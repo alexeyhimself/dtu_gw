@@ -46,20 +46,22 @@
 			.custom-helper {
 				font-size: 14px;
 				color: gray;
+        margin-top: 5px;
 			}
       #features_calls_over_time_chart_id {
         //height: 500px!important;
       }
       .refresh_reset_buttons {
         padding-top: 25px;
+        margin-bottom: 1rem;
       }
-      @media screen and (max-width: 643px) {
+      @media screen and (max-width: 992px) {
           .refresh_reset_buttons {
           padding-top: 0;
         }
       }
       .margin-top-10 {
-        margin-top: 20px;
+        //margin-top: 20px;
       }
       .hidden {
         display: none;
@@ -68,15 +70,15 @@
         width: 100%;
         //height: 50%;
       }
-      .row {
-        margin-right: 0;
-        margin-left: 0;
+      .container-padding {
+        padding: 7px;
       }
+
 		</style>
 	</head>
 	<body>
-		<div style="height: 100%; padding: 10px;">
-			<div class="row row-cols-auto">
+		<div class="container-fluid">
+			<div class="row container-padding">
 				<div class="col hidden">
 					<label for="topic" class="form-label no-margin-bottom custom-label">topic:</label>
 					<div class="input-group input-group-sm mb-3">
@@ -89,10 +91,15 @@
 				</div>
 
 				<div class="col">
-					<label for="datetime" class="form-label no-margin-bottom custom-label">from-to date-time range:</label>
-		      <div class="input-group input-group-sm mb-3 no-margin-bottom"><!-- https://www.codeply.com/p/zU0EWDmIfn -->
-		        <input id="datetime_from" class="form-control" type="datetime-local"/>
-		        <input id="datetime_to" class="form-control" type="datetime-local"/>
+					<div class="row">
+            <div class="col">
+              <label for="datetime_from" class="form-label no-margin-bottom custom-label">from date-time:</label>
+  		        <input id="datetime_from" class="form-control" type="datetime-local"/>
+            </div>
+            <div class="col">
+              <label for="datetime_to" class="form-label no-margin-bottom custom-label">to date-time:</label>
+		          <input id="datetime_to" class="form-control" type="datetime-local"/>
+            </div>
 		      </div>
 		      <p class="custom-helper">Show last: 
 		      	<span class="time-shortcut look-like-link" timedelta_ms="900000">15 min</span>
@@ -104,17 +111,20 @@
 		    	</p>
 		    </div>
 
-		    <div class="col refresh_reset_buttons">
+		    <div class="col-lg refresh_reset_buttons">
 		    	<button id="btn:refresh_features_page_data_according_to_filters_setup" type="button" class="btn btn-primary btn-sm">Apply filter</button>
 		    	<button id="btn:reset_features_page_filters" type="button" class="btn btn-secondary btn-sm">Reset filter</button>
 		    </div>
 			</div>
 
-			<div class="row margin-top-10">
-			<h4>Elements usage stats</h4>
-			<p id="feature_path" path='[""]' class="hidden"></p>
-      <div class="canvas-wrapper">
-			  <canvas id="features_calls_over_time_chart_id"></canvas>
+			<div class="row container-padding">
+        <div class="col">
+          <h4>Elements usage stats</h4>
+          <p id="feature_path" path='[""]' class="hidden"></p>
+          <div class="canvas-wrapper">
+            <canvas id="features_calls_over_time_chart_id"></canvas>
+          </div>
+        </div>
       </div>
 		</div>
 
@@ -891,9 +901,9 @@
 				let agregation_result = [];
 				if (agregation_time_frame > 0) {
 					if (dates.datetime_from != dates.datetime_to) {
-						for (let t = dates.datetime_from + agregation_time_frame; // from "datetime_from +" to make first window, not the dot
-                     t <= dates.datetime_to + agregation_time_frame * 0; // till "datetime_to +" - to include latest data not yet in any time frame due to agregation to the last artificaial frame, which is partly out of bounds, but data report in it is not out of bounds
-                     t += agregation_time_frame) {
+						for (let t = dates.datetime_to - agregation_time_frame; // from "datetime_from +" to make first window, not the dot
+                     t >= dates.datetime_from + agregation_time_frame * 0; // till "datetime_to +" - to include latest data not yet in any time frame due to agregation to the last artificaial frame, which is partly out of bounds, but data report in it is not out of bounds
+                     t -= agregation_time_frame) {
 							agregation_result.push(t);
 						}
 					}
@@ -901,11 +911,11 @@
 						agregation_result.push(dates.datetime_from);
 				}
 
-        console.log(new Date(dates.datetime_from))
-        console.log(new Date(dates.datetime_to))
-        console.log(dates.time_range, agregation_time_frame)
+        //console.log(new Date(dates.datetime_from))
+        //console.log(new Date(dates.datetime_to))
+        //console.log(dates.time_range, agregation_time_frame)
 
-				return {'agregation_result': agregation_result, 
+				return {'agregation_result': agregation_result.reverse(), 
                 'displayed_time_range': dates.time_range, 
                 'datetime_from': dates.datetime_from, 
                 'datetime_to': dates.datetime_to, 
