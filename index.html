@@ -13,13 +13,6 @@
 			.form-select, .form-control {
 				cursor: pointer;
 			}
-			textarea.form-control {
-				cursor: text;
-			}
-			.percent {
-				background-image: linear-gradient(to right, lightskyblue 0%, lightskyblue 100%);
-  			background-repeat: no-repeat;
-			}
 			.resize-canvas-wrapper {
 				width: 100px !important; /* https://stackoverflow.com/questions/42340342/cant-make-chart-js-responsive */
 			}
@@ -48,9 +41,6 @@
 				color: gray;
         margin-top: 5px;
 			}
-      #features_calls_over_time_chart_id {
-        //height: 500px!important;
-      }
       .refresh_reset_buttons {
         padding-top: 25px;
         margin-bottom: 1rem;
@@ -60,18 +50,14 @@
           padding-top: 0;
         }
       }
-      .margin-top-10 {
-        //margin-top: 20px;
-      }
       .hidden {
         display: none;
       }
       .canvas-wrapper {
         width: 100%;
-        //height: 50%;
       }
       .container-padding {
-        padding: 7px;
+        padding: 5px;
       }
 
 		</style>
@@ -92,11 +78,11 @@
 
 				<div class="col">
 					<div class="row">
-            <div class="col">
+            <div class="col-md">
               <label for="datetime_from" class="form-label no-margin-bottom custom-label">from date-time:</label>
   		        <input id="datetime_from" class="form-control" type="datetime-local"/>
             </div>
-            <div class="col">
+            <div class="col-md">
               <label for="datetime_to" class="form-label no-margin-bottom custom-label">to date-time:</label>
 		          <input id="datetime_to" class="form-control" type="datetime-local"/>
             </div>
@@ -391,8 +377,8 @@
 					    },
 						},
 				    responsive: true,
-            maintainAspectRatio: true,
-            aspectRatio: 2.5,
+            //maintainAspectRatio: true,
+            //aspectRatio: 2.5,
             layout: {
               //autoPadding: false,
               //padding: 100
@@ -901,8 +887,8 @@
 				let agregation_result = [];
 				if (agregation_time_frame > 0) {
 					if (dates.datetime_from != dates.datetime_to) {
-						for (let t = dates.datetime_to - agregation_time_frame; // from "datetime_from +" to make first window, not the dot
-                     t >= dates.datetime_from + agregation_time_frame * 0; // till "datetime_to +" - to include latest data not yet in any time frame due to agregation to the last artificaial frame, which is partly out of bounds, but data report in it is not out of bounds
+						for (let t = dates.datetime_to - agregation_time_frame; // from "datetime_to -" to make most recent window always available
+                     t >= dates.datetime_from + agregation_time_frame * 1; // till "datetime_from +" - to not to include oldest partial frame data
                      t -= agregation_time_frame) {
 							agregation_result.push(t);
 						}
