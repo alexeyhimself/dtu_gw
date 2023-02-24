@@ -58,7 +58,7 @@
       .refresh_reset_buttons {
         padding-top: 25px;
       }
-      @media screen and (max-width: 800px) {
+      @media screen and (max-width: 643px) {
           .refresh_reset_buttons {
           padding-top: 0;
         }
@@ -74,7 +74,7 @@
 	<body>
 		<div style="height: 100%; padding: 10px;">
 			<div class="row row-cols-auto">
-				<div class="col">
+				<div class="col hidden">
 					<label for="topic" class="form-label no-margin-bottom custom-label">topic:</label>
 					<div class="input-group input-group-sm mb-3">
 					<select class="form-select" data-dotheyuse="topic" pp="topic" onchange="ANALYTICS_PORTAL_SDK_refresh_features_page_data_according_to_topic_change();">
