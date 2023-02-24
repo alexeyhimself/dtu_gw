@@ -53,7 +53,21 @@
 				color: gray;
 			}
       #features_calls_over_time_chart_id {
-        height: 500px!important;
+        //height: 500px!important;
+      }
+      .refresh_reset_buttons {
+        padding-top: 25px;
+      }
+      @media screen and (max-width: 800px) {
+          .refresh_reset_buttons {
+          padding-top: 0;
+        }
+      }
+      .margin-top-10 {
+        margin-top: 20px;
+      }
+      .hidden {
+        display: none;
       }
 		</style>
 	</head>
@@ -87,16 +101,15 @@
 		    	</p>
 		    </div>
 
-		    <div class="col">
-		    	<br>
+		    <div class="col refresh_reset_buttons">
 		    	<button id="btn:refresh_features_page_data_according_to_filters_setup" type="button" class="btn btn-primary btn-sm">Apply filter</button>
 		    	<button id="btn:reset_features_page_filters" type="button" class="btn btn-secondary btn-sm">Reset filter</button>
 		    </div>
 			</div>
 
-			<div class="row">
+			<div class="row margin-top-10">
 			<h4>Elements usage stats</h4>
-			<p id="feature_path" path='[""]'></p>
+			<p id="feature_path" path='[""]' class="hidden"></p>
 			<canvas id="features_calls_over_time_chart_id"></canvas>
 		</div>
 
