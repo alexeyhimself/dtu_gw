@@ -6,10 +6,6 @@
 		<title>Do They Use</title>
 		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
 		<style type="text/css">
-			body, html {
-				height: 100%;
-				width: 100%;
-			}
 			.form-control {
 				min-height: 32px;
 				height: 0;
@@ -68,6 +64,14 @@
       .hidden {
         display: none;
       }
+      .canvas-wrapper {
+        width: 100%;
+        //height: 50%;
+      }
+      .row {
+        margin-right: 0;
+        margin-left: 0;
+      }
 		</style>
 	</head>
 	<body>
@@ -109,7 +113,9 @@
 			<div class="row margin-top-10">
 			<h4>Elements usage stats</h4>
 			<p id="feature_path" path='[""]' class="hidden"></p>
-			<canvas id="features_calls_over_time_chart_id"></canvas>
+      <div class="canvas-wrapper">
+			  <canvas id="features_calls_over_time_chart_id"></canvas>
+      </div>
 		</div>
 
 		<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -375,6 +381,12 @@
 					    },
 						},
 				    responsive: true,
+            maintainAspectRatio: true,
+            aspectRatio: 2.5,
+            layout: {
+              //autoPadding: false,
+              //padding: 100
+            },
 				    plugins: {
               legend: {
 				        display: false,
@@ -400,14 +412,13 @@
 				    }
 				  },
           plugins: [{
-            id: 'customPlugin',
             afterRender: (chart, args, options) => {
               const width_before_render = chart.config.width_before_render;
               const width_after_render = Math.floor(chart.chartArea.width);
-              console.log(width_before_render, width_after_render, chart.chartArea.width);
-              //if (width_after_render > width_before_render + 1 || width_after_render < width_before_render - 1) {
-              //  ANALYTICS_PORTAL_SDK_refresh_features_page_data_according_to_user_filters_setup(); // redraw due to changed agregation interval
-              //}
+              console.log(width_before_render, width_after_render, width_before_render - width_after_render);
+              if (width_after_render != width_before_render) {
+                ;//ANALYTICS_PORTAL_SDK_refresh_features_page_data_according_to_user_filters_setup(); // redraw due to changed agregation interval
+              }
             }
           }]
 				};
@@ -445,6 +456,7 @@
 
 		  	let chart = Chart.getChart(chart_id);
 		  	chart.config.data.labels = config.labels;
+
 		  	chart.config.data.datasets[0].data = config.data[0];
         chart.config.data.datasets[1].data = config.data[1];
         chart.config.data.datasets[2].data = config.data[2];
@@ -806,6 +818,7 @@
 
 				const chart = Chart.getChart(chart_id);
 				const chart_width_px = Math.floor(chart.chartArea.width);
+        // here
         chart.config.width_before_render = chart_width_px; // to be able to redraw after initial draw
         return Math.floor(displayed_time_range / chart_width_px); // how many seconds in 1 px
 			}
@@ -933,7 +946,7 @@
 				const reports_with_features_path_match = TX_API_get_reports_with_features_path_match(user_filters, kwargs)
         let agregations = TX_API_prepare_time_windows_agregations(chart_id, user_filters, kwargs);
         let agregation_result = agregations.agregation_result;
-				
+
         /*
         console.log("first: ", new Date(reports_with_features_path_match[0].date_time));
         console.log("last: ", new Date(reports_with_features_path_match[reports_with_features_path_match.length - 1].date_time));
