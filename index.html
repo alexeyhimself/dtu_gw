@@ -1,0 +1,1131 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>Do They Use</title>
+		<!--link href="bootstrap-5.2.3/css/bootstrap.min.css" rel="stylesheet"-->
+		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+		<style type="text/css">
+			body, html {
+				height: 100%;
+				width: 100%;
+			}
+			.form-control {
+				min-height: 32px;
+				height: 0;
+			}
+			.form-select, .form-control {
+				cursor: pointer;
+			}
+			textarea.form-control {
+				cursor: text;
+			}
+			.percent {
+				background-image: linear-gradient(to right, lightskyblue 0%, lightskyblue 100%);
+  			background-repeat: no-repeat;
+			}
+			.resize-canvas-wrapper {
+				width: 100px !important; /* https://stackoverflow.com/questions/42340342/cant-make-chart-js-responsive */
+			}
+			.look-like-link {
+				text-decoration: underline;
+				color: rgba(var(--bs-link-color-rgb),var(--bs-link-opacity,1));
+				cursor: pointer;
+			}
+			.look-like-link:hover {
+				--bs-link-color-rgb: var(--bs-link-hover-color-rgb);
+			}
+			.no-margin-bottom {
+				margin-bottom: 0!important;
+			}
+			.time-shortcut {
+				margin-left: 5px;
+				font-size: 14px;
+			}
+			.custom-label {
+				font-weight: bold;
+				font-size: 14px;
+				color: gray;
+			}
+			.custom-helper {
+				font-size: 14px;
+				color: gray;
+			}
+      #features_calls_over_time_chart_id {
+        height: 500px!important;
+      }
+		</style>
+	</head>
+	<body>
+		<div style="height: 100%; padding: 10px;">
+			<div class="row row-cols-auto">
+				<div class="col">
+					<label for="topic" class="form-label no-margin-bottom custom-label">topic:</label>
+					<div class="input-group input-group-sm mb-3">
+					<select class="form-select" data-dotheyuse="topic" pp="topic" onchange="ANALYTICS_PORTAL_SDK_refresh_features_page_data_according_to_topic_change();">
+			  			<option>default</option>
+			  			<option>custom</option>
+			  			<option>do they use</option>
+			  		</select>
+					</div>
+				</div>
+
+				<div class="col">
+					<label for="datetime" class="form-label no-margin-bottom custom-label">date-time range:</label>
+		      <div class="input-group input-group-sm mb-3 no-margin-bottom"><!-- https://www.codeply.com/p/zU0EWDmIfn -->
+		        <input id="datetime_from" class="form-control" type="datetime-local"/>
+		        <input id="datetime_to" class="form-control" type="datetime-local"/>
+		      </div>
+		      <p class="custom-helper">Show last: 
+		      	<span class="time-shortcut look-like-link" timedelta_ms="900000">15 min</span>
+		      	<span class="time-shortcut look-like-link" timedelta_ms="3600000">1 hour</span>
+		      	<span class="time-shortcut look-like-link" timedelta_ms="86400000">24 hours</span>
+		      	<span class="time-shortcut look-like-link" timedelta_ms="604800000">7 days</span>
+		      	<span class="time-shortcut look-like-link" timedelta_ms="2592000000">30 days</span>
+		      	<span class="time-shortcut look-like-link" timedelta_ms="8640000000">100 days</span>
+		    	</p>
+		    </div>
+
+		    <div class="col">
+		    	<br>
+		    	<button id="btn:refresh_features_page_data_according_to_filters_setup" type="button" class="btn btn-primary btn-sm">Apply filter</button>
+		    	<button id="btn:reset_features_page_filters" type="button" class="btn btn-secondary btn-sm">Reset filter</button>
+		    </div>
+			</div>
+
+			<div class="row">
+			<h4>Elements usage stats</h4>
+			<p id="feature_path" path='[""]'></p>
+			<canvas id="features_calls_over_time_chart_id"></canvas>
+		</div>
+
+		<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+		<script>
+	////////////////////// DB /////////////////////////
+			// separate tables in db
+			var db = [];
+			var db_tags = {};
+
+			// INIT DB DATA:
+			db2 = [
+				{"gtag":"ABCD","date_time":1671532440488,"uid":52,"feature_path":["Posts","Multiple media objects","Videos"],"feature":"Videos","topic":"default"},
+			]
+	////////////////////// END OF DB /////////////////////////
+
+
+	////////////////////// RX_API /////////////////////////
+			function DB_INSERT_report(r) {
+				debug_helper(arguments, DEBUG);
+
+				if (!r.topic) // enrich
+					r.topic = "default";
+        if (!r.feature_path) // enrich
+          r.feature_path = [''];
+				if (r.feature_path[0] !== '')
+				  r.feature_path.unshift(''); // add to the beginning as "all" features for filter
+
+				db.push(r);
+			}
+
+			function DB_UPDATE_tags(r) {
+				debug_helper(arguments, DEBUG);
+
+				if (!db_tags[r.gtag]) {
+					let topic = r.topic;
+					db_tags[r.gtag] = {topic: r.tags};
+				}
+				else {
+					if (!db_tags[r.gtag][r.topic]) {
+						db_tags[r.gtag][r.topic] = r.tags;
+					}
+					else {
+						let already_saved_tags = db_tags[r.gtag][r.topic];
+						for (let tag in r.tags) {
+							let value = r.tags[tag][0]; // support multiselect here
+							if (tag in already_saved_tags) {
+								if (already_saved_tags[tag].includes(value))
+									continue;
+								already_saved_tags[tag].push(value);
+							}
+							else {
+								already_saved_tags[tag] = [r.tags[tag]];
+							}
+						}
+					}
+				}
+			}
+
+			function RX_API_save_to_db(r) {
+				debug_helper(arguments, DEBUG);
+
+				DB_INSERT_report(r);
+				DB_UPDATE_tags(r);
+			}
+
+			function RX_API_submint_report(report) {
+				debug_helper(arguments, DEBUG);
+				let r = JSON.parse(report);
+				RX_API_save_to_db(r);
+				//ANALYTICS_PORTAL_SDK_refresh_features_page_data_according_to_user_filters_setup(); // temporary for debug
+			}
+	////////////////// END OF RX_API ///////////////////////
+
+
+	////////////////////// ANALYTICS_PORTAL_SDK /////////////////////////
+			const gtag = "ABCD"; // somehow via session ID mapping in DB, not in request
+
+			function ANALYTICS_PORTAL_SDK_reset_datetime_filter() {
+				debug_helper(arguments, DEBUG);
+				ANALYTICS_PORTAL_SDK_set_datetime_filter();
+			}
+
+			function ANALYTICS_PORTAL_SDK_set_datetime_filter(timedelta_ms) {
+				debug_helper(arguments, DEBUG);
+
+				let datetime_to = "";
+				let datetime_from = "";
+				if (timedelta_ms) { // if not reset
+					const back = new Date() - timedelta_ms;
+					date = new Date(back).toLocaleDateString('en-GB').split('/');
+					time = new Date(back).toLocaleTimeString('en-GB');
+					datetime_from = date[2] + '-' + date[1] + '-' + date[0] + 'T' + time;
+				}
+
+				const datetime_to_input = document.getElementById('datetime_to');
+				const datetime_from_input = document.getElementById('datetime_from');
+				datetime_to_input.value = datetime_to;
+				datetime_from_input.value = datetime_from;
+			}
+
+			function ANALYTICS_PORTAL_SDK_init_time_shortcut_listeners() {
+				debug_helper(arguments, DEBUG);
+
+				const elements_to_track = document.querySelectorAll('.time-shortcut');
+				for (let i = 0; i < elements_to_track.length; i++) {
+					let el = elements_to_track[i];
+					el.addEventListener("click", function(e) {
+						const timedelta_ms = this.getAttribute('timedelta_ms');
+						ANALYTICS_PORTAL_SDK_set_datetime_filter(timedelta_ms);
+						ANALYTICS_PORTAL_SDK_refresh_features_page_data_according_to_user_filters_setup();
+					}, false);
+				}
+			}
+
+			function ANALYTICS_PORTAL_SDK_collect_user_filters_on_the_page() {
+				debug_helper(arguments, DEBUG);
+
+        let topic = window.localStorage.getItem('topic');
+        if (!topic)
+				  topic = document.querySelector('[pp="topic"]').value;
+        else
+          document.querySelector('[pp="topic"]').value = topic;
+
+				let user_filters = {"gtag": gtag, "topic": topic};
+
+				const df = document.getElementById("datetime_from").value;
+				if (df != '')
+					user_filters["datetime_from"] = Date.parse(df);
+
+				const dt = document.getElementById("datetime_to").value;
+				if (dt != '')
+					user_filters["datetime_to"] = Date.parse(dt);
+
+				let feature_path = document.getElementById("feature_path").getAttribute("path");
+				user_filters["feature_path"] = JSON.parse(feature_path);
+
+				return user_filters;
+			}
+
+			async function ANALYTICS_PORTAL_SDK_start() {
+				debug_helper(arguments, DEBUG);
+
+				// detect which tab now is opened and update accordingly
+				ANALYTICS_PORTAL_SDK_init_calls_over_time_chart_for_('features_calls_over_time_chart_id');
+				ANALYTICS_PORTAL_SDK_init_time_shortcut_listeners();
+
+				await ANALYTICS_PORTAL_SDK_refresh_features_page_data_according_to_user_filters_setup();
+
+				// add listeners
+				ANALYTICS_PORTAL_SDK_make_refresh_button_work();
+				ANALYTICS_PORTAL_SDK_make_reset_filters_button_work();
+			}
+
+			function ANALYTICS_PORTAL_SDK_make_refresh_button_work() {
+				debug_helper(arguments, DEBUG);
+
+				let btn = document.getElementById('btn:refresh_features_page_data_according_to_filters_setup');
+				btn.addEventListener("click", function(e) {
+					ANALYTICS_PORTAL_SDK_refresh_features_page_data_according_to_user_filters_setup();
+				})
+			}
+
+			function ANALYTICS_PORTAL_SDK_make_reset_filters_button_work() {
+				debug_helper(arguments, DEBUG);
+
+				let btn = document.getElementById('btn:reset_features_page_filters');
+				btn.addEventListener("click", function(e) {
+					ANALYTICS_PORTAL_SDK_reset_filters_on_features_page();
+				})
+			}
+
+		  function ANALYTICS_PORTAL_SDK_make_filters_work() {
+		  	debug_helper(arguments, DEBUG);
+
+			  let elements_to_track = document.querySelectorAll('[pp]');
+				for (let i = 0; i < elements_to_track.length; i++) {
+					let el = elements_to_track[i];
+					el.addEventListener("change", function(e) { // dropdown
+						ANALYTICS_PORTAL_SDK_refresh_features_page_data_according_to_user_filters_setup();
+					}, false);	
+				}
+
+				/*
+				var elements_to_track = document.querySelectorAll('[track_name]');
+				for (let i = 0; i < elements_to_track.length; i++) {
+					var el = elements_to_track[i];
+					el.addEventListener("click", function(e) {
+						console.log("k");
+					}, false);	
+				}
+				*/
+
+				// ... add another listeners
+		  }
+
+		  function ANALYTICS_PORTAL_SDK_init_calls_over_time_chart_for_(chart_id) {
+				debug_helper(arguments, DEBUG);
+		  	const config = {
+				  type: 'line',
+				  data: {
+					  datasets: [{
+  	    				borderWidth: 1,
+                tension: 0.2,
+                fill: false
+  					  },
+              {
+                borderWidth: 1,
+                tension: 0.2,
+                borderColor: '#777777',
+                backgroundColor: '#f6f6b788',
+                fill: '-1',
+              },
+              {
+                borderWidth: 1,
+                tension: 0.2,
+                backgroundColor: '#f6f6b788',
+                fill: '-1'
+              }
+            ]
+					},
+				  options: {
+            elements: {
+              line: {
+                fill: false
+              },
+              point: {
+                radius: 0,
+              },
+            },
+				  	scales: {
+				      y: {
+				      	title: {
+				      		display: false,
+				      	},
+					    },
+					    x: {
+					    	type: 'time',
+					    	time: {
+					    		//unit: 'minute',
+					    		displayFormats: {
+					    			second: 'HH:mm:ss',
+                    minute: 'HH:mm',
+                    hour: 'HH:mm',
+                  }
+					    	},
+					    	title: {
+				      		display: false,
+				      		text: "time",	
+				      	},
+					    	ticks: {
+					    		//source: 'data',
+            			//stepSize: 1,
+          			}
+					    },
+						},
+				    responsive: true,
+				    plugins: {
+              legend: {
+				        display: false,
+				        position: "right",
+				        maxWidth: 1000,
+				        labels: {
+				        	boxWidth: 12,
+				        	boxHeight: 12,
+				        	padding: 8,
+				        	usePointStyle: true,
+				        }
+				      },
+				      title: {
+				        display: true,
+				      },
+				      tooltip: {
+				        callbacks: {
+				          label: function(context) {
+				            return context.dataset.label;
+				          }
+				        }
+				      },
+				    }
+				  },
+          plugins: [{
+            id: 'customPlugin',
+            afterRender: (chart, args, options) => {
+              const width_before_render = chart.config.width_before_render;
+              const width_after_render = Math.floor(chart.chartArea.width);
+              console.log(width_before_render, width_after_render, chart.chartArea.width);
+              //if (width_after_render > width_before_render + 1 || width_after_render < width_before_render - 1) {
+              //  ANALYTICS_PORTAL_SDK_refresh_features_page_data_according_to_user_filters_setup(); // redraw due to changed agregation interval
+              //}
+            }
+          }]
+				};
+			  
+			  if ('features_calls_over_time_chart_id' == chart_id) {
+			  	config.options.scales.y.title.text = "# of calls for selected element(s) at the same time";
+			  	config.options.plugins.title.text = "Median calls (with max and min bursts) for the selected element in time";
+			  }
+        //config.options.animations = false;
+
+        const chart_element = document.getElementById(chart_id);
+			  new Chart(chart_element, config);   
+		  }
+
+			function ANALYTICS_PORTAL_SDK_update_feature_path(feature) {
+				debug_helper(arguments, DEBUG);
+				let feature_path_element = document.getElementById("feature_path");
+				let current_feature_path = feature_path_element.getAttribute("path");
+				
+				new_feature_path = JSON.parse(current_feature_path);
+				new_feature_path.push(feature);
+				new_feature_path = JSON.stringify(new_feature_path);
+				feature_path_element.setAttribute("path", new_feature_path);
+			}
+
+			function ANALYTICS_PORTAL_SDK_refresh_calls_over_time_for_chart_id_(chart_id, user_filters, kwargs) {
+				debug_helper(arguments, DEBUG);
+
+				const reports_match_user_filters_length = kwargs['reports_match_user_filters_length'];
+				let config = {};
+				if (reports_match_user_filters_length == 0)
+					config = {'labels': [], 'data': [], 'unit': 'year'};
+				else
+					config = TX_API_get_data_for_chart_(chart_id, user_filters, kwargs);					
+
+		  	let chart = Chart.getChart(chart_id);
+		  	chart.config.data.labels = config.labels;
+		  	chart.config.data.datasets[0].data = config.data[0];
+        chart.config.data.datasets[1].data = config.data[1];
+        chart.config.data.datasets[2].data = config.data[2];
+		  	chart.config.options.scales.x.time.unit = config.unit;
+		  	chart.config.options.scales.x.ticks.stepSize = config.step_size;
+		  	//console.log("sec in 1 px: ", config.ms_in_pixel / 1000)
+				chart.update();
+			}
+
+			function ANALYTICS_PORTAL_SDK_reset_filters_on_features_page() {
+				debug_helper(arguments, DEBUG);
+
+				ANALYTICS_PORTAL_SDK_reset_datetime_filter();
+				ANALYTICS_PORTAL_SDK_refresh_features_page_data_according_to_user_filters_setup();
+			}
+
+			function ANALYTICS_PORTAL_SDK_refresh_features_page_data_according_to_topic_change() {
+				debug_helper(arguments, DEBUG);
+
+        // remember value
+        const topic = document.querySelector('[pp="topic"]').value;
+        window.localStorage.setItem('topic', topic);
+				ANALYTICS_PORTAL_SDK_refresh_features_page_data_according_to_user_filters_setup();
+			}
+
+			function ANALYTICS_PORTAL_SDK_refresh_features_page_data_according_to_user_filters_setup() {
+				debug_helper(arguments, DEBUG);
+
+				let user_filters = ANALYTICS_PORTAL_SDK_collect_user_filters_on_the_page();
+				let kwargs = TX_API_process_user_filters_request(user_filters);
+
+				ANALYTICS_PORTAL_SDK_refresh_feature_path(user_filters);
+				ANALYTICS_PORTAL_SDK_refresh_calls_over_time_for_chart_id_('features_calls_over_time_chart_id', user_filters, kwargs);
+			}
+
+			function ANALYTICS_PORTAL_SDK_refresh_feature_path(user_filters) {
+				debug_helper(arguments, DEBUG);
+
+				let feature_path_element = document.getElementById("feature_path");
+				let feature_path = user_filters.feature_path;
+				let feature_path_html = 'usage stats for the element: ';
+
+        feature_path_html += '<select class=""><option>topic</option></select>'
+				feature_path_element.innerHTML = feature_path_html;
+			}
+
+      /*
+			function ANALYTICS_PORTAL_SDK_feature_path_click(element) {
+				let new_feature_path = element.getAttribute("path");
+				document.getElementById("feature_path").setAttribute("path", new_feature_path);
+				ANALYTICS_PORTAL_SDK_refresh_features_page_data_according_to_user_filters_setup();
+			}
+      */
+	////////////////////// END OF ANALYTICS_PORTAL_SDK /////////////////////////
+
+	////////////////////// TX API /////////////////////////
+			function TX_API_get_all_from_db() {  // debug func
+				debug_helper(arguments, DEBUG);
+				for(var i = 0; i < db.length; i++) {
+					console.log(JSON.stringify(db[i]));
+				}
+			}
+
+			/*
+			function TX_API_sum_values_of_dict(obj) { // https://stackoverflow.com/questions/16449295/how-to-sum-the-values-of-a-javascript-object
+  			return Object.values(obj).reduce((a, b) => a + b, 0);
+			}
+			*/
+
+			function TX_API_get_sum(list_sorted_by_value_desc) {
+				debug_helper(arguments, DEBUG);
+
+				let sum = 0;
+				for (let i in list_sorted_by_value_desc)
+					sum += list_sorted_by_value_desc[i];
+
+				return sum;
+			}
+
+			function TX_API_get_avg(list_sorted_by_value_desc) {
+				debug_helper(arguments, DEBUG);
+
+				let items_number = list_sorted_by_value_desc.length;
+				const sum = TX_API_get_sum(list_sorted_by_value_desc);
+				return Math.round(sum / items_number, 2);
+			}
+
+			function TX_API_get_median(list_sorted_by_value_desc) {
+				debug_helper(arguments, DEBUG);
+
+				const items_number = list_sorted_by_value_desc.length;
+				const middle_item_id = Math.floor(items_number / 2); // floor because arr ids count from 0, not 1
+				const middle_item_value = list_sorted_by_value_desc[middle_item_id];
+				if (items_number % 2 != 0) // if odd
+					return middle_item_value;
+
+				const another_middle_item_id = middle_item_id + 1; // next because was floor
+				const another_middle_item_value = list_sorted_by_value_desc[another_middle_item_id];
+				return (middle_item_value + another_middle_item_value) / 2;
+			}
+
+			function TX_API_get_mode(list_sorted_by_value_desc) {
+				debug_helper(arguments, DEBUG);
+
+				let arr = [];
+				for (let i in list_sorted_by_value_desc)
+					arr.push(list_sorted_by_value_desc[i]);
+
+		    return arr.sort((a,b) => // https://stackoverflow.com/questions/1053843/get-the-element-with-the-highest-occurrence-in-an-array
+    	      arr.filter(v => v===a).length
+      	  - arr.filter(v => v===b).length
+    		).pop();
+			}
+
+			function TX_API_get_range(list_sorted_by_value_desc) {
+				debug_helper(arguments, DEBUG);
+
+				const max = TX_API_get_max(list_sorted_by_value_desc);
+				const min = TX_API_get_min(list_sorted_by_value_desc);
+				return max - min;
+			}
+
+      function TX_API_get_min(list_sorted_by_value_desc) {
+        debug_helper(arguments, DEBUG);
+        return list_sorted_by_value_desc[list_sorted_by_value_desc.length - 1];
+      }
+
+      function TX_API_get_max(list_sorted_by_value_desc) {
+        debug_helper(arguments, DEBUG);
+        return list_sorted_by_value_desc[0];
+      }
+
+			function TX_API_get_stats_for_list(list) {
+				debug_helper(arguments, DEBUG);
+
+        const list_sorted_by_value_desc = list.sort(function(a, b){return b - a})
+
+        const min = TX_API_get_min(list_sorted_by_value_desc);
+        const max = TX_API_get_max(list_sorted_by_value_desc);
+				const avg = TX_API_get_avg(list_sorted_by_value_desc);
+				const median = TX_API_get_median(list_sorted_by_value_desc);
+				const mode = TX_API_get_mode(list_sorted_by_value_desc);
+				const range = TX_API_get_range(list_sorted_by_value_desc);
+
+				return {'avg': avg, 'median': median, 'mode': mode, 'range': range, 'min': min, 'max': max};
+			}
+
+			function TX_API_process_user_filters_request(user_filters) {
+				debug_helper(arguments, DEBUG);
+
+				let kwargs = {};
+
+				const unique_uids_and_calls_num_for_feature_sorted_desc = DB_SELECT_uid_count_WHERE_feature_LIKE_GROUP_BY_uid(user_filters);
+				kwargs['unique_uids_and_calls_num_for_feature_sorted_desc'] = unique_uids_and_calls_num_for_feature_sorted_desc;
+				kwargs['unique_uids_and_calls_num_for_feature_sorted_desc_length'] = unique_uids_and_calls_num_for_feature_sorted_desc.length;
+				kwargs['unique_uids_calls_for_feature'] = TX_API_get_sum(unique_uids_and_calls_num_for_feature_sorted_desc);
+
+				const reports_match_user_filters  = DB_SELECT_all_WHERE_user_filters(user_filters);
+				kwargs['reports_match_user_filters'] = reports_match_user_filters;
+				kwargs['reports_match_user_filters_length'] = reports_match_user_filters.length;
+
+				//console.log(kwargs)
+				return kwargs;
+			}
+
+			function DB_SELECT_EMULATION_check_if_report_gtag_and_topic_match_them_in_user_filters(r, user_filters) {
+				debug_helper(arguments, DEBUG);
+				let gtag = user_filters['gtag']
+				let topic = user_filters['topic']
+
+				if (r.gtag != gtag)
+					return false;
+
+				if (r.topic != topic)
+					return false;
+
+				return true;
+			}
+
+			function DB_SELECT_EMULATION_check_if_report_date_matches_dates_in_user_filters(r, user_filters) {
+				debug_helper(arguments, DEBUG);
+				let datetime_from = user_filters['datetime_from'];
+				let datetime_to = user_filters['datetime_to'];
+				
+				if (!datetime_from && !datetime_to) {
+					return true;
+				}
+				if (!datetime_from && datetime_to) {
+					if (r.date_time > datetime_to) {
+						return false;
+					}
+				}
+				if (datetime_from && !datetime_to) {
+					if (r.date_time < datetime_from) {
+						return false;
+					}
+				}
+				if (datetime_from && datetime_to) {
+					if (r.date_time > datetime_to || r.date_time < datetime_from) {
+						return false;
+					}
+				}
+
+				return true;
+			}
+
+			function DB_SELECT_EMULATION_check_if_report_uid_matches_uids_in_user_filters(r, user_filters) {
+				debug_helper(arguments, DEBUG);
+				let uids = user_filters['uids'];
+				let uids_exclude = user_filters['uids_exclude'];
+
+				if (uids) {
+					if (!uids.includes(String(r.uid))) {
+						return false;
+					}
+				}
+				if (uids_exclude) {
+					if (uids_exclude.includes(String(r.uid))) {
+						return false;
+					}
+				}
+
+				return true;
+			}
+
+			function DB_SELECT_EMULATION_check_if_report_gtag_topic_users_dates_match_user_filters(r, user_filters) {
+				debug_helper(arguments, DEBUG);
+				if (!DB_SELECT_EMULATION_check_if_report_uid_matches_uids_in_user_filters(r, user_filters))
+					return false;
+
+				if (!DB_SELECT_EMULATION_check_if_report_gtag_and_topic_match_them_in_user_filters(r, user_filters))
+					return false;
+
+				if (!DB_SELECT_EMULATION_check_if_report_date_matches_dates_in_user_filters(r, user_filters))
+					return false;
+
+				return true;
+			}
+
+			function DB_SELECT_DISTINCT_uid_WHERE_gtag_topic(user_filters) {
+				// SELECT DISTINCT uid FROM reports_table WHERE 1=1
+				// AND gtag = user_filters.gtag
+				// AND topic = user_filters.topic
+				// AND uid IN user_filters.uids_to_include
+				// AND uid NOT IN user_filters.uids_to_exclude
+				// AND date_time BETWEEN (user_filters.date_time_from, user_filters.date_time_to);
+				debug_helper(arguments, DEBUG);
+
+				let uu = [];
+				for (let i = 0; i < db.length; i++) {
+					let r = db[i];
+					if (!DB_SELECT_EMULATION_check_if_report_gtag_topic_users_dates_match_user_filters(r, user_filters))
+						continue;
+					if (!uu.includes(r.uid)) {
+						uu.push(r.uid);
+					}
+				}
+				return uu;
+			}
+
+			function DB_SELECT_all_WHERE_user_filters(user_filters) {
+				// SELECT * FROM reports_table WHERE 1=1
+				// AND gtag = user_filters.gtag
+				// AND topic = user_filters.topic
+				// AND uid IN user_filters.uids_to_include
+				// AND uid NOT IN user_filters.uids_to_exclude
+				// AND date_time BETWEEN (user_filters.date_time_from, user_filters.date_time_to)
+				// AND FOR each_custom_tag DO each_custom_tag = user_filters.custom_tag;
+				debug_helper(arguments, DEBUG);
+
+				var found = [];
+				for (let i = 0; i < db.length; i++) {
+					var r = db[i];
+					if (!DB_SELECT_EMULATION_check_if_report_gtag_topic_users_dates_match_user_filters(r, user_filters))
+						continue;
+					found.push(r);
+				}
+				return found;
+			}
+
+			function DB_SELECT_uid_count_WHERE_feature_LIKE_GROUP_BY_uid(user_filters) {
+				// SELECT uid, count() FROM reports_table WHERE 1=1
+				// AND gtag = user_filters.gtag
+				// AND topic = user_filters.topic
+				// AND uid IN user_filters.uids_to_include
+				// AND uid NOT IN user_filters.uids_to_exclude
+				// AND date_time BETWEEN (user_filters.date_time_from, user_filters.date_time_to)
+				// AND feature LIKE 'user_filters.feature_path %'
+				// GROUP BY uid
+				// ORDER by count() DESC;
+				debug_helper(arguments, DEBUG);
+
+				let feature_path = user_filters['feature_path'];
+				let uu = {};
+				for (let i = 0; i < db.length; i++) {
+					let r = db[i];
+					if (!DB_SELECT_EMULATION_check_if_report_gtag_topic_users_dates_match_user_filters(r, user_filters))
+						continue;
+
+					let feature_in_db = r.feature_path.toString();
+					let feature_in_search = feature_path.toString();
+					if (feature_in_db.startsWith(feature_in_search)) { // re.match('^substring', string)
+						if (feature_in_search != "") {
+							let feature_in_db_symbol_at_feature_in_search_length = feature_in_db[feature_in_search.length];
+							if (!(feature_in_db_symbol_at_feature_in_search_length == ',' || 
+										feature_in_db_symbol_at_feature_in_search_length == '' || // avoid matching "a" and "ab"
+										feature_in_db_symbol_at_feature_in_search_length == undefined)) { // strings are equal
+								continue;
+							}	
+						}
+						if (r.uid in uu)
+							uu[r.uid] = uu[r.uid] + 1;
+						else
+							uu[r.uid] = 1;	
+					}
+				}
+
+				let sorted_by_value_desc = []; // https://stackoverflow.com/questions/1069666/sorting-object-property-by-values
+				for (let uid in uu) {
+				    sorted_by_value_desc.push([uid, uu[uid]]);
+				}
+				sorted_by_value_desc.sort(function(a, b) {
+				    return b[1] - a[1]; // desc
+				});
+
+				return sorted_by_value_desc;
+			}
+
+			const TX_API_arrays_are_equal = (a, b) => // https://www.freecodecamp.org/news/how-to-compare-arrays-in-javascript/
+  			a.length === b.length && a.every((element, index) => element === b[index]);
+
+			function TX_API_get_dates_from_to(user_filters, kwargs) {
+				debug_helper(arguments, DEBUG);
+
+				const reports_match_user_filters_length = kwargs['reports_match_user_filters_length'];
+				let datetime_from = user_filters['datetime_from'];
+				let datetime_to = user_filters['datetime_to'];
+				if (!datetime_to)
+					datetime_to = Date.now(); // if not set then till now
+
+				if (reports_match_user_filters_length == 0) {
+					if (!datetime_from)
+						datetime_from = Date.now();
+
+					let time_range = datetime_to - datetime_from;
+					return {'datetime_from': datetime_from, 'datetime_to': datetime_to, 'time_range': time_range};
+				}
+
+				const reports_match_user_filters = kwargs['reports_match_user_filters'];
+				if (!datetime_from)
+					datetime_from = reports_match_user_filters[0].date_time; // if not set then from first date in all related reports
+
+				let time_range = datetime_to - datetime_from;
+				return {'datetime_from': datetime_from, 'datetime_to': datetime_to, 'time_range': time_range};
+			}
+
+			function TX_API_get_agregation_time_frame(chart_id, displayed_time_range) {
+				debug_helper(arguments, DEBUG);
+
+				const chart = Chart.getChart(chart_id);
+				const chart_width_px = Math.floor(chart.chartArea.width);
+        chart.config.width_before_render = chart_width_px; // to be able to redraw after initial draw
+        return Math.floor(displayed_time_range / chart_width_px); // how many seconds in 1 px
+			}
+
+			function TX_API_get_display_unit_and_step(displayed_time_range, chart_id) {
+				debug_helper(arguments, DEBUG);
+
+				let chart = Chart.getChart(chart_id);
+				let chart_width_px = Math.floor(chart.chartArea.width);
+
+				if (0 == displayed_time_range) {
+					unit = 'second';
+					step_size = 1;
+
+					return {'unit': unit, 'step_size': step_size};
+				}
+				
+				if (chart_width_px < 350) {
+					if (displayed_time_range < 5 * 60 * 1000) {
+						unit = 'second';
+						if (displayed_time_range > 0)
+							step_size = displayed_time_range / 8;
+						else
+							step_size = 1;
+					}
+					else if (displayed_time_range < 5 * 60 * 60 * 1000) {
+						unit = 'minute';
+						step_size = 1;
+					}
+					else if (displayed_time_range < 5 * 24 * 60 * 60 * 1000) {
+						unit = 'hour';
+						step_size = 1;
+					}
+					else {
+						unit = 'day';
+						step_size = 1;
+					}	
+				}
+				else {
+					if (displayed_time_range < 5 * 60 * 1000) {
+						unit = 'second';
+						if (displayed_time_range > 0)
+							step_size = 8;
+						else
+							step_size = 1;
+					}
+					else if (displayed_time_range < 5 * 60 * 60 * 1000) {
+						unit = 'minute';
+						step_size = 1;
+					}
+					else if (displayed_time_range < 5 * 24 * 60 * 60 * 1000) {
+						unit = 'hour';
+						step_size = 1;
+					}
+					else {
+						unit = 'day';
+						step_size = 1;
+					}	
+				}
+
+				return {'unit': unit, 'step_size': step_size};
+			}
+
+			function TX_API_prepare_time_windows_agregations(chart_id, user_filters, kwargs) {
+				debug_helper(arguments, DEBUG);
+
+				let dates = TX_API_get_dates_from_to(user_filters, kwargs)
+				let agregation_time_frame = TX_API_get_agregation_time_frame(chart_id, dates.time_range);
+
+				let agregation_result = [];
+				if (agregation_time_frame > 0) {
+					if (dates.datetime_from != dates.datetime_to) {
+						for (let t = dates.datetime_from + agregation_time_frame; // from "datetime_from +" to make first window, not the dot
+                     t <= dates.datetime_to + agregation_time_frame * 0; // till "datetime_to +" - to include latest data not yet in any time frame due to agregation to the last artificaial frame, which is partly out of bounds, but data report in it is not out of bounds
+                     t += agregation_time_frame) {
+							agregation_result.push(t);
+						}
+					}
+					else
+						agregation_result.push(dates.datetime_from);
+				}
+
+        console.log(new Date(dates.datetime_from))
+        console.log(new Date(dates.datetime_to))
+        console.log(dates.time_range, agregation_time_frame)
+
+				return {'agregation_result': agregation_result, 
+                'displayed_time_range': dates.time_range, 
+                'datetime_from': dates.datetime_from, 
+                'datetime_to': dates.datetime_to, 
+                'agregation_time_frame': agregation_time_frame};
+			}
+
+			function TX_API_get_reports_with_features_path_match(user_filters, kwargs) {
+				debug_helper(arguments, DEBUG);
+				let reports_with_matched_feature_paths = [];
+
+				const feature_path_user_filters = user_filters['feature_path'];
+				const feature_path_user_filters_length = feature_path_user_filters.length;
+				const reports_match_user_filters = kwargs['reports_match_user_filters'];
+				const reports_match_user_filters_length = kwargs['reports_match_user_filters_length'];
+
+				for (let i = 0; i < reports_match_user_filters_length; i++) {
+					let report = reports_match_user_filters[i];
+					let reports_match = true;
+					if (!(feature_path_user_filters_length == 1 && feature_path_user_filters[0] == '')) { // if not [""]
+						for (let j = 0; j < feature_path_user_filters_length; j++) {
+							if (report.feature_path[j] != feature_path_user_filters[j]) {
+								reports_match = false;
+								break;
+							}
+						}
+					}
+
+					if (reports_match)
+						reports_with_matched_feature_paths.push(report);
+				}
+				return reports_with_matched_feature_paths;
+			}
+
+
+			function TX_API_get_data_for_chart_(chart_id, user_filters, kwargs) {
+				debug_helper(arguments, DEBUG);
+
+				const reports_with_features_path_match = TX_API_get_reports_with_features_path_match(user_filters, kwargs)
+        let agregations = TX_API_prepare_time_windows_agregations(chart_id, user_filters, kwargs);
+        let agregation_result = agregations.agregation_result;
+				
+        /*
+        console.log("first: ", new Date(reports_with_features_path_match[0].date_time));
+        console.log("last: ", new Date(reports_with_features_path_match[reports_with_features_path_match.length - 1].date_time));
+        console.log("first aggr: ", new Date(agregation_result[0]));
+        console.log("last aggr: ", new Date(agregation_result[agregation_result.length - 1]));
+        */
+        let stats = [];
+				let position_in_reports = 0; // to continue from this, not from the beginning again
+				for (let i in agregation_result) {
+          stats.push(0); // create next step
+          let date = agregation_result[i];
+          for (let j = position_in_reports; j < reports_with_features_path_match.length; j++) {
+						let r = reports_with_features_path_match[j];
+						if (r.date_time <= date) { // this report is in this time frame, so collect it
+							if (chart_id == 'features_calls_over_time_chart_id') {
+								stats[i] += 1;
+							}
+							position_in_reports += 1;
+						}
+						else {
+							break; // this report from next frame, so go for next time frame
+						}
+					}
+				}
+
+        const step = 10;
+        let aggr_dates = [];
+        let mins = [];
+        let maxes = [];
+        let medians = [];
+        for (let i = 0; i < stats.length / step; i++) {
+          let pack = stats.slice(i * step, i * step + step);
+          const pack_stats = TX_API_get_stats_for_list(pack);
+
+          mins.push(pack_stats.min);
+          maxes.push(pack_stats.max);
+          medians.push(pack_stats.median);
+          aggr_dates.push(agregation_result[i * step]);
+        }
+
+        //console.table(TX_API_get_stats_for_list(stats))
+
+        let labels = [];
+        let data = [];
+				for (let i in aggr_dates) {
+					labels.push(parseInt(aggr_dates[i]));
+				}
+        data.push(mins);
+        data.push(medians);
+        data.push(maxes);
+
+				let displayed_time_range = agregations.displayed_time_range;
+				let display_unit_and_step = TX_API_get_display_unit_and_step(displayed_time_range, chart_id);
+
+				return Object.assign({}, {'labels': labels, 'data': data, 'ms_in_pixel': agregations.agregation_time_frame}, display_unit_and_step);
+			}
+	////////////////////// END OF OUR ANALYTICS TX API /////////////////////////
+
+
+	////////////////////// CLIENT EMULATORS /////////////////////////
+			function EMULATOR_get_random_int_between(min, max) { // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/random
+			  return Math.floor(Math.random() * (max - min) + min);
+			}
+
+			function EMULATOR_get_random_item_from_list(list) { // https://stackoverflow.com/questions/5915096/get-a-random-item-from-a-javascript-array
+				debug_helper(arguments, DEBUG);
+			  return list[EMULATOR_get_random_item_from_number(list.length)];
+			}
+			function EMULATOR_get_random_item_from_number(number) {
+				debug_helper(arguments, DEBUG);
+				return Math.floor(Math.random()*number);
+			}
+
+			const max_number_of_days_ago = 100;
+			const max_time_ago = Date.now() - 86400 * 1000 * max_number_of_days_ago;
+			var emulated_time = max_time_ago;
+      var of_minutes = 15;
+
+			function EMULATOR_get_random_date() {
+				debug_helper(arguments, DEBUG);
+				let minutes = EMULATOR_get_random_item_from_number(of_minutes);
+				let new_emulated_time = emulated_time + minutes * 60 * 1000;
+				emulated_time = new_emulated_time;
+				return new_emulated_time;
+			}
+
+			let feature_paths = [
+				["Stories", "Videos", "Upload"],
+				["Stories", "Videos", "Record"],
+				["Stories", "Pics", "Upload"],
+				["Stories", "Pics", "Make photo"],
+				["Stories", "Create mode", "Add text"],
+				["Stories", "Create mode", "Add stickers"],
+				["Stories", "Create mode", "Change background"],
+				//["Stories", "Share", "Post"], // to be introduced later
+				["Posts", "Single media object", "Picture"],
+				["Posts", "Single media object", "Video"],
+				["Posts", "Multiple media objects", "Pictures"],
+				["Posts", "Multiple media objects", "Videos"],
+				["Posts", "Multiple media objects", "Mix"],
+				["Reels", "Videos", "Upload"],
+				["Reels", "Videos", "Record"],
+			];
+
+			let topics = [null, 'default', 'custom'];
+
+			function EMULATOR_make_report() {
+				debug_helper(arguments, DEBUG);
+
+				let c = {};
+				c.gtag = gtag;
+				let topic = EMULATOR_get_random_item_from_list(topics);
+				if (topic) {
+					c.topic = topic;
+				}
+				c.date_time = EMULATOR_get_random_date();
+				let feature_path = EMULATOR_get_random_item_from_list(feature_paths);
+				c.feature = feature_path[feature_path.length - 1];
+
+				return c;
+			}
+
+      function generate_fake_data() {
+        const number_of_uids = 150; // from emulator here temporary
+        
+        var max_reports = 30000;
+        let t = max_time_ago;
+        while (t < Date.now()) {
+          let c = EMULATOR_make_report();
+          t = c.date_time;
+          CLIENT_SDK_send_to_telemetry_api(c);
+        }
+      }
+
+      generate_fake_data();
+	//////////////////// CLIENT EMULATORS END ///////////////////////
+
+	////////////////////// CLIENT'S SDK /////////////////////////
+			// ENV-DEPENDANT PARAMS
+			//var c = {};
+			//c.gtag = "ABC";
+			//c.category = "web";  // to be used here without get from elements
+			//c.topic = "default";
+			//c.app_name = "Analytics";
+
+			// ENV-INDEPENDANT PARAMS
+			//c.app_version = "4.26.1";
+			//c.release = "0.1.0.0";
+
+			// SDK APP FUNCTIONS
+			const excluded_events = "mousedown mouseup mousemove mouseover mouseout mousewheel";
+			const events = "click focus blur keydown change dblclick keydown keyup keypress textInput touchstart touchmove touchend touchcancel resize scroll zoom select change submit reset".split(" ");
+
+
+			function CLIENT_SDK_send_to_telemetry_api(report) {
+				debug_helper(arguments, DEBUG);
+				//console.log(report)
+				jr = JSON.stringify(report);
+				RX_API_submint_report(jr); // send emulation
+			}
+
+      const CLIENT_SDK_topic = "do they use";
+      const CLIENT_SDK_gtag = "ABCD";
+			
+			var elements_to_track = document.querySelectorAll('[data-dotheyuse]');
+			for (let i = 0; i < elements_to_track.length; i++) {
+				var element = elements_to_track[i];
+
+        if (element.type == "select-one") { // dropdown
+          element.addEventListener("change", function(e) {
+            var clicked = this.dataset.dotheyuse;
+            var value = this.value;
+            if (value != "null") { // if not reset filter
+              var c = EMULATOR_make_report();
+              //var event_type = this.type;
+              //c.listener = "change";
+              c.gtag = CLIENT_SDK_gtag;
+              c.topic = CLIENT_SDK_topic;
+              c.feature = clicked;
+              c.value = value;
+              c.date_time = Date.now();
+              //feature_path_copy = [...feature_path];
+              //feature_path_copy.push(clicked);
+
+              // temporary disable this
+              CLIENT_SDK_send_to_telemetry_api(c);
+              //console.log(c)
+            }
+          }, false);
+        }
+			}
+	////////////////////// END OF CLIENT'S SDK /////////////////////////
+
+
+	/////////////// ANALYTICS HTML /////////////////
+
+			ANALYTICS_PORTAL_SDK_start();
+
+	/////////////// END OF ANALYTICS HTML /////////
+
+
+	///////////////////////////////// DEBUG HELP ///////////////////////////////
+			var DEBUG = false;
+			function debug_helper(args, is_debug) {
+				if (!is_debug)
+					return;
+
+				console.log(args.callee.name);
+			}
+	///////////////////////////////// END OF DEBUG HELP ///////////////////////
+		</script>
+
+		<script src="bootstrap-5.2.3/js/bootstrap.bundle.min.js"></script>
+	</body>
+</html>
