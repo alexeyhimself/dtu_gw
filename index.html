@@ -381,8 +381,8 @@
 					    },
 						},
 				    responsive: true,
-            //maintainAspectRatio: true,
-            //aspectRatio: 2.5,
+            maintainAspectRatio: false,
+            aspectRatio: 1,
             layout: {
               //autoPadding: false,
               //padding: 100
@@ -821,13 +821,15 @@
 				debug_helper(arguments, DEBUG);
 
 				const chart = Chart.getChart(chart_id);
-
+        let c = document.getElementById(chart_id);
+        console.log(c.style.width)
 				let chart_width_px = chart.canvas.style.width; //Math.floor(chart.chartArea.width); - not work due to constant recalcs
         chart_width_px = chart_width_px.slice(0, chart_width_px.length - 2); // cut 'px'
         chart_width_px = parseInt(chart_width_px)
         //chart_width_px=Math.floor(chart.chartArea.width);
         // here
-        //console.log(chart.chartArea.left, chart.chartArea.right, chart_width_px)
+        console.log(displayed_time_range, chart_width_px)
+        //debugger
         //chart.config.width_before_render = chart_width_px; // to be able to redraw after initial draw
         return Math.floor(displayed_time_range / chart_width_px); // how many seconds in 1 px
 			}
