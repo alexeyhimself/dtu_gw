@@ -329,13 +329,16 @@
               {
                 borderWidth: 1,
                 tension: 0.2,
+                borderColor: '#058dc7',
                 borderColor: '#777777',
+                //backgroundColor: '#e7f4f988',
                 backgroundColor: '#f6f6b788',
                 fill: '-1',
               },
               {
                 borderWidth: 1,
                 tension: 0.2,
+                //backgroundColor: '#e7f4f999',
                 backgroundColor: '#f6f6b788',
                 fill: '-1'
               }
@@ -352,6 +355,7 @@
             },
 				  	scales: {
 				      y: {
+                //display: false,
 				      	title: {
 				      		display: false,
 				      	},
@@ -409,12 +413,18 @@
 				  },
           plugins: [{
             afterRender: (chart, args, options) => {
-              const width_before_render = chart.config.width_before_render;
-              const width_after_render = Math.floor(chart.chartArea.width);
-              console.log(width_before_render, width_after_render, width_before_render - width_after_render);
-              if (width_after_render != width_before_render) {
+              //const width_before_render = chart.config.width_before_render;
+              //const width_after_render = Math.floor(chart.chartArea.width);
+              //console.log(width_before_render, width_after_render, width_before_render - width_after_render);
+
+              //let chart = Chart.getChart('features_calls_over_time_chart_id');
+
+//chart.width = width_before_render;
+//chart.update();
+
+              //if (width_after_render != width_before_render) {
                 ;//ANALYTICS_PORTAL_SDK_refresh_features_page_data_according_to_user_filters_setup(); // redraw due to changed agregation interval
-              }
+              //}
             }
           }]
 				};
@@ -537,7 +547,7 @@
 
 				let items_number = list_sorted_by_value_desc.length;
 				const sum = TX_API_get_sum(list_sorted_by_value_desc);
-				return Math.round(sum / items_number, 2);
+				return sum / items_number;
 			}
 
 			function TX_API_get_median(list_sorted_by_value_desc) {
@@ -557,10 +567,7 @@
 			function TX_API_get_mode(list_sorted_by_value_desc) {
 				debug_helper(arguments, DEBUG);
 
-				let arr = [];
-				for (let i in list_sorted_by_value_desc)
-					arr.push(list_sorted_by_value_desc[i]);
-
+				let arr = list_sorted_by_value_desc;
 		    return arr.sort((a,b) => // https://stackoverflow.com/questions/1053843/get-the-element-with-the-highest-occurrence-in-an-array
     	      arr.filter(v => v===a).length
       	  - arr.filter(v => v===b).length
@@ -589,6 +596,7 @@
 				debug_helper(arguments, DEBUG);
 
         const list_sorted_by_value_desc = list.sort(function(a, b){return b - a})
+        //console.log(list_sorted_by_value_desc)
 
         const min = TX_API_get_min(list_sorted_by_value_desc);
         const max = TX_API_get_max(list_sorted_by_value_desc);
@@ -813,9 +821,14 @@
 				debug_helper(arguments, DEBUG);
 
 				const chart = Chart.getChart(chart_id);
-				const chart_width_px = Math.floor(chart.chartArea.width);
+
+				let chart_width_px = chart.canvas.style.width; //Math.floor(chart.chartArea.width); - not work due to constant recalcs
+        chart_width_px = chart_width_px.slice(0, chart_width_px.length - 2); // cut 'px'
+        chart_width_px = parseInt(chart_width_px)
+        //chart_width_px=Math.floor(chart.chartArea.width);
         // here
-        chart.config.width_before_render = chart_width_px; // to be able to redraw after initial draw
+        //console.log(chart.chartArea.left, chart.chartArea.right, chart_width_px)
+        //chart.config.width_before_render = chart_width_px; // to be able to redraw after initial draw
         return Math.floor(displayed_time_range / chart_width_px); // how many seconds in 1 px
 			}
 
@@ -967,6 +980,7 @@
 						}
 					}
 				}
+        console.log(stats)
 
         const step = 10;
         let aggr_dates = [];
@@ -993,6 +1007,7 @@
         data.push(mins);
         data.push(medians);
         data.push(maxes);
+        console.log(data[0]) // here2
 
 				let displayed_time_range = agregations.displayed_time_range;
 				let display_unit_and_step = TX_API_get_display_unit_and_step(displayed_time_range, chart_id);
