@@ -848,8 +848,26 @@
 				debug_helper(arguments, DEBUG);
 
         const chart_width_px = TX_API_get_chart_size(chart_id);
+        const chart_size = {'xs': 500, 's': 800, 'm': 1000, 'l': 1200}; // https://getbootstrap.com/docs/4.1/layout/grid/
 
-        const chart_size = {'xs': 539, 's': 719, 'm': 959, 'l': 1139}; // https://getbootstrap.com/docs/4.1/layout/grid/
+        // chart_size.l and higher
+        let min_pixels_for_tick = 100;
+        let max_pixels_for_tick = 200;
+
+        if (chart_width_px <= chart_size.xs) {
+          min_pixels_for_tick = 50;
+          max_pixels_for_tick = 150;
+        }
+        else if (chart_width_px <= chart_size.s) {
+          console.log(111)
+          min_pixels_for_tick = 80;
+          max_pixels_for_tick = 160;
+        }
+        else if (chart_width_px <= chart_size.m) {
+          min_pixels_for_tick = 90;
+          max_pixels_for_tick = 180;
+        }
+        
         const units_names = [ // https://www.chartjs.org/docs/latest/axes/cartesian/time.html#time-units
           'second',
           'minute',
@@ -875,9 +893,17 @@
           return {'unit': units.second, 'step_size': 1};
         }
 
-        preferred_steps_for_units = {'year': [1, 2, 5, 10], 'month': [1, 2, 3, 6, 12], 'day': [1, 2, 3, 7, 10], 'hour': [1, 2, 3, 6, 12, 24], 'minute': [1, 2, 3, 5, 10, 12, 15, 20, 30, 60], 'second': [1, 2, 3, 5, 10, 12, 15, 20, 30, 60]}
-        let min_steps = Math.floor(chart_width_px / 200);
-        let max_steps = Math.floor(chart_width_px / 100);
+        preferred_steps_for_units = {
+          'year': [1, 2, 5, 10], 
+          'month': [1, 2, 3, 6, 12], 
+          'day': [1, 2, 3, 7, 10], 
+          'hour': [1, 2, 3, 6, 12, 24], 
+          'minute': [1, 2, 3, 5, 10, 12, 15, 20, 30, 60], 
+          'second': [1, 2, 3, 5, 10, 12, 15, 20, 30, 60]
+        };
+        let min_steps = Math.floor(chart_width_px / max_pixels_for_tick);
+        let max_steps = Math.floor(chart_width_px / min_pixels_for_tick);
+        console.log(min_steps, max_steps)
 
         for (let i in units_values) {
           let em = displayed_time_range / units_values[i]; // how many each of them in this time range
@@ -897,10 +923,12 @@
             for (let j in preferred_steps_for_this_unit) {
               let candidate = preferred_steps_for_this_unit[j];
               if (candidate >= em_min && candidate <= em_max) {
-                step_size = candidate;
-                break;
+                  if (em / candidate <= max_steps && em / candidate >= min_steps) {
+                    step_size = candidate;
+                    break;
+                  }
               }
-              step_size = 1000;
+              step_size = em_min;
             }
             break;
           }
