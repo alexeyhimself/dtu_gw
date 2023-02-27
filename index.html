@@ -88,12 +88,21 @@
             </div>
 		      </div>
 		      <p class="custom-helper">Show last: 
+            <span class="time-shortcut look-like-link" timedelta_ms="60000">1 min</span>
 		      	<span class="time-shortcut look-like-link" timedelta_ms="900000">15 min</span>
 		      	<span class="time-shortcut look-like-link" timedelta_ms="3600000">1 hour</span>
+            <span class="time-shortcut look-like-link" timedelta_ms="7200000">2 hour</span>
+            <span class="time-shortcut look-like-link" timedelta_ms="43200000">12 hour</span>
 		      	<span class="time-shortcut look-like-link" timedelta_ms="86400000">24 hours</span>
+            <span class="time-shortcut look-like-link" timedelta_ms="259200000">3 days</span>
 		      	<span class="time-shortcut look-like-link" timedelta_ms="604800000">7 days</span>
+            <span class="time-shortcut look-like-link" timedelta_ms="1209600000">14 days</span>
+            <span class="time-shortcut look-like-link" timedelta_ms="1728000000">20 days</span>
 		      	<span class="time-shortcut look-like-link" timedelta_ms="2592000000">30 days</span>
 		      	<span class="time-shortcut look-like-link" timedelta_ms="8640000000">100 days</span>
+            <span class="time-shortcut look-like-link" timedelta_ms="31536000000">365 days</span>
+            <span class="time-shortcut look-like-link" timedelta_ms="63072000000">2 years</span>
+            <span class="time-shortcut look-like-link" timedelta_ms="86400000000">1000 days</span>
 		    	</p>
 		    </div>
 
@@ -375,7 +384,9 @@
 				      		text: "time",	
 				      	},
 					    	ticks: {
-					    		//source: 'data',
+                  display: true,
+                  crossAlign: 'far'
+                  //source: 'data',
             			//stepSize: 1,
           			}
 					    },
@@ -456,7 +467,7 @@
 				const reports_match_user_filters_length = kwargs['reports_match_user_filters_length'];
 				let config = {};
 				if (reports_match_user_filters_length == 0)
-					config = {'labels': [], 'data': [], 'unit': 'year'};
+					config = {'labels': [], 'data': [], 'unit': 'second', 'step_size': 1}; // no data case
 				else
 					config = TX_API_get_data_for_chart_(chart_id, user_filters, kwargs);					
 
@@ -817,80 +828,86 @@
 				return {'datetime_from': datetime_from, 'datetime_to': datetime_to, 'time_range': time_range};
 			}
 
+      function TX_API_get_chart_size(chart_id) {
+        debug_helper(arguments, DEBUG);
+
+        const chart = Chart.getChart(chart_id);
+        let chart_width_px = chart.canvas.style.width; //Math.floor(chart.chartArea.width); - not work due to constant recalcs, so, base on canvas.style.width
+        chart_width_px = chart_width_px.slice(0, chart_width_px.length - 2); // cut 'px'
+        return parseInt(chart_width_px);
+      }
+
 			function TX_API_get_agregation_time_frame(chart_id, displayed_time_range) {
 				debug_helper(arguments, DEBUG);
 
-				const chart = Chart.getChart(chart_id);
-        let c = document.getElementById(chart_id);
-        console.log(c.style.width)
-				let chart_width_px = chart.canvas.style.width; //Math.floor(chart.chartArea.width); - not work due to constant recalcs
-        chart_width_px = chart_width_px.slice(0, chart_width_px.length - 2); // cut 'px'
-        chart_width_px = parseInt(chart_width_px)
-        //chart_width_px=Math.floor(chart.chartArea.width);
-        // here
-        console.log(displayed_time_range, chart_width_px)
-        //debugger
-        //chart.config.width_before_render = chart_width_px; // to be able to redraw after initial draw
+				const chart_width_px = TX_API_get_chart_size(chart_id)
         return Math.floor(displayed_time_range / chart_width_px); // how many seconds in 1 px
 			}
 
 			function TX_API_get_display_unit_and_step(displayed_time_range, chart_id) {
 				debug_helper(arguments, DEBUG);
 
-				let chart = Chart.getChart(chart_id);
-				let chart_width_px = Math.floor(chart.chartArea.width);
+        const chart_width_px = TX_API_get_chart_size(chart_id);
 
-				if (0 == displayed_time_range) {
-					unit = 'second';
-					step_size = 1;
+        const chart_size = {'xs': 539, 's': 719, 'm': 959, 'l': 1139}; // https://getbootstrap.com/docs/4.1/layout/grid/
+        const units_names = [ // https://www.chartjs.org/docs/latest/axes/cartesian/time.html#time-units
+          'second',
+          'minute',
+          'hour',
+          'day',
+          //'week', // don't want weeks
+          'month',
+          //'quarter', // don't want quarters
+          'year'
+        ].reverse(); // to go from largest to lowest to detect first > 0
+        const units_values = [
+          10**3, // second
+          60 * 10**3, // minute
+          60 * 60 * 10**3, // hour
+          24 * 60 * 60 * 10**3, // day
+          //7 * 24 * 60 * 60 * 10**3, // week // don't want weeks
+          30 * 24 * 60 * 60 * 10**3, // month
+          //3 * 30 * 24 * 60 * 60 * 10**3, // quarter // don't want quarters// 
+          365 * 24 * 60 * 60 * 10**3 // year
+        ].reverse(); // to go from largest to lowest to detect first > 0
 
-					return {'unit': unit, 'step_size': step_size};
-				}
-				
-				if (chart_width_px < 350) {
-					if (displayed_time_range < 5 * 60 * 1000) {
-						unit = 'second';
-						if (displayed_time_range > 0)
-							step_size = displayed_time_range / 8;
-						else
-							step_size = 1;
-					}
-					else if (displayed_time_range < 5 * 60 * 60 * 1000) {
-						unit = 'minute';
-						step_size = 1;
-					}
-					else if (displayed_time_range < 5 * 24 * 60 * 60 * 1000) {
-						unit = 'hour';
-						step_size = 1;
-					}
-					else {
-						unit = 'day';
-						step_size = 1;
-					}	
-				}
-				else {
-					if (displayed_time_range < 5 * 60 * 1000) {
-						unit = 'second';
-						if (displayed_time_range > 0)
-							step_size = 8;
-						else
-							step_size = 1;
-					}
-					else if (displayed_time_range < 5 * 60 * 60 * 1000) {
-						unit = 'minute';
-						step_size = 1;
-					}
-					else if (displayed_time_range < 5 * 24 * 60 * 60 * 1000) {
-						unit = 'hour';
-						step_size = 1;
-					}
-					else {
-						unit = 'day';
-						step_size = 1;
-					}	
-				}
+				if (0 == displayed_time_range) { // artificial case of 0 seconds
+          return {'unit': units.second, 'step_size': 1};
+        }
 
-				return {'unit': unit, 'step_size': step_size};
+        preferred_steps_for_units = {'year': [1, 2, 5, 10], 'month': [1, 2, 3, 6, 12], 'day': [1, 2, 3, 7, 10], 'hour': [1, 2, 3, 6, 12, 24], 'minute': [1, 2, 3, 5, 10, 12, 15, 20, 30, 60], 'second': [1, 2, 3, 5, 10, 12, 15, 20, 30, 60]}
+        let min_steps = Math.floor(chart_width_px / 200);
+        let max_steps = Math.floor(chart_width_px / 100);
+
+        for (let i in units_values) {
+          let em = displayed_time_range / units_values[i]; // how many each of them in this time range
+          let em_min = Math.floor(em / max_steps); // how many items in one step for min steps case
+          let em_max = Math.floor(em / min_steps); // how many items in one step for max steps case
+
+          //console.log(units_names[i], em, em_min, em_max);
+        }
+        for (let i in units_values) {
+          let em = displayed_time_range / units_values[i]; // how many each of them in this time range
+          let em_min = Math.floor(em / max_steps); // how many items in one step for min steps case
+          let em_max = Math.floor(em / min_steps); // how many items in one step for max steps case
+
+          if (em_min + 1 > 0 && em_max > 0) {
+            unit = units_names[i];
+            let preferred_steps_for_this_unit = preferred_steps_for_units[unit];
+            for (let j in preferred_steps_for_this_unit) {
+              let candidate = preferred_steps_for_this_unit[j];
+              if (candidate >= em_min && candidate <= em_max) {
+                step_size = candidate;
+                break;
+              }
+              step_size = 1000;
+            }
+            break;
+          }
+        }
+
+        //console.log(chart_width_px, unit, step_size);
+        return {'unit': unit, 'step_size': step_size};
 			}
 
 			function TX_API_prepare_time_windows_agregations(chart_id, user_filters, kwargs) {
@@ -982,7 +999,6 @@
 						}
 					}
 				}
-        console.log(stats)
 
         const step = 10;
         let aggr_dates = [];
@@ -1009,7 +1025,6 @@
         data.push(mins);
         data.push(medians);
         data.push(maxes);
-        console.log(data[0]) // here2
 
 				let displayed_time_range = agregations.displayed_time_range;
 				let display_unit_and_step = TX_API_get_display_unit_and_step(displayed_time_range, chart_id);
