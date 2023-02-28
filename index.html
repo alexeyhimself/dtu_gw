@@ -70,7 +70,7 @@
         <div class="row">
           <div class="col-lg-2">
             <label for="topic" class="form-label no-margin-bottom custom-label">topic:</label>
-            <select class="form-control form-select" data-dtu="topic" pp="topic" onchange="ANALYTICS_PORTAL_SDK_refresh_features_page_data_according_to_topic_change();">
+            <select class="form-control form-select" data-dtu="topic" pp="topic" id="drpd:topic">
               <option>default</option>
               <option>custom</option>
             </select>
@@ -283,7 +283,17 @@
 				// add listeners
 				ANALYTICS_PORTAL_SDK_make_refresh_button_work();
 				ANALYTICS_PORTAL_SDK_make_reset_filters_button_work();
+        ANALYTICS_PORTAL_SDK_make_topic_dropdown_work();
 			}
+
+      function ANALYTICS_PORTAL_SDK_make_topic_dropdown_work() {
+        debug_helper(arguments, DEBUG);
+
+        let btn = document.getElementById('drpd:topic');
+        btn.addEventListener("change", function(e) {
+          ANALYTICS_PORTAL_SDK_refresh_features_page_data_according_to_topic_change();
+        })
+      }
 
 			function ANALYTICS_PORTAL_SDK_make_refresh_button_work() {
 				debug_helper(arguments, DEBUG);
@@ -432,7 +442,7 @@
                 }
               } 
               catch (error) {
-                let message = 'An error occured during building chart'
+                let message = 'An error occured while trying to draw the chart'
                 ANALYTICS_PORTAL_SDK_display_message_on_chart(chart, message);
               }
             },
