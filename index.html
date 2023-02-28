@@ -87,7 +87,7 @@
   		          <input id="datetime_to" class="form-control" type="datetime-local" data-dtu="date-time to"/>
               </div>
   		      
-    		      <p class="custom-helper" data-dtu="quick links">Show last: 
+    		      <p class="custom-helper">Show last: 
                 <span class="time-shortcut look-like-link" timedelta_ms="60000" data-dtu="1 min">1 min</span>
     		      	<span class="time-shortcut look-like-link" timedelta_ms="900000" data-dtu="15 min">15 min</span>
     		      	<span class="time-shortcut look-like-link" timedelta_ms="3600000" data-dtu="1 hour">1 hour</span>
@@ -1180,6 +1180,7 @@
             var value = this.value;
 
             const c = CLIENT_SDK_prepare_data_before_send(clicked, value);
+            console.log(c);
             CLIENT_SDK_send_to_telemetry_api(c);
           }, false);
         }
@@ -1189,6 +1190,7 @@
             var value = this.value;
             
             const c = CLIENT_SDK_prepare_data_before_send(clicked, value);
+            console.log(c);
             CLIENT_SDK_send_to_telemetry_api(c);
           }, false);
         }
@@ -1199,6 +1201,7 @@
             const value = this.dataset[DTU_TAG];
 
             const c = CLIENT_SDK_prepare_data_before_send(clicked, value);
+            console.log(c);
             CLIENT_SDK_send_to_telemetry_api(c);
           }, false);
         }
