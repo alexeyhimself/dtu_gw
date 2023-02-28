@@ -55,6 +55,7 @@
       }
       .canvas-wrapper {
         width: 100%;
+        border: 1px solid #dee2e6;
       }
       .container-padding {
         padding: 5px;
@@ -423,20 +424,18 @@
 				    }
 				  },
           plugins: [{
-            afterRender: (chart, args, options) => {
-              //const width_before_render = chart.config.width_before_render;
-              //const width_after_render = Math.floor(chart.chartArea.width);
-              //console.log(width_before_render, width_after_render, width_before_render - width_after_render);
+            afterDraw: function(chart) { // https://stackoverflow.com/questions/55564508/pie-chart-js-display-a-no-data-held-message
+              if (chart.data.datasets[0].data.length == 0) {
+                  let ctx = chart.ctx;
 
-              //let chart = Chart.getChart('features_calls_over_time_chart_id');
-
-//chart.width = width_before_render;
-//chart.update();
-
-              //if (width_after_render != width_before_render) {
-                ;//ANALYTICS_PORTAL_SDK_refresh_features_page_data_according_to_user_filters_setup(); // redraw due to changed agregation interval
-              //}
-            }
+                  chart.clear();
+                  ctx.save();
+                  ctx.textAlign = 'center';
+                  ctx.textBaseline = 'middle';
+                  ctx.fillText('No data to display for current filter condition(s). To get data try to loosen the filter', chart.width / 2, chart.height / 2);
+                  ctx.restore();
+              }
+            },
           }]
 				};
 			  
@@ -859,7 +858,6 @@
           max_pixels_for_tick = 150;
         }
         else if (chart_width_px <= chart_size.s) {
-          console.log(111)
           min_pixels_for_tick = 80;
           max_pixels_for_tick = 160;
         }
@@ -934,7 +932,7 @@
           }
         }
 
-        //console.log(chart_width_px, unit, step_size);
+        console.log(chart_width_px, unit, step_size);
         return {'unit': unit, 'step_size': step_size};
 			}
 
