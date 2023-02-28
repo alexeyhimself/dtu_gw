@@ -70,7 +70,7 @@
         <div class="row">
           <div class="col-lg-2">
             <label for="topic" class="form-label no-margin-bottom custom-label">topic:</label>
-            <select class="form-control form-select" data-dtu="topic" pp="topic" id="drpd:topic">
+            <select class="form-control form-select" data-dtu="topic" id="drpd:topic">
               <option>default</option>
               <option>custom</option>
             </select>
@@ -251,9 +251,9 @@
 
         let topic = window.localStorage.getItem('topic');
         if (!topic)
-				  topic = document.querySelector('[pp="topic"]').value;
+				  topic = document.getElementById('drpd:topic').value;
         else
-          document.querySelector('[pp="topic"]').value = topic;
+          document.getElementById('drpd:topic').value = topic;
 
 				let user_filters = {"gtag": gtag, "topic": topic};
 
@@ -312,30 +312,6 @@
 					ANALYTICS_PORTAL_SDK_reset_filters_on_features_page();
 				})
 			}
-
-		  function ANALYTICS_PORTAL_SDK_make_filters_work() {
-		  	debug_helper(arguments, DEBUG);
-
-			  let elements_to_track = document.querySelectorAll('[pp]');
-				for (let i = 0; i < elements_to_track.length; i++) {
-					let el = elements_to_track[i];
-					el.addEventListener("change", function(e) { // dropdown
-						ANALYTICS_PORTAL_SDK_refresh_features_page_data_according_to_user_filters_setup();
-					}, false);	
-				}
-
-				/*
-				var elements_to_track = document.querySelectorAll('[track_name]');
-				for (let i = 0; i < elements_to_track.length; i++) {
-					var el = elements_to_track[i];
-					el.addEventListener("click", function(e) {
-						console.log("k");
-					}, false);	
-				}
-				*/
-
-				// ... add another listeners
-		  }
 
 		  function ANALYTICS_PORTAL_SDK_init_calls_over_time_chart_for_(chart_id) {
 				debug_helper(arguments, DEBUG);
@@ -514,7 +490,7 @@
 				debug_helper(arguments, DEBUG);
 
         // remember value
-        const topic = document.querySelector('[pp="topic"]').value;
+        const topic = document.getElementById('drpd:topic').value;
         window.localStorage.setItem('topic', topic);
 				ANALYTICS_PORTAL_SDK_refresh_features_page_data_according_to_user_filters_setup();
 			}
