@@ -1,14 +1,13 @@
 <!DOCTYPE html>
 <html>
 	<head>
-    <!--script async src="https://www.googletagmanager.com/gtag/js?id=G-J69ENZY4TQ"></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-J69ENZY4TQ"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
-
       gtag('config', 'G-J69ENZY4TQ');
-    </script-->
+    </script>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<title>Do They Use</title>
@@ -135,7 +134,10 @@
 
 		<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 		<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
-		<script>
+		<script> // https://stackoverflow.com/questions/40297763/how-to-disable-google-analytics-on-localhost
+      if (window.location.hostname == '') { // local file
+        window['ga-disable-UA-G-J69ENZY4TQ'] = true;
+      }
 	////////////////////// DB /////////////////////////
 			// separate tables in db
 			var db = [];
@@ -207,7 +209,7 @@
 
 
 	////////////////////// ANALYTICS_PORTAL_SDK /////////////////////////
-			const gtag = "ABCD"; // somehow via session ID mapping in DB, not in request
+			const ctag = "ABCD"; // somehow via session ID mapping in DB, not in request
 
 			function ANALYTICS_PORTAL_SDK_reset_datetime_filter() {
 				debug_helper(arguments, DEBUG);
@@ -263,7 +265,7 @@
         //else
           document.getElementById('drpd:topic').value = topic;
 
-				let user_filters = {"gtag": gtag, "topic": topic};
+				let user_filters = {"ctag": ctag, "topic": topic};
 
 				const df = document.getElementById("datetime_from").value;
 				if (df != '')
@@ -642,12 +644,12 @@
 				return kwargs;
 			}
 
-			function DB_SELECT_EMULATION_check_if_report_gtag_and_topic_match_them_in_user_filters(r, user_filters) {
+			function DB_SELECT_EMULATION_check_if_report_ctag_and_topic_match_them_in_user_filters(r, user_filters) {
 				debug_helper(arguments, DEBUG);
-				let gtag = user_filters['gtag']
+				let ctag = user_filters['ctag']
 				let topic = user_filters['topic']
 
-				if (r.gtag != gtag)
+				if (r.ctag != ctag)
 					return false;
 
 				if (r.topic != topic)
@@ -702,12 +704,12 @@
 				return true;
 			}
 
-			function DB_SELECT_EMULATION_check_if_report_gtag_topic_users_dates_match_user_filters(r, user_filters) {
+			function DB_SELECT_EMULATION_check_if_report_ctag_topic_users_dates_match_user_filters(r, user_filters) {
 				debug_helper(arguments, DEBUG);
 				if (!DB_SELECT_EMULATION_check_if_report_uid_matches_uids_in_user_filters(r, user_filters))
 					return false;
 
-				if (!DB_SELECT_EMULATION_check_if_report_gtag_and_topic_match_them_in_user_filters(r, user_filters))
+				if (!DB_SELECT_EMULATION_check_if_report_ctag_and_topic_match_them_in_user_filters(r, user_filters))
 					return false;
 
 				if (!DB_SELECT_EMULATION_check_if_report_date_matches_dates_in_user_filters(r, user_filters))
@@ -716,9 +718,9 @@
 				return true;
 			}
 
-			function DB_SELECT_DISTINCT_uid_WHERE_gtag_topic(user_filters) {
+			function DB_SELECT_DISTINCT_uid_WHERE_ctag_topic(user_filters) {
 				// SELECT DISTINCT uid FROM reports_table WHERE 1=1
-				// AND gtag = user_filters.gtag
+				// AND ctag = user_filters.ctag
 				// AND topic = user_filters.topic
 				// AND uid IN user_filters.uids_to_include
 				// AND uid NOT IN user_filters.uids_to_exclude
@@ -728,7 +730,7 @@
 				let uu = [];
 				for (let i = 0; i < db.length; i++) {
 					let r = db[i];
-					if (!DB_SELECT_EMULATION_check_if_report_gtag_topic_users_dates_match_user_filters(r, user_filters))
+					if (!DB_SELECT_EMULATION_check_if_report_ctag_topic_users_dates_match_user_filters(r, user_filters))
 						continue;
 					if (!uu.includes(r.uid)) {
 						uu.push(r.uid);
@@ -739,7 +741,7 @@
 
 			function DB_SELECT_all_WHERE_user_filters(user_filters) {
 				// SELECT * FROM reports_table WHERE 1=1
-				// AND gtag = user_filters.gtag
+				// AND ctag = user_filters.ctag
 				// AND topic = user_filters.topic
 				// AND uid IN user_filters.uids_to_include
 				// AND uid NOT IN user_filters.uids_to_exclude
@@ -750,7 +752,7 @@
 				var found = [];
 				for (let i = 0; i < db.length; i++) {
 					var r = db[i];
-					if (!DB_SELECT_EMULATION_check_if_report_gtag_topic_users_dates_match_user_filters(r, user_filters))
+					if (!DB_SELECT_EMULATION_check_if_report_ctag_topic_users_dates_match_user_filters(r, user_filters))
 						continue;
 					found.push(r);
 				}
@@ -759,7 +761,7 @@
 
 			function DB_SELECT_uid_count_WHERE_feature_LIKE_GROUP_BY_uid(user_filters) {
 				// SELECT uid, count() FROM reports_table WHERE 1=1
-				// AND gtag = user_filters.gtag
+				// AND ctag = user_filters.ctag
 				// AND topic = user_filters.topic
 				// AND uid IN user_filters.uids_to_include
 				// AND uid NOT IN user_filters.uids_to_exclude
@@ -773,7 +775,7 @@
 				let uu = {};
 				for (let i = 0; i < db.length; i++) {
 					let r = db[i];
-					if (!DB_SELECT_EMULATION_check_if_report_gtag_topic_users_dates_match_user_filters(r, user_filters))
+					if (!DB_SELECT_EMULATION_check_if_report_ctag_topic_users_dates_match_user_filters(r, user_filters))
 						continue;
 
 					let feature_in_db = r.feature_path.toString();
@@ -1123,7 +1125,7 @@
 				debug_helper(arguments, DEBUG);
 
 				let c = {};
-				c.gtag = gtag;
+				c.ctag = ctag;
 				let topic = EMULATOR_get_random_item_from_list(topics);
 				if (topic) {
 					c.topic = topic;
@@ -1153,7 +1155,7 @@
 	////////////////////// CLIENT'S SDK /////////////////////////
 			// ENV-DEPENDANT PARAMS
 			//var c = {};
-			//c.gtag = "ABC";
+			//c.ctag = "ABC";
 			//c.category = "web";  // to be used here without get from elements
 			//c.topic = "default";
 			//c.app_name = "Analytics";
@@ -1175,7 +1177,7 @@
 			}
 
       const CLIENT_SDK_topic = "real usage";
-      const CLIENT_SDK_gtag = "ABCD";
+      const CLIENT_SDK_ctag = "ABCD";
       const DTU_TAG = "dtu";
 			
 			var elements_to_track = document.querySelectorAll('[data-dtu]');
@@ -1217,7 +1219,7 @@
 
       function CLIENT_SDK_prepare_data_before_send(clicked, value) {
         let c = {};
-        c.gtag = CLIENT_SDK_gtag;
+        c.ctag = CLIENT_SDK_ctag;
         c.topic = CLIENT_SDK_topic;
         c.feature = clicked;
         c.value = value;
