@@ -126,10 +126,10 @@
   		    </div>
   			</div>
 
-  			<div class="row container-padding">
-          <div class="col">
-            <h4>Elements usage stats</h4>
-            <p id="feature_path" path='[""]' class="hidden"></p>
+  			<div class="row">
+          <div class="col-lg">
+            <h4>Elements usage stats for:</h4>
+            <p id="feature_path" path='[""]'></p>
             <div class="canvas-wrapper">
               <canvas id="features_calls_over_time_chart_id"></canvas>
             </div>
@@ -561,20 +561,35 @@
 				let user_filters = ANALYTICS_PORTAL_SDK_collect_user_filters_on_the_page();
 				let kwargs = TX_API_process_user_filters_request(user_filters);
 
-				ANALYTICS_PORTAL_SDK_refresh_feature_path(user_filters);
+				ANALYTICS_PORTAL_SDK_refresh_feature_path(user_filters, kwargs);
 				ANALYTICS_PORTAL_SDK_refresh_calls_over_time_for_chart_id_('features_calls_over_time_chart_id', user_filters, kwargs);
 			}
 
-			function ANALYTICS_PORTAL_SDK_refresh_feature_path(user_filters) {
+			function ANALYTICS_PORTAL_SDK_refresh_feature_path(user_filters, kwargs) {
 				debug_helper(arguments, DEBUG);
 
+        const elements = ANALYTICS_PORTAL_SDK_get_elements_in_reports(kwargs);
 				let feature_path_element = document.getElementById("feature_path");
 				let feature_path = user_filters.feature_path;
-				let feature_path_html = 'usage stats for the element: ';
+        //console.log(elements)
 
-        feature_path_html += '<select class=""><option>topic</option></select>'
+        let feature_path_html = '<select class="form-control form-select" disabled><option>all the elements</option></select>'
 				feature_path_element.innerHTML = feature_path_html;
 			}
+
+      function ANALYTICS_PORTAL_SDK_get_elements_in_reports(kwargs) {
+        debug_helper(arguments, DEBUG);
+
+        // TODO: not in reports, but overall.
+        let elements = [''];
+        const reports_match_user_filters = kwargs['reports_match_user_filters'];
+        for (let i in reports_match_user_filters) {
+          let r = reports_match_user_filters[i];
+          if (!elements.includes(r.feature))
+            elements.push(r.feature);
+        }
+        return elements;
+      }
 
       /*
 			function ANALYTICS_PORTAL_SDK_feature_path_click(element) {
@@ -760,27 +775,6 @@
 					return false;
 
 				return true;
-			}
-
-			function DB_SELECT_DISTINCT_uid_WHERE_ctag_topic(user_filters) {
-				// SELECT DISTINCT uid FROM reports_table WHERE 1=1
-				// AND ctag = user_filters.ctag
-				// AND topic = user_filters.topic
-				// AND uid IN user_filters.uids_to_include
-				// AND uid NOT IN user_filters.uids_to_exclude
-				// AND date_time BETWEEN (user_filters.date_time_from, user_filters.date_time_to);
-				debug_helper(arguments, DEBUG);
-
-				let uu = [];
-				for (let i = 0; i < db.length; i++) {
-					let r = db[i];
-					if (!DB_SELECT_EMULATION_check_if_report_ctag_topic_users_dates_match_user_filters(r, user_filters))
-						continue;
-					if (!uu.includes(r.uid)) {
-						uu.push(r.uid);
-					}
-				}
-				return uu;
 			}
 
 			function DB_SELECT_all_WHERE_user_filters(user_filters) {
