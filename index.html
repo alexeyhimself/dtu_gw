@@ -68,7 +68,12 @@
       .container-padding {
         padding: 5px;
       }
-
+      .active-filter {
+        background-color: mediumseagreen;
+        padding: 3px 7px 5px 7px;
+        border-radius: 4px;
+        color: white;
+      }
 		</style>
 	</head>
 	<body>
@@ -259,12 +264,23 @@
 				for (let i = 0; i < elements_to_track.length; i++) {
 					let el = elements_to_track[i];
 					el.addEventListener("click", function(e) {
+            ANALYTICS_PORTAL_SDK_remove_all_active_filter_class_from_time_shortcuts();
+            this.classList.add('active-filter');
 						const timedelta_ms = this.getAttribute('timedelta_ms');
 						ANALYTICS_PORTAL_SDK_set_datetime_filter(timedelta_ms);
 						ANALYTICS_PORTAL_SDK_refresh_features_page_data_according_to_user_filters_setup();
 					}, false);
 				}
 			}
+
+      function ANALYTICS_PORTAL_SDK_remove_all_active_filter_class_from_time_shortcuts() {
+        const elements_to_track = document.querySelectorAll('.time-shortcut');
+        for (let i in elements_to_track) {
+          let el = elements_to_track[i];
+          if (el.classList)
+            el.classList.remove('active-filter')
+        }
+      }
 
 			function ANALYTICS_PORTAL_SDK_collect_user_filters_on_the_page() {
 				debug_helper(arguments, DEBUG);
@@ -303,6 +319,7 @@
 				// add listeners
 				ANALYTICS_PORTAL_SDK_make_refresh_button_work();
 				ANALYTICS_PORTAL_SDK_make_reset_filters_button_work();
+        ANALYTICS_PORTAL_SDK_make_reset_active_time_filters_work();
         ANALYTICS_PORTAL_SDK_make_topic_dropdown_work();
 			}
 
@@ -329,9 +346,24 @@
 
 				let btn = document.getElementById('btn:reset_features_page_filters');
 				btn.addEventListener("click", function(e) {
+          ANALYTICS_PORTAL_SDK_remove_all_active_filter_class_from_time_shortcuts();
 					ANALYTICS_PORTAL_SDK_reset_filters_on_features_page();
 				})
 			}
+
+      function ANALYTICS_PORTAL_SDK_make_reset_active_time_filters_work() {
+        debug_helper(arguments, DEBUG);
+
+        const from = document.getElementById('datetime_from');
+        from.addEventListener("change", function(e) {
+          ANALYTICS_PORTAL_SDK_remove_all_active_filter_class_from_time_shortcuts();
+        });
+
+        const to = document.getElementById('datetime_to');
+        to.addEventListener("change", function(e) {
+          ANALYTICS_PORTAL_SDK_remove_all_active_filter_class_from_time_shortcuts();
+        });
+      }
 
 		  function ANALYTICS_PORTAL_SDK_init_calls_over_time_chart_for_(chart_id) {
 				debug_helper(arguments, DEBUG);
@@ -648,11 +680,6 @@
 
 				let kwargs = {};
 
-				const unique_uids_and_calls_num_for_feature_sorted_desc = DB_SELECT_uid_count_WHERE_feature_LIKE_GROUP_BY_uid(user_filters);
-				kwargs['unique_uids_and_calls_num_for_feature_sorted_desc'] = unique_uids_and_calls_num_for_feature_sorted_desc;
-				kwargs['unique_uids_and_calls_num_for_feature_sorted_desc_length'] = unique_uids_and_calls_num_for_feature_sorted_desc.length;
-				kwargs['unique_uids_calls_for_feature'] = TX_API_get_sum(unique_uids_and_calls_num_for_feature_sorted_desc);
-
 				const reports_match_user_filters  = DB_SELECT_all_WHERE_user_filters(user_filters);
 				kwargs['reports_match_user_filters'] = reports_match_user_filters;
 				kwargs['reports_match_user_filters_length'] = reports_match_user_filters.length;
@@ -774,54 +801,6 @@
 					found.push(r);
 				}
 				return found;
-			}
-
-			function DB_SELECT_uid_count_WHERE_feature_LIKE_GROUP_BY_uid(user_filters) {
-				// SELECT uid, count() FROM reports_table WHERE 1=1
-				// AND ctag = user_filters.ctag
-				// AND topic = user_filters.topic
-				// AND uid IN user_filters.uids_to_include
-				// AND uid NOT IN user_filters.uids_to_exclude
-				// AND date_time BETWEEN (user_filters.date_time_from, user_filters.date_time_to)
-				// AND feature LIKE 'user_filters.feature_path %'
-				// GROUP BY uid
-				// ORDER by count() DESC;
-				debug_helper(arguments, DEBUG);
-
-				let feature_path = user_filters['feature_path'];
-				let uu = {};
-				for (let i = 0; i < db.length; i++) {
-					let r = db[i];
-					if (!DB_SELECT_EMULATION_check_if_report_ctag_topic_users_dates_match_user_filters(r, user_filters))
-						continue;
-
-					let feature_in_db = r.feature_path.toString();
-					let feature_in_search = feature_path.toString();
-					if (feature_in_db.startsWith(feature_in_search)) { // re.match('^substring', string)
-						if (feature_in_search != "") {
-							let feature_in_db_symbol_at_feature_in_search_length = feature_in_db[feature_in_search.length];
-							if (!(feature_in_db_symbol_at_feature_in_search_length == ',' || 
-										feature_in_db_symbol_at_feature_in_search_length == '' || // avoid matching "a" and "ab"
-										feature_in_db_symbol_at_feature_in_search_length == undefined)) { // strings are equal
-								continue;
-							}	
-						}
-						if (r.uid in uu)
-							uu[r.uid] = uu[r.uid] + 1;
-						else
-							uu[r.uid] = 1;	
-					}
-				}
-
-				let sorted_by_value_desc = []; // https://stackoverflow.com/questions/1069666/sorting-object-property-by-values
-				for (let uid in uu) {
-				    sorted_by_value_desc.push([uid, uu[uid]]);
-				}
-				sorted_by_value_desc.sort(function(a, b) {
-				    return b[1] - a[1]; // desc
-				});
-
-				return sorted_by_value_desc;
 			}
 
 			const TX_API_arrays_are_equal = (a, b) => // https://www.freecodecamp.org/news/how-to-compare-arrays-in-javascript/
@@ -1142,8 +1121,6 @@
 			const max_number_of_days_ago = 50;
 			const max_time_ago = Date.now() - 86400 * 1000 * max_number_of_days_ago;
 			var emulated_time = max_time_ago;
-      //var random_time_frame = 15;
-      //var random_time_unit = UNITS_NAMES_VALUES.second;
 
 			function EMULATOR_get_random_date(random_time_frame, random_time_unit) {
 				debug_helper(arguments, DEBUG);
@@ -1255,7 +1232,7 @@
           element.addEventListener("change", function(e) {
             var clicked = this.dataset[DTU_TAG];
             var value = this.value;
-            
+            //ANALYTICS_PORTAL_SDK_remove_all_active_filter_class_from_time_shortcuts(); // has to be separate listener, just done here for fast try
             const c = CLIENT_SDK_prepare_data_before_send(clicked, value);
             console.log(c);
             CLIENT_SDK_send_to_telemetry_api(c);
