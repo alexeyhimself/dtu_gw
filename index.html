@@ -16,70 +16,9 @@
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<title>Do They Use?</title>
-		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
-		<style type="text/css">
-			.form-control {
-				min-height: 32px;
-				height: 0;
-			}
-			.form-select, .form-control {
-				cursor: pointer;
-        line-height: 1.1;
-			}
-			.resize-canvas-wrapper {
-				width: 100px !important; /* https://stackoverflow.com/questions/42340342/cant-make-chart-js-responsive */
-			}
-			.look-like-link {
-				text-decoration: underline;
-				color: rgba(var(--bs-link-color-rgb),var(--bs-link-opacity,1));
-				cursor: pointer;
-			}
-			.look-like-link:hover {
-				--bs-link-color-rgb: var(--bs-link-hover-color-rgb);
-			}
-			.no-margin-bottom {
-				margin-bottom: 0!important;
-			}
-			.time-shortcut {
-				margin-left: 5px;
-				font-size: 14px;
-			}
-			.custom-label {
-				font-weight: bold;
-				font-size: 14px;
-				color: gray;
-			}
-			.custom-helper {
-				font-size: 14px;
-				color: gray;
-        margin-top: 5px;
-			}
-      .refresh_reset_buttons {
-        padding-top: 25px;
-        margin-bottom: 1rem;
-      }
-      @media screen and (max-width: 992px) {
-          .refresh_reset_buttons {
-          padding-top: 0;
-        }
-      }
-      .hidden {
-        display: none;
-      }
-      .canvas-wrapper {
-        width: 100%;
-        border: 1px solid #dee2e6;
-      }
-      .container-padding {
-        padding: 5px;
-      }
-      .active-filter {
-        background-color: mediumseagreen;
-        padding: 3px 7px 5px 7px;
-        border-radius: 4px;
-        color: white;
-      }
-		</style>
+
+		<link href="src/web/common/bootstrap/bootstrap.5.3.0-alpha.min.css" rel="stylesheet">
+		<link href="src/web/account/dtu_css.css" rel="stylesheet">
 	</head>
 	<body>
 		<div class="container-fluid">
@@ -143,22 +82,16 @@
   		</div>
     </div>
 
-		<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-		<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+		<script src="src/web/common/chartjs/chart-4.2.1.js"></script>
+		<script src="src/web/common/chartjs/chartjs-adapter-date-fns-3.0.0.bundle.min.js"></script>
+
+		<script src="src/common/helpers.js"></script>
+		<script src="src/web/account/dtu_sdk.js"></script>
 
     <script src="src/db/dtu_db.js"></script>
     <script src="src/rx_api/dtu_rx_api.js"></script>
 		<script src="src/tx_api/dtu_tx_api.js"></script>
-		<script src="src/web/account/dtu_sdk.js"></script>
 
-		<script type="text/javascript">
-			var DEBUG = false;
-      function debug_helper(args, is_debug) {
-        if (!is_debug)
-          return;
-        console.log(args.callee.name);
-      }
-		</script>
     <script src="src/customer/dtu_sdk.js"></script>
     <script type="text/javascript">
       ANALYTICS_PORTAL_SDK_start();

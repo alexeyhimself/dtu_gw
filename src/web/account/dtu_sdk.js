@@ -1,3 +1,6 @@
+//import("src/web/common/chartjs/chart-4.2.1.js");
+//import("src/web/common/chartjs/chartjs-adapter-date-fns-3.0.0.bundle.min.js");
+
 const ctag = "ABCD"; // somehow via session ID mapping in DB, not in request
 
 function ANALYTICS_PORTAL_SDK_get_chart_size(chart_id) {
