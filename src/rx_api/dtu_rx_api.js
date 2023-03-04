@@ -11,30 +11,24 @@ function DB_INSERT_report(r) {
   db.push(r);
 }
 
-function DB_UPDATE_tags(r) {
+function DB_UPDATE_elements(r) {
   debug_helper(arguments, DEBUG);
+  const element = r['feature'];
+  const ctag = r['ctag'];
+  const topic = r['topic'];
 
-  if (!db_tags[r.gtag]) {
-    let topic = r.topic;
-    db_tags[r.gtag] = {topic: r.tags};
+  if (!db_elements[ctag]) {
+    db_elements[ctag] = {};
+    db_elements[ctag][topic] = [element];
   }
   else {
-    if (!db_tags[r.gtag][r.topic]) {
-      db_tags[r.gtag][r.topic] = r.tags;
+    if (!db_elements[ctag][topic]) {
+      db_elements[ctag][topic] = [element];
     }
     else {
-      let already_saved_tags = db_tags[r.gtag][r.topic];
-      for (let tag in r.tags) {
-        let value = r.tags[tag][0]; // support multiselect here
-        if (tag in already_saved_tags) {
-          if (already_saved_tags[tag].includes(value))
-            continue;
-          already_saved_tags[tag].push(value);
-        }
-        else {
-          already_saved_tags[tag] = [r.tags[tag]];
-        }
-      }
+      let already_saved_elements = db_elements[ctag][topic];
+      if (!already_saved_elements.includes(element))
+        already_saved_elements.push(element);
     }
   }
 }
@@ -43,12 +37,10 @@ function RX_API_save_to_db(r) {
   debug_helper(arguments, DEBUG);
 
   DB_INSERT_report(r);
-  DB_UPDATE_tags(r);
+  DB_UPDATE_elements(r);
 }
 
 function RX_API_submint_report(report) {
   debug_helper(arguments, DEBUG);
-  let r = JSON.parse(report);
-  RX_API_save_to_db(r);
-  //ANALYTICS_PORTAL_SDK_refresh_features_page_data_according_to_user_filters_setup(); // temporary for debug
+  RX_API_save_to_db(JSON.parse(report));
 }

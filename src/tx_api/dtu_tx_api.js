@@ -1,10 +1,3 @@
-function TX_API_get_all_from_db() {  // debug func
-  debug_helper(arguments, DEBUG);
-  for(var i = 0; i < db.length; i++) {
-    console.log(JSON.stringify(db[i]));
-  }
-}
-
 /*
 function TX_API_sum_values_of_dict(obj) { // https://stackoverflow.com/questions/16449295/how-to-sum-the-values-of-a-javascript-object
   return Object.values(obj).reduce((a, b) => a + b, 0);
@@ -95,6 +88,10 @@ function TX_API_process_user_filters_request(user_filters) {
   const reports_match_user_filters  = DB_SELECT_all_WHERE_user_filters(user_filters);
   kwargs['reports_match_user_filters'] = reports_match_user_filters;
   kwargs['reports_match_user_filters_length'] = reports_match_user_filters.length;
+
+  const topics_and_elements  = DB_SELECT_DISTINCT_topics_AND_elements_WHERE_ctag_topic(user_filters);
+  kwargs['elements_match_ctag_topic'] = topics_and_elements.elements;
+  kwargs['topics_match_ctag'] = topics_and_elements.topics;
 
   //console.log(kwargs)
   return kwargs;

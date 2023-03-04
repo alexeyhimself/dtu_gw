@@ -75,7 +75,7 @@ function ANALYTICS_PORTAL_SDK_collect_user_filters_on_the_page() {
   //if (!topic)
     topic = document.getElementById('drpd:topic').value;
   //else
-    document.getElementById('drpd:topic').value = topic;
+    //document.getElementById('drpd:topic').value = topic;
 
   let user_filters = {"ctag": ctag, "topic": topic};
 
@@ -89,6 +89,10 @@ function ANALYTICS_PORTAL_SDK_collect_user_filters_on_the_page() {
 
   let feature_path = document.getElementById("feature_path").getAttribute("path");
   user_filters["feature_path"] = JSON.parse(feature_path);
+
+  const e = document.getElementById("drpd:elements").value;
+  if (e != '')
+    user_filters["chosen_element"] = e;
 
   return user_filters;
 }
@@ -104,9 +108,23 @@ async function ANALYTICS_PORTAL_SDK_start() {
 
   // add listeners
   ANALYTICS_PORTAL_SDK_make_refresh_button_work();
+  ANALYTICS_PORTAL_SDK_make_element_dropdown_work();
   ANALYTICS_PORTAL_SDK_make_reset_filters_button_work();
   ANALYTICS_PORTAL_SDK_make_reset_active_time_filters_work();
   ANALYTICS_PORTAL_SDK_make_topic_dropdown_work();
+}
+
+function ANALYTICS_PORTAL_SDK_make_element_dropdown_work() {
+  debug_helper(arguments, DEBUG);
+
+  let btn = document.getElementById('drpd:elements');
+  btn.addEventListener("change", function(e) {
+    let p = [''];
+    if (this.value != 'all the elements')
+      p = ['', this.value];
+    document.getElementById('feature_path').setAttribute('path', JSON.stringify(p));
+    ANALYTICS_PORTAL_SDK_refresh_features_page_data_according_to_topic_change();
+  })
 }
 
 function ANALYTICS_PORTAL_SDK_make_topic_dropdown_work() {
@@ -335,10 +353,40 @@ function ANALYTICS_PORTAL_SDK_reset_filters_on_features_page() {
 function ANALYTICS_PORTAL_SDK_refresh_features_page_data_according_to_topic_change() {
   debug_helper(arguments, DEBUG);
 
-  // remember value
   const topic = document.getElementById('drpd:topic').value;
-  window.localStorage.setItem('topic', topic);
+  // window.localStorage.setItem('topic', topic);
   ANALYTICS_PORTAL_SDK_refresh_features_page_data_according_to_user_filters_setup();
+}
+
+/*
+function ANALYTICS_PORTAL_SDK_refresh_topics(kwargs) {
+  debug_helper(arguments, DEBUG);
+
+  const topics = kwargs.topics_match_ctag;
+  let topics_html = '';
+  for (let i in topics) {
+    topics_html += '<option>' + topics[i] + '</option>';
+  }
+  topics_html += '<option>real usage</option>';
+  document.getElementById('drpd:topic').innerHTML = topics_html;
+}
+*/
+function ANALYTICS_PORTAL_SDK_refresh_elements_list(kwargs, user_filters) {
+  debug_helper(arguments, DEBUG);
+
+  const chosen_element = user_filters.chosen_element;
+  const elements = kwargs.elements_match_ctag_topic;
+  let elements_html = '<option>all the elements</option>';
+  for (let i in elements) {
+    let element = elements[i];
+    if (element == chosen_element)
+      elements_html += '<option selected>';
+    else 
+      elements_html += '<option>';
+
+    elements_html += element + '</option>';
+  }
+  document.getElementById('drpd:elements').innerHTML = elements_html;
 }
 
 function ANALYTICS_PORTAL_SDK_refresh_features_page_data_according_to_user_filters_setup() {
@@ -347,21 +395,21 @@ function ANALYTICS_PORTAL_SDK_refresh_features_page_data_according_to_user_filte
   let user_filters = ANALYTICS_PORTAL_SDK_collect_user_filters_on_the_page();
   let kwargs = TX_API_process_user_filters_request(user_filters);
 
-  ANALYTICS_PORTAL_SDK_refresh_feature_path(user_filters, kwargs);
+  // ANALYTICS_PORTAL_SDK_refresh_topics(kwargs);
+  ANALYTICS_PORTAL_SDK_refresh_elements_list(kwargs, user_filters);
+  // ANALYTICS_PORTAL_SDK_refresh_feature_path(user_filters, kwargs);
   ANALYTICS_PORTAL_SDK_refresh_calls_over_time_for_chart_id_('features_calls_over_time_chart_id', user_filters, kwargs);
 }
 
+/*
 function ANALYTICS_PORTAL_SDK_refresh_feature_path(user_filters, kwargs) {
   debug_helper(arguments, DEBUG);
 
   const elements = ANALYTICS_PORTAL_SDK_get_elements_in_reports(kwargs);
   let feature_path_element = document.getElementById("feature_path");
   let feature_path = user_filters.feature_path;
-  //console.log(elements)
-
-  let feature_path_html = '<select class="form-control form-select" disabled><option>all the elements</option></select>'
-  feature_path_element.innerHTML = feature_path_html;
 }
+*/
 
 function ANALYTICS_PORTAL_SDK_get_elements_in_reports(kwargs) {
   debug_helper(arguments, DEBUG);
