@@ -1,96 +1,95 @@
-// ENV-DEPENDANT PARAMS
-//var c = {};
-//c.ctag = "ABC";
-//c.category = "web";  // to be used here without get from elements
-//c.topic = "default";
-//c.app_name = "Analytics";
-
-// ENV-INDEPENDANT PARAMS
-//c.app_version = "4.26.1";
-//c.release = "0.1.0.0";
-
 // SDK APP FUNCTIONS
 //const excluded_events = "mousedown mouseup mousemove mouseover mouseout mousewheel";
 //const events = "click focus blur keydown change dblclick keydown keyup keypress textInput touchstart touchmove touchend touchcancel resize scroll zoom select change submit reset".split(" ");
 
-const CLIENT_SDK_DTU_TAG = "dtu";
-const CLIENT_SDK_DTU_ELEMENTS_TO_TRACK = document.querySelectorAll('[data-' + CLIENT_SDK_DTU_TAG + ']');
-const CLIENT_SDK_topic = "real usage";
-const CLIENT_SDK_ctag = "ABCD";
+const DEFAULT_CTAG = 'ABCD';
+const DEFAULT_TOPIC = 'default';
+const DEFAULT_DTU_DATASET_ATTRIBUTE = "dtu";
+const DEFAULT_ELEMENTS_EVENTS = {
+        'select-one': ['change'],
+        'datetime-local': ['change'],
+        'button': ['click'],
+        '': ['click'], // link button in bootstrap 5 at least
+        undefined: ['click'],
+      };
 
-function CLIENT_SDK_send_to_telemetry_api(report) {
-  //console.log(report)
-	jr = JSON.stringify(report);
-	RX_API_submint_report(jr); // send emulation
-}
+class DoTheyUse {
+  constructor(config) {
+    this.ctag = DEFAULT_CTAG;
+    this.topic = DEFAULT_TOPIC;
+    this.dtu_attr = DEFAULT_DTU_DATASET_ATTRIBUTE;
+    this.listen_default_evemts = true;
 
-for (let i = 0; i < CLIENT_SDK_DTU_ELEMENTS_TO_TRACK.length; i++) {
-	let element = CLIENT_SDK_DTU_ELEMENTS_TO_TRACK[i];
+    if (config) {
+      if (config.ctag)
+        this.ctag = config.ctag;
+      if (config.topic)
+        this.topic = config.topic;
+      if (config.dtu_attr)
+        this.dtu_attr = config.dtu_attr;
+      if (config.listen)
+        this.listen_default_evemts = config.listen;
+    }
+    
+    this.collect_dtu_elements();
+    if (this.listen_default_evemts)
+      this.listen();
+  }
 
-  if (element.type == "select-one") { // dropdown
-    element.addEventListener("change", function(e) {
-      console.log("element type: ", element.type)
-      var clicked = this.dataset[CLIENT_SDK_DTU_TAG];
-      var value = this.value;
+  init_report() {
+    this.report = {};
+    this.report.ctag = this.ctag;
+    this.report.topic = this.topic;
+  }
 
-      const c = CLIENT_SDK_prepare_data_before_send(clicked, value);
-      console.log(c);
-      CLIENT_SDK_send_to_telemetry_api(c);
-    }, false);
+  enrich_report(element, value) {
+    this.report.feature = element;
+    this.report.feature_path = ['', element];
+    this.report.value = value;
+    this.report.date_time = Date.now();
   }
-  else if (element.type == "datetime-local") {
-    element.addEventListener("change", function(e) {
-      console.log("element type: ", element.type)
-      var clicked = this.dataset[CLIENT_SDK_DTU_TAG];
-      var value = this.value;
-      const c = CLIENT_SDK_prepare_data_before_send(clicked, value);
-      //console.log(c);
-      CLIENT_SDK_send_to_telemetry_api(c);
-    }, false);
-  }
-  else if (element.type == "button") {
-    element.addEventListener("click", function(e) {
-      console.log("element type: ", element.type)
-      var clicked = this.dataset[CLIENT_SDK_DTU_TAG];
-      var value = this.value;
-      const c = CLIENT_SDK_prepare_data_before_send(clicked, value);
-      //console.log(c);
-      CLIENT_SDK_send_to_telemetry_api(c);
-    }, false);
-  }
-  else if (element.type == "") { // link but button in bootstrap 5
-    element.addEventListener("click", function(e) {
-      console.log("element type: ", element.type)
-      var clicked = this.dataset[CLIENT_SDK_DTU_TAG];
-      var value = this.value;
-      const c = CLIENT_SDK_prepare_data_before_send(clicked, value);
-      //console.log(c);
-      CLIENT_SDK_send_to_telemetry_api(c);
-    }, false);
-  }
-  else if (element.type === undefined) { // link
-    element.addEventListener("click", function(e) {
-      var clicked = 'link';
-      var value = this.dataset[CLIENT_SDK_DTU_TAG];
-      const c = CLIENT_SDK_prepare_data_before_send(clicked, value);
-      //console.log(c);
-      CLIENT_SDK_send_to_telemetry_api(c);
-    }, false);
-  }
-  else { // some link or any clickable thing
-    element.addEventListener("click", function(e) {
-      console.error("clicked unknown element type: ", element.type)
-    }, false);
-  }
-}
 
-function CLIENT_SDK_prepare_data_before_send(clicked, value) {
-  let c = {};
-  c.ctag = CLIENT_SDK_ctag;
-  c.topic = CLIENT_SDK_topic;
-  c.feature = clicked;
-  c.feature_path = ['', clicked];
-  c.value = value;
-  c.date_time = Date.now();
-  return c;
-}
+  make_report(element, value) {
+    this.init_report();
+    this.enrich_report(element, value);
+  }
+
+  send_report_to_dtu_api() {
+    console.log(this.report)
+    // const json_report = JSON.stringify(this.report); // stringify before sending as payload
+    const json_report = this.report; // till no real networking - no stringify as well to save CPU time
+    DTU_RX_API_submint_report_endpoint(json_report);
+  }
+
+  send(element, value) {
+    this.make_report(element, value);
+    this.send_report_to_dtu_api();
+  }
+
+  collect_dtu_elements() {
+    this.elements_to_listen_to = document.querySelectorAll('[data-' + this.dtu_attr + ']');
+  }
+  listen() {
+    for (let i = 0; i < this.elements_to_listen_to.length; i++) {
+      let element = this.elements_to_listen_to[i];
+      let events_to_listen = DEFAULT_ELEMENTS_EVENTS[element.type];
+      let dtu_this = this;
+      for (let j = 0; j < events_to_listen.length; j++) {
+        try {
+          element.addEventListener(events_to_listen[j], function (e) {
+            const el = this.dataset[DEFAULT_DTU_DATASET_ATTRIBUTE];
+            const val = this.value;
+            dtu_this.send(el, val);
+          }, false);
+        }
+        catch (error) {
+          console.error(error, 'at:', element);
+        }
+      }
+    }
+  }
+};
+
+function dotheyuse(config) {
+  const dtu = new DoTheyUse(config);
+};

@@ -35,12 +35,13 @@ function DB_UPDATE_elements(r) {
 
 function RX_API_save_to_db(r) {
   debug_helper(arguments, DEBUG);
-
-  DB_INSERT_report(r);
-  DB_UPDATE_elements(r);
+  // let report = JSON.parse(r); // parse payload after receive
+  let report = r; // till no real networking - no parse to save CPU time
+  DB_INSERT_report(report);
+  DB_UPDATE_elements(report);
 }
 
-function RX_API_submint_report(report) {
+function DTU_RX_API_submint_report_endpoint(report) {
   debug_helper(arguments, DEBUG);
-  RX_API_save_to_db(JSON.parse(report));
+  RX_API_save_to_db(report);
 }

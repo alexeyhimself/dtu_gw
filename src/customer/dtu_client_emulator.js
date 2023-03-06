@@ -90,6 +90,6 @@ generate_fake_data();
 function CLIENT_SDK_EMULATOR_send_to_telemetry_api(report) {
   debug_helper(arguments, DEBUG);
   //console.log(report)
-	jr = JSON.stringify(report);
-	RX_API_submint_report(jr); // send emulation
+	//jr = JSON.stringify(report);  // till no real networking - no stringify to save CPU time
+	DTU_RX_API_submint_report_endpoint(report); // send emulation
 }
