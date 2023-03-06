@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+	<head>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-J69ENZY4TQ"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-J69ENZY4TQ');
+    </script>
+    <!--script> // https://stackoverflow.com/questions/40297763/how-to-disable-google-analytics-on-localhost
+      if (window.location.hostname == '') { // local file
+        window['ga-disable-UA-G-J69ENZY4TQ'] = true;
+      }
+    </script-->
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>Do They Use?</title>
+
+		<link href="src/web/common/bootstrap/bootstrap.5.3.0-alpha.min.css" rel="stylesheet">
+		<link href="src/web/account/dtu_css.css" rel="stylesheet">
+	</head>
+	<body>
+		<div class="container-fluid">
+			<div class="row container-padding">
+        <div class="row">
+          <div class="col-lg-2">
+            <label for="topic" class="form-label no-margin-bottom custom-label">topic:</label>
+            <select class="form-control form-select" data-dtu="topic" id="drpd:topic">
+              <option>auto-generated (light)</option>
+              <option>auto-generated (heavy)</option>
+              <option>real usage</option>
+            </select>
+          </div>
+        
+					<div class="col-lg">
+            <div class="row">
+              <div class="col-sm">
+                <label for="datetime_from" class="form-label no-margin-bottom custom-label">date-time from:</label>
+    		        <input id="datetime_from" class="form-control" type="datetime-local" data-dtu="date-time from"/>
+              </div>
+              <div class="col-sm">
+                <label for="datetime_to" class="form-label no-margin-bottom custom-label">date-time to:</label>
+  		          <input id="datetime_to" class="form-control" type="datetime-local" data-dtu="date-time to"/>
+              </div>
+  		      
+    		      <p class="custom-helper">Show last: 
+                <span class="time-shortcut look-like-link" timedelta_ms="60000" data-dtu="1 min">1 min</span>
+    		      	<span class="time-shortcut look-like-link" timedelta_ms="900000" data-dtu="15 min">15 min</span>
+    		      	<span class="time-shortcut look-like-link" timedelta_ms="3600000" data-dtu="1 hour">1 hour</span>
+                <span class="time-shortcut look-like-link" timedelta_ms="7200000" data-dtu="2 hour">2 hour</span>
+                <span class="time-shortcut look-like-link" timedelta_ms="43200000" data-dtu="12 hour">12 hour</span>
+    		      	<span class="time-shortcut look-like-link" timedelta_ms="86400000" data-dtu="24 hours">24 hours</span>
+                <span class="time-shortcut look-like-link" timedelta_ms="259200000" data-dtu="3 days">3 days</span>
+    		      	<span class="time-shortcut look-like-link" timedelta_ms="604800000" data-dtu="7 days">7 days</span>
+                <span class="time-shortcut look-like-link" timedelta_ms="1209600000" data-dtu="14 days">14 days</span>
+                <span class="time-shortcut look-like-link" timedelta_ms="1728000000" data-dtu="20 days">20 days</span>
+    		      	<span class="time-shortcut look-like-link" timedelta_ms="2592000000" data-dtu="30 days">30 days</span>
+    		      	<span class="time-shortcut look-like-link" timedelta_ms="8640000000" data-dtu="100 days">100 days</span>
+                <span class="time-shortcut look-like-link" timedelta_ms="31536000000" data-dtu="365 days">365 days</span>
+                <span class="time-shortcut look-like-link" timedelta_ms="63072000000" data-dtu="2 years">2 years</span>
+                <span class="time-shortcut look-like-link" timedelta_ms="86400000000" data-dtu="1000 days">1000 days</span>
+    		    	</p>
+            </div>
+          </div>
+
+  		    <div class="col-lg-3 refresh_reset_buttons">
+  		    	<button id="btn:refresh_features_page_data_according_to_filters_setup" type="button" class="btn btn-primary btn-sm" data-dtu="apply filter">Apply filter</button>
+  		    	<button id="btn:reset_features_page_filters" type="button" class="btn btn-secondary btn-sm" data-dtu="reset filter">Reset filter</button>
+  		    </div>
+  			</div>
+
+  			<div class="row">
+          <div class="col-lg">
+            <h4>Usage stats for:</h4>
+            <p id="feature_path" path='[""]'>
+            	<select id="drpd:elements" class="form-control form-select" data-dtu="element dropdown"></select>
+            </p>
+            <div class="canvas-wrapper">
+              <canvas id="features_calls_over_time_chart_id"></canvas>
+            </div>
+          </div>
+        </div>
+  		</div>
+    </div>
+
+		<script src="src/web/common/chartjs/chart-4.2.1.js"></script>
+		<script src="src/web/common/chartjs/chartjs-adapter-date-fns-3.0.0.bundle.min.js"></script>
+
+		<script src="src/common/helpers.js"></script>
+
+    <script src="src/db/dtu_db.js"></script>
+    <script src="src/rx_api/dtu_rx_api.js"></script>
+    <script src="src/customer/dtu_client_emulator.js"></script>
+
+		<script src="src/tx_api/dtu_tx_api.js"></script>
+
+		<script src="src/web/account/dtu_sdk.js"></script>
+    <script src="src/customer/dtu_sdk.js"></script>
+    <script type="text/javascript">
+      ANALYTICS_PORTAL_SDK_start();
+    </script>
+	</body>
+</html>
