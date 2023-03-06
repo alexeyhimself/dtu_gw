@@ -38,7 +38,7 @@
   padding-top: 25px;
   margin-bottom: 1rem;
 }
-@media screen and (max-width: 992px) {
+@media screen and (max-width: 991px) {
     .refresh_reset_buttons {
     padding-top: 0;
   }
@@ -58,4 +58,24 @@
   padding: 3px 7px 5px 7px;
   border-radius: 4px;
   color: white;
+}
+
+
+.bg-light {
+  background-color: transparent!important;
+  border-bottom: 1px solid;
+  border-color: #dee2e6;
+}
+.navbar-toggler {
+  border: 0px;
+}
+.navbar-brand {
+  width: 0px;
+  padding: 0px;
+  margin: 0;
+}
+@media screen and (min-width: 991px) {
+  .navbar {
+    height: 40px;
+  }
 }

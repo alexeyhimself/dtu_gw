@@ -49,8 +49,18 @@ for (let i = 0; i < DTU_ELEMENTS_TO_TRACK.length; i++) {
       CLIENT_SDK_send_to_telemetry_api(c);
     }, false);
   }
+  else if (element.type == "button") {
+    element.addEventListener("click", function(e) {
+      var clicked = this.dataset[DTU_TAG];
+      var value = this.value;
+      //ANALYTICS_PORTAL_SDK_remove_all_active_filter_class_from_time_shortcuts(); // has to be separate listener, just done here for fast try
+      const c = CLIENT_SDK_prepare_data_before_send(clicked, value);
+      console.log(c);
+      CLIENT_SDK_send_to_telemetry_api(c);
+    }, false);
+  }
   else { // some link or any clickable thing
-    //console.log(element.type)
+    console.log(element.type)
     element.addEventListener("click", function(e) {
       const clicked = 'link';
       const value = this.dataset[DTU_TAG];
