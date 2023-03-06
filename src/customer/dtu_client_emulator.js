@@ -1,6 +1,6 @@
 const EMULATOR_CTAG = 'ABCD';
-const DTU_TAG = "dtu";
-const DTU_ELEMENTS_TO_TRACK = document.querySelectorAll('[data-' + DTU_TAG + ']');
+const EMULATOR_DTU_TAG = "dtu";
+const EMULATOR_DTU_ELEMENTS_TO_TRACK = document.querySelectorAll('[data-' + EMULATOR_DTU_TAG + ']');
 
 function EMULATOR_get_random_int_between(min, max) { // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/random
   return Math.floor(Math.random() * (max - min) + min);
@@ -28,10 +28,10 @@ function EMULATOR_get_random_date(random_time_frame, random_time_unit) {
 }
 
 const elements = [];
-for (let i in DTU_ELEMENTS_TO_TRACK) {
-  const element = DTU_ELEMENTS_TO_TRACK[i];
+for (let i in EMULATOR_DTU_ELEMENTS_TO_TRACK) {
+  const element = EMULATOR_DTU_ELEMENTS_TO_TRACK[i];
   if (element.dataset)
-    elements.push(element.dataset[DTU_TAG]);
+    elements.push(element.dataset[EMULATOR_DTU_TAG]);
 }
 
 const topic_dropdown = document.getElementById('drpd:topic');

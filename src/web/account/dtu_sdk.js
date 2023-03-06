@@ -120,7 +120,7 @@ function ANALYTICS_PORTAL_SDK_make_element_dropdown_work() {
   let btn = document.getElementById('drpd:elements');
   btn.addEventListener("change", function(e) {
     let p = [''];
-    if (this.value != 'all the elements')
+    if (this.value != '-- all the elements --')
       p = ['', this.value];
     document.getElementById('feature_path').setAttribute('path', JSON.stringify(p));
     ANALYTICS_PORTAL_SDK_refresh_features_page_data_according_to_topic_change();
@@ -376,7 +376,7 @@ function ANALYTICS_PORTAL_SDK_refresh_elements_list(kwargs, user_filters) {
 
   const chosen_element = user_filters.chosen_element;
   const elements = kwargs.elements_match_ctag_topic;
-  let elements_html = '<option>all the elements</option>';
+  let elements_html = '<option>-- all the elements --</option>';
   for (let i in elements) {
     let element = elements[i];
     if (element == chosen_element)
