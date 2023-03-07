@@ -19,7 +19,7 @@
 		<title>Do They Use? Application</title>
 
 		<link href="src/web/common/bootstrap/bootstrap.5.3.0-alpha.min.css" rel="stylesheet">
-		<link href="src/web/account/dtu_css.css" rel="stylesheet">
+		<link href="src/web/account/css/dtu_css.css" rel="stylesheet">
     <style type="text/css">
 
     </style>
@@ -52,7 +52,7 @@
           <div class="col-lg-2">
             <label for="topic" class="form-label no-margin-bottom custom-label">topic:</label>
             <select class="form-control form-select" data-dtu="topic" id="drpd:topic">
-              <option>auto-generated (light)</option>
+              <option>auto-generated (lite)</option>
               <option>auto-generated (heavy)</option>
               <option>real usage</option>
             </select>
@@ -119,13 +119,14 @@
     <script src="src/customer/dtu_client_emulator.js"></script>
 
 		<script src="src/tx_api/dtu_tx_api.js"></script>
-		<script src="src/web/account/dtu_sdk.js"></script>
+		<script src="src/web/account/js/dtu_sdk.js"></script>
     
-    <script src="src/customer/dtu_sdk.js"></script>
+    <script src="src/customer/dtu_sdk_js/dtu_sdk.js"></script>
     <script type="text/javascript">
       const dtu = dotheyuse({
         'ctag': 'DEMO MVP',
         'topic': 'real usage',
+        'callback': DTU_RX_API_submint_report_endpoint,
       });
     </script>
 	</body>

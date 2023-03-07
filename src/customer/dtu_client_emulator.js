@@ -69,7 +69,7 @@ function generate_fake_data() {
         CLIENT_SDK_EMULATOR_send_to_telemetry_api(c);
       }
     }
-    else if (topic == 'auto-generated (light)') {
+    else if (topic == 'auto-generated (lite)') {
       emulated_time = max_time_ago;
       let t = max_time_ago;
       while (t < Date.now()) {
