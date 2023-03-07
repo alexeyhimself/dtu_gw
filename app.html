@@ -119,14 +119,14 @@
     <script src="src/customer/dtu_client_emulator.js"></script>
 
 		<script src="src/tx_api/dtu_tx_api.js"></script>
-
 		<script src="src/web/account/dtu_sdk.js"></script>
+    
     <script src="src/customer/dtu_sdk.js"></script>
     <script type="text/javascript">
-      dotheyuse({'topic': 'real usage'});
-    </script>
-    <script type="text/javascript">
-      ANALYTICS_PORTAL_SDK_start();
+      const dtu = dotheyuse({
+        'ctag': 'DEMO MVP',
+        'topic': 'real usage',
+      });
     </script>
 	</body>
 </html>

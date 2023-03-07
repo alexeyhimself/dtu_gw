@@ -1,8 +1,6 @@
-// SDK APP FUNCTIONS
 //const excluded_events = "mousedown mouseup mousemove mouseover mouseout mousewheel";
 //const events = "click focus blur keydown change dblclick keydown keyup keypress textInput touchstart touchmove touchend touchcancel resize scroll zoom select change submit reset".split(" ");
 
-const DEFAULT_CTAG = 'ABCD';
 const DEFAULT_TOPIC = 'default';
 const DEFAULT_DTU_DATASET_ATTRIBUTE = "dtu";
 const DEFAULT_ELEMENTS_EVENTS = {
@@ -12,28 +10,46 @@ const DEFAULT_ELEMENTS_EVENTS = {
         '': ['click'], // link button in bootstrap 5 at least
         undefined: ['click'],
       };
+const DEFAULT_LISTEN_TO_DEFAULT_EVENTS = true;
+const DEFAULT_CALLBACK = DTU_RX_API_submint_report_endpoint;
+
 
 class DoTheyUse {
   constructor(config) {
-    this.ctag = DEFAULT_CTAG;
-    this.topic = DEFAULT_TOPIC;
-    this.dtu_attr = DEFAULT_DTU_DATASET_ATTRIBUTE;
-    this.listen_default_evemts = true;
+    if (!this.config_is_valid(config))
+      return;
 
-    if (config) {
-      if (config.ctag)
-        this.ctag = config.ctag;
-      if (config.topic)
-        this.topic = config.topic;
-      if (config.dtu_attr)
-        this.dtu_attr = config.dtu_attr;
-      if (config.listen)
-        this.listen_default_evemts = config.listen;
-    }
-    
+    this.ctag = config.ctag;
+    this.topic = config.topic || DEFAULT_TOPIC;
+    this.dtu_attribute = config.dtu_attribute || DEFAULT_DTU_DATASET_ATTRIBUTE;
+    this.callback = config.callback || DEFAULT_CALLBACK;
     this.collect_dtu_elements();
-    if (this.listen_default_evemts)
+
+    if ([true, false].includes(config.listen))
+      this.listen_default_events = config.listen;
+    else
+      this.listen_default_events = DEFAULT_LISTEN_TO_DEFAULT_EVENTS;
+
+    if (this.listen_default_events)
       this.listen();
+  }
+
+  config_is_valid(config) {
+    if (!config) {
+      console.error("dotheyuse not working: config was not provided durinig initialization. ");
+      return false;
+    }
+    else if (config.constructor !== Object) {
+      console.error("dotheyuse not working: config must be a dictionary, but given a: ", typeof(config));
+      return false;
+    }
+    else if (!config.ctag) {
+      console.error("dotheyuse not working: config must contain 'ctag'. ");
+      return false;
+    }
+    else {
+      return true;
+    }
   }
 
   init_report() {
@@ -55,10 +71,9 @@ class DoTheyUse {
   }
 
   send_report_to_dtu_api() {
-    console.log(this.report)
     // const json_report = JSON.stringify(this.report); // stringify before sending as payload
     const json_report = this.report; // till no real networking - no stringify as well to save CPU time
-    DTU_RX_API_submint_report_endpoint(json_report);
+    this.callback(json_report);
   }
 
   send(element, value) {
@@ -67,29 +82,31 @@ class DoTheyUse {
   }
 
   collect_dtu_elements() {
-    this.elements_to_listen_to = document.querySelectorAll('[data-' + this.dtu_attr + ']');
+    this.elements_to_listen_to = document.querySelectorAll('[data-' + this.dtu_attribute + ']');
   }
+
   listen() {
     for (let i = 0; i < this.elements_to_listen_to.length; i++) {
-      let element = this.elements_to_listen_to[i];
-      let events_to_listen = DEFAULT_ELEMENTS_EVENTS[element.type];
-      let dtu_this = this;
+      const element = this.elements_to_listen_to[i];
+      const events_to_listen = DEFAULT_ELEMENTS_EVENTS[element.type];
+      const dtu_this = this;
       for (let j = 0; j < events_to_listen.length; j++) {
         try {
           element.addEventListener(events_to_listen[j], function (e) {
-            const el = this.dataset[DEFAULT_DTU_DATASET_ATTRIBUTE];
-            const val = this.value;
+            const event_this = this; // to distinguish event.this and dtu.this
+            const el = event_this.dataset[DEFAULT_DTU_DATASET_ATTRIBUTE];
+            const val = event_this.value;
             dtu_this.send(el, val);
           }, false);
         }
         catch (error) {
-          console.error(error, 'at:', element);
+          console.error("DoTheyUse can't bind listener to an element: ", element, " due to an error: ", error);
         }
       }
     }
   }
-};
+}
 
 function dotheyuse(config) {
-  const dtu = new DoTheyUse(config);
-};
+  return new DoTheyUse(config);
+}

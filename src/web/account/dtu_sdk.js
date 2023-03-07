@@ -1,7 +1,7 @@
 //import("src/web/common/chartjs/chart-4.2.1.js");
 //import("src/web/common/chartjs/chartjs-adapter-date-fns-3.0.0.bundle.min.js");
 
-const ctag = "ABCD"; // somehow via session ID mapping in DB, not in request
+const ctag = "DEMO MVP"; // somehow via session ID mapping in DB, not in request
 
 function ANALYTICS_PORTAL_SDK_get_chart_size(chart_id) {
   debug_helper(arguments, DEBUG);
@@ -97,14 +97,14 @@ function ANALYTICS_PORTAL_SDK_collect_user_filters_on_the_page() {
   return user_filters;
 }
 
-async function ANALYTICS_PORTAL_SDK_start() {
+function ANALYTICS_PORTAL_SDK_start() {
   debug_helper(arguments, DEBUG);
 
   // detect which tab now is opened and update accordingly
   ANALYTICS_PORTAL_SDK_init_calls_over_time_chart_for_('features_calls_over_time_chart_id');
   ANALYTICS_PORTAL_SDK_init_time_shortcut_listeners();
 
-  await ANALYTICS_PORTAL_SDK_refresh_features_page_data_according_to_user_filters_setup();
+  ANALYTICS_PORTAL_SDK_refresh_features_page_data_according_to_user_filters_setup();
 
   // add listeners
   ANALYTICS_PORTAL_SDK_make_refresh_button_work();
@@ -432,3 +432,5 @@ function ANALYTICS_PORTAL_SDK_feature_path_click(element) {
   ANALYTICS_PORTAL_SDK_refresh_features_page_data_according_to_user_filters_setup();
 }
 */
+
+ANALYTICS_PORTAL_SDK_start();

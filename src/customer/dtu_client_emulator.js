@@ -1,4 +1,4 @@
-const EMULATOR_CTAG = 'ABCD';
+const EMULATOR_CTAG = 'DEMO MVP';
 const EMULATOR_DTU_TAG = "dtu";
 const EMULATOR_DTU_ELEMENTS_TO_TRACK = document.querySelectorAll('[data-' + EMULATOR_DTU_TAG + ']');
 
