@@ -21,7 +21,12 @@
 		<link href="src/web/common/bootstrap/bootstrap.5.3.0-alpha.min.css" rel="stylesheet">
 		<link href="src/web/account/css/dtu_css.css" rel="stylesheet">
     <style type="text/css">
-
+      .margin-left-8 {
+        margin-left: 8px;
+      }
+      .margin-bottom-5 {
+        margin-bottom: 5px;
+      }
     </style>
 	</head>
 	<body>
@@ -32,7 +37,7 @@
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
-          <ul class="navbar-nav">
+          <ul class="navbar-nav margin-left-8">
             <li class="nav-item">
               <a class="nav-link" href="index.html" data-dtu="about service">About service</a>
             </li>
@@ -90,8 +95,14 @@
           </div>
 
   		    <div class="col-lg-3 refresh_reset_buttons">
-  		    	<button id="btn:refresh_features_page_data_according_to_filters_setup" type="button" class="btn btn-primary btn-sm" data-dtu="apply filter">Apply filter</button>
-  		    	<button id="btn:reset_features_page_filters" type="button" class="btn btn-secondary btn-sm" data-dtu="reset filter">Reset filter</button>
+            <div class="row">
+              <div class="col-lg-7 d-grid margin-bottom-5">
+  		          <button id="btn:refresh_features_page_data_according_to_filters_setup" type="button" class="btn btn-primary btn-sm" data-dtu="apply filter">Apply filter</button>
+              </div>
+              <div class="col-lg-5 d-grid margin-bottom-5">
+  		          <button id="btn:reset_features_page_filters" type="button" class="btn btn-secondary btn-sm" data-dtu="reset filter">Reset filter</button>
+              </div>
+            </div>
   		    </div>
   			</div>
 
