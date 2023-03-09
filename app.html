@@ -21,11 +21,14 @@
 		<link href="src/web/common/bootstrap/bootstrap.5.3.0-alpha.min.css" rel="stylesheet">
 		<link href="src/web/account/css/dtu_css.css" rel="stylesheet">
     <style type="text/css">
-      .margin-left-8 {
-        margin-left: 8px;
+      .margin-left-6 {
+        margin-left: 6px;
       }
       .margin-bottom-5 {
         margin-bottom: 5px;
+      }
+      .margin-bottom-50 {
+        margin-bottom: 50%;
       }
     </style>
 	</head>
@@ -37,7 +40,7 @@
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
-          <ul class="navbar-nav margin-left-8">
+          <ul class="navbar-nav margin-left-6">
             <li class="nav-item">
               <a class="nav-link" href="index.html" data-dtu="about service">About service</a>
             </li>
@@ -51,8 +54,8 @@
         </div>
       </div>
     </nav>
-		<div class="container-fluid">
-			<div class="row container-padding">
+		<div class="container-fluid container-padding">
+			
         <div class="row">
           <div class="col-lg-2">
             <label for="topic" class="form-label no-margin-bottom custom-label">topic:</label>
@@ -106,7 +109,7 @@
   		    </div>
   			</div>
 
-  			<div class="row">
+  			<div class="row margin-bottom-50">
           <div class="col-lg">
             <h4>Usage stats for:</h4>
             <p id="feature_path" path='[""]'>
@@ -117,7 +120,7 @@
             </div>
           </div>
         </div>
-  		</div>
+
     </div>
 
 		<script src="src/web/common/chartjs/chart-4.2.1.js"></script>
