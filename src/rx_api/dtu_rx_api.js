@@ -3,17 +3,17 @@ function DB_INSERT_report(r) {
 
   if (!r.topic) // enrich
     r.topic = "default";
-  if (!r.feature_path) // enrich
-    r.feature_path = [''];
-  if (r.feature_path[0] !== '')
-    r.feature_path.unshift(''); // add to the beginning as "all" features for filter
+  if (!r.element_path) // enrich
+    r.element_path = [''];
+  if (r.element_path[0] !== '')
+    r.element_path.unshift(''); // add to the beginning as "all" elements for filter
 
   db.push(r);
 }
 
 function DB_UPDATE_elements(r) {
   debug_helper(arguments, DEBUG);
-  const element = r['feature'];
+  const element = r['element'];
   const ctag = r['ctag'];
   const topic = r['topic'];
 

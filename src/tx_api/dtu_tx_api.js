@@ -263,21 +263,21 @@ function TX_API_prepare_time_windows_agregations(chart_width_px, user_filters, k
           'ms_in_1_px': ms_in_1_px};
 }
 
-function TX_API_get_reports_with_features_path_match(user_filters, kwargs) {
+function TX_API_get_reports_with_elements_path_match(user_filters, kwargs) {
   debug_helper(arguments, DEBUG);
-  let reports_with_matched_feature_paths = [];
+  let reports_with_matched_element_paths = [];
 
-  const feature_path_user_filters = user_filters['feature_path'];
-  const feature_path_user_filters_length = feature_path_user_filters.length;
+  const element_path_user_filters = user_filters['element_path'];
+  const element_path_user_filters_length = element_path_user_filters.length;
   const reports_match_user_filters = kwargs['reports_match_user_filters'];
   const reports_match_user_filters_length = kwargs['reports_match_user_filters_length'];
 
   for (let i = 0; i < reports_match_user_filters_length; i++) {
     let report = reports_match_user_filters[i];
     let reports_match = true;
-    if (!(feature_path_user_filters_length == 1 && feature_path_user_filters[0] == '')) { // if not [""]
-      for (let j = 0; j < feature_path_user_filters_length; j++) {
-        if (report.feature_path[j] != feature_path_user_filters[j]) {
+    if (!(element_path_user_filters_length == 1 && element_path_user_filters[0] == '')) { // if not [""]
+      for (let j = 0; j < element_path_user_filters_length; j++) {
+        if (report.element_path[j] != element_path_user_filters[j]) {
           reports_match = false;
           break;
         }
@@ -285,9 +285,9 @@ function TX_API_get_reports_with_features_path_match(user_filters, kwargs) {
     }
 
     if (reports_match)
-      reports_with_matched_feature_paths.push(report);
+      reports_with_matched_element_paths.push(report);
   }
-  return reports_with_matched_feature_paths;
+  return reports_with_matched_element_paths;
 }
 
 function TX_API_get_optimal_time_step_for_agregations(chart_width_px, ms_in_1_px) {
@@ -334,13 +334,13 @@ function TX_API_get_optimal_time_step_for_agregations(chart_width_px, ms_in_1_px
 function TX_API_get_data_for_chart_(chart_width_px, user_filters, kwargs) {
   debug_helper(arguments, DEBUG);
 
-  const reports_with_features_path_match = TX_API_get_reports_with_features_path_match(user_filters, kwargs)
+  const reports_with_elements_path_match = TX_API_get_reports_with_elements_path_match(user_filters, kwargs)
   let agregations = TX_API_prepare_time_windows_agregations(chart_width_px, user_filters, kwargs);
   let agregation_result = agregations.agregation_result;
 
   /*
-  console.log("first: ", new Date(reports_with_features_path_match[0].date_time));
-  console.log("last: ", new Date(reports_with_features_path_match[reports_with_features_path_match.length - 1].date_time));
+  console.log("first: ", new Date(reports_with_elements_path_match[0].date_time));
+  console.log("last: ", new Date(reports_with_elements_path_match[reports_with_elements_path_match.length - 1].date_time));
   console.log("first aggr: ", new Date(agregation_result[0]));
   console.log("last aggr: ", new Date(agregation_result[agregation_result.length - 1]));
   */
@@ -349,8 +349,8 @@ function TX_API_get_data_for_chart_(chart_width_px, user_filters, kwargs) {
   for (let i in agregation_result) {
     stats.push(0); // create next step
     let date = agregation_result[i];
-    for (let j = position_in_reports; j < reports_with_features_path_match.length; j++) {
-      let r = reports_with_features_path_match[j];
+    for (let j = position_in_reports; j < reports_with_elements_path_match.length; j++) {
+      let r = reports_with_elements_path_match[j];
       if (r.date_time <= date) { // this report is in this time frame, so collect it
         stats[i] += 1;
         position_in_reports += 1;

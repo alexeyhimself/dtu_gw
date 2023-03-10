@@ -54,7 +54,7 @@ function ANALYTICS_PORTAL_SDK_init_time_shortcut_listeners() {
       this.classList.add('active-filter');
       const timedelta_ms = this.getAttribute('timedelta_ms');
       ANALYTICS_PORTAL_SDK_set_datetime_filter(timedelta_ms);
-      ANALYTICS_PORTAL_SDK_refresh_features_page_data_according_to_user_filters_setup();
+      ANALYTICS_PORTAL_SDK_refresh_elements_page_data_according_to_user_filters_setup();
     }, false);
   }
 }
@@ -87,8 +87,8 @@ function ANALYTICS_PORTAL_SDK_collect_user_filters_on_the_page() {
   if (dt != '')
     user_filters["datetime_to"] = Date.parse(dt);
 
-  let feature_path = document.getElementById("feature_path").getAttribute("path");
-  user_filters["feature_path"] = JSON.parse(feature_path);
+  let element_path = document.getElementById("element_path").getAttribute("path");
+  user_filters["element_path"] = JSON.parse(element_path);
 
   const e = document.getElementById("drpd:elements").value;
   if (e != '')
@@ -101,10 +101,10 @@ function ANALYTICS_PORTAL_SDK_start() {
   debug_helper(arguments, DEBUG);
 
   // detect which tab now is opened and update accordingly
-  ANALYTICS_PORTAL_SDK_init_calls_over_time_chart_for_('features_calls_over_time_chart_id');
+  ANALYTICS_PORTAL_SDK_init_calls_over_time_chart_for_('elements_calls_over_time_chart_id');
   ANALYTICS_PORTAL_SDK_init_time_shortcut_listeners();
 
-  ANALYTICS_PORTAL_SDK_refresh_features_page_data_according_to_user_filters_setup();
+  ANALYTICS_PORTAL_SDK_refresh_elements_page_data_according_to_user_filters_setup();
 
   // add listeners
   ANALYTICS_PORTAL_SDK_make_refresh_button_work();
@@ -122,8 +122,8 @@ function ANALYTICS_PORTAL_SDK_make_element_dropdown_work() {
     let p = [''];
     if (this.value != '-- all the elements --')
       p = ['', this.value];
-    document.getElementById('feature_path').setAttribute('path', JSON.stringify(p));
-    ANALYTICS_PORTAL_SDK_refresh_features_page_data_according_to_topic_change();
+    document.getElementById('element_path').setAttribute('path', JSON.stringify(p));
+    ANALYTICS_PORTAL_SDK_refresh_elements_page_data_according_to_topic_change();
   })
 }
 
@@ -132,26 +132,26 @@ function ANALYTICS_PORTAL_SDK_make_topic_dropdown_work() {
 
   let btn = document.getElementById('drpd:topic');
   btn.addEventListener("change", function(e) {
-    ANALYTICS_PORTAL_SDK_refresh_features_page_data_according_to_topic_change();
+    ANALYTICS_PORTAL_SDK_refresh_elements_page_data_according_to_topic_change();
   })
 }
 
 function ANALYTICS_PORTAL_SDK_make_refresh_button_work() {
   debug_helper(arguments, DEBUG);
 
-  let btn = document.getElementById('btn:refresh_features_page_data_according_to_filters_setup');
+  let btn = document.getElementById('btn:refresh_elements_page_data_according_to_filters_setup');
   btn.addEventListener("click", function(e) {
-    ANALYTICS_PORTAL_SDK_refresh_features_page_data_according_to_user_filters_setup();
+    ANALYTICS_PORTAL_SDK_refresh_elements_page_data_according_to_user_filters_setup();
   })
 }
 
 function ANALYTICS_PORTAL_SDK_make_reset_filters_button_work() {
   debug_helper(arguments, DEBUG);
 
-  let btn = document.getElementById('btn:reset_features_page_filters');
+  let btn = document.getElementById('btn:reset_elements_page_filters');
   btn.addEventListener("click", function(e) {
     ANALYTICS_PORTAL_SDK_remove_all_active_filter_class_from_time_shortcuts();
-    ANALYTICS_PORTAL_SDK_reset_filters_on_features_page();
+    ANALYTICS_PORTAL_SDK_reset_filters_on_elements_page();
   })
 }
 
@@ -282,7 +282,7 @@ function ANALYTICS_PORTAL_SDK_init_calls_over_time_chart_for_(chart_id) {
     }]
   };
   
-  if ('features_calls_over_time_chart_id' == chart_id) {
+  if ('elements_calls_over_time_chart_id' == chart_id) {
     config.options.scales.y.title.text = "# of calls for selected element(s) at the same time";
     config.options.plugins.title.text = "Median calls (with max and min bursts) for the selected element in time";
   }
@@ -303,15 +303,15 @@ function ANALYTICS_PORTAL_SDK_display_message_on_chart(chart, message) {
   ctx.restore();
 }
 
-function ANALYTICS_PORTAL_SDK_update_feature_path(feature) {
+function ANALYTICS_PORTAL_SDK_update_element_path(element) {
   debug_helper(arguments, DEBUG);
-  let feature_path_element = document.getElementById("feature_path");
-  let current_feature_path = feature_path_element.getAttribute("path");
+  let element_path_element = document.getElementById("element_path");
+  let current_element_path = element_path_element.getAttribute("path");
   
-  new_feature_path = JSON.parse(current_feature_path);
-  new_feature_path.push(feature);
-  new_feature_path = JSON.stringify(new_feature_path);
-  feature_path_element.setAttribute("path", new_feature_path);
+  new_element_path = JSON.parse(current_element_path);
+  new_element_path.push(element);
+  new_element_path = JSON.stringify(new_element_path);
+  element_path_element.setAttribute("path", new_element_path);
 }
 
 function ANALYTICS_PORTAL_SDK_refresh_calls_over_time_for_chart_id_(chart_id, user_filters, kwargs) {
@@ -343,19 +343,19 @@ function ANALYTICS_PORTAL_SDK_refresh_stats_for_chart_id_(chart_id, config) {
   ; // here
 }
 
-function ANALYTICS_PORTAL_SDK_reset_filters_on_features_page() {
+function ANALYTICS_PORTAL_SDK_reset_filters_on_elements_page() {
   debug_helper(arguments, DEBUG);
 
   ANALYTICS_PORTAL_SDK_reset_datetime_filter();
-  ANALYTICS_PORTAL_SDK_refresh_features_page_data_according_to_user_filters_setup();
+  ANALYTICS_PORTAL_SDK_refresh_elements_page_data_according_to_user_filters_setup();
 }
 
-function ANALYTICS_PORTAL_SDK_refresh_features_page_data_according_to_topic_change() {
+function ANALYTICS_PORTAL_SDK_refresh_elements_page_data_according_to_topic_change() {
   debug_helper(arguments, DEBUG);
 
   const topic = document.getElementById('drpd:topic').value;
   // window.localStorage.setItem('topic', topic);
-  ANALYTICS_PORTAL_SDK_refresh_features_page_data_according_to_user_filters_setup();
+  ANALYTICS_PORTAL_SDK_refresh_elements_page_data_according_to_user_filters_setup();
 }
 
 /*
@@ -389,7 +389,7 @@ function ANALYTICS_PORTAL_SDK_refresh_elements_list(kwargs, user_filters) {
   document.getElementById('drpd:elements').innerHTML = elements_html;
 }
 
-function ANALYTICS_PORTAL_SDK_refresh_features_page_data_according_to_user_filters_setup() {
+function ANALYTICS_PORTAL_SDK_refresh_elements_page_data_according_to_user_filters_setup() {
   debug_helper(arguments, DEBUG);
 
   let user_filters = ANALYTICS_PORTAL_SDK_collect_user_filters_on_the_page();
@@ -397,17 +397,17 @@ function ANALYTICS_PORTAL_SDK_refresh_features_page_data_according_to_user_filte
 
   // ANALYTICS_PORTAL_SDK_refresh_topics(kwargs);
   ANALYTICS_PORTAL_SDK_refresh_elements_list(kwargs, user_filters);
-  // ANALYTICS_PORTAL_SDK_refresh_feature_path(user_filters, kwargs);
-  ANALYTICS_PORTAL_SDK_refresh_calls_over_time_for_chart_id_('features_calls_over_time_chart_id', user_filters, kwargs);
+  // ANALYTICS_PORTAL_SDK_refresh_element_path(user_filters, kwargs);
+  ANALYTICS_PORTAL_SDK_refresh_calls_over_time_for_chart_id_('elements_calls_over_time_chart_id', user_filters, kwargs);
 }
 
 /*
-function ANALYTICS_PORTAL_SDK_refresh_feature_path(user_filters, kwargs) {
+function ANALYTICS_PORTAL_SDK_refresh_element_path(user_filters, kwargs) {
   debug_helper(arguments, DEBUG);
 
   const elements = ANALYTICS_PORTAL_SDK_get_elements_in_reports(kwargs);
-  let feature_path_element = document.getElementById("feature_path");
-  let feature_path = user_filters.feature_path;
+  let element_path_element = document.getElementById("element_path");
+  let element_path = user_filters.element_path;
 }
 */
 
@@ -419,17 +419,17 @@ function ANALYTICS_PORTAL_SDK_get_elements_in_reports(kwargs) {
   const reports_match_user_filters = kwargs['reports_match_user_filters'];
   for (let i in reports_match_user_filters) {
     let r = reports_match_user_filters[i];
-    if (!elements.includes(r.feature))
-      elements.push(r.feature);
+    if (!elements.includes(r.element))
+      elements.push(r.element);
   }
   return elements;
 }
 
 /*
-function ANALYTICS_PORTAL_SDK_feature_path_click(element) {
-  let new_feature_path = element.getAttribute("path");
-  document.getElementById("feature_path").setAttribute("path", new_feature_path);
-  ANALYTICS_PORTAL_SDK_refresh_features_page_data_according_to_user_filters_setup();
+function ANALYTICS_PORTAL_SDK_element_path_click(element) {
+  let new_element_path = element.getAttribute("path");
+  document.getElementById("element_path").setAttribute("path", new_element_path);
+  ANALYTICS_PORTAL_SDK_refresh_elements_page_data_according_to_user_filters_setup();
 }
 */
 

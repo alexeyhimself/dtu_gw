@@ -51,9 +51,9 @@ function EMULATOR_make_report(topic, random_time_unit) {
   c.topic = topic;
   const random_time_frame = 15;
   c.date_time = EMULATOR_get_random_date(random_time_frame, random_time_unit);
-  let f = EMULATOR_get_random_item_from_list(elements);
-  c.feature = f;
-  c.feature_path = ['', f];
+  let el = EMULATOR_get_random_item_from_list(elements);
+  c.element = el;
+  c.element_path = ['', el];
   return c;
 }
 
