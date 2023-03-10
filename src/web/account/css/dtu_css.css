@@ -9,20 +9,13 @@
 .resize-canvas-wrapper {
 	width: 100px !important; /* https://stackoverflow.com/questions/42340342/cant-make-chart-js-responsive */
 }
-.look-like-link {
-	text-decoration: underline;
-	color: rgba(var(--bs-link-color-rgb),var(--bs-link-opacity,1));
-	cursor: pointer;
-}
-.look-like-link:hover {
-	--bs-link-color-rgb: var(--bs-link-hover-color-rgb);
-}
 .no-margin-bottom {
 	margin-bottom: 0!important;
 }
 .time-shortcut {
 	margin-left: 5px;
 	font-size: 14px;
+  cursor: pointer;
 }
 .custom-label {
 	font-weight: bold;
