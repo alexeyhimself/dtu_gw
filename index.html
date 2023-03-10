@@ -16,7 +16,9 @@
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<title>Do They Use? About service</title>
-
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Lao&display=swap" rel="stylesheet">
 		<link href="src/web/common/bootstrap/bootstrap.5.3.0-alpha.min.css" rel="stylesheet">
 		<link rel="preconnect" href="https://fonts.googleapis.com">
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -29,15 +31,23 @@
 				padding: 0 10px 4px 10px;
 				border-radius: 5px;
 			}
-			.margin-bottom-50 {
-				margin-bottom: 7%;
+			.margin-bottom-7 {
+				margin-bottom: 10%;
+			}
+			.margin-top-50 {
+				margin-top: 50px;
 			}
 			h2 {
 				text-align: center;
-
+			}
+			h3 {
+			}
+			.font {
+				font-family: 'Noto Serif Lao', serif;
+				font-size: 13pt;
 			}
 			.container {
-				margin-bottom: 120px;
+				margin-bottom: 50px;
 			}
 			.row {
 				margin-left: 0;
@@ -54,33 +64,42 @@
 			.clip {
 				overflow-x: clip;
 			}
+			.center {
+				text-align: center;
+			}
 		</style>
 	</head>
 	<body>
 		<div class="row">
-			<div class="container col-10">
+			<div class="container col-10 center">
 				<h1>Do They Use</h1>
 				<h2>Make data-driven decisions for your digital products <span class="bg-gold">easily</span></h2>
 				<div class="d-grid gap-2 col-md-6 mx-auto">
-	  			<a class="btn btn-lg btn-primary" href="app.html" data-dtu="try now">Try how it works</a>
-	  			<p id="about">no registration required</p>
+	  			<a class="btn btn-lg btn-primary" href="app.html" data-dtu="try now">Try demo account now</a>
+	  			<p>no registration required</p>
 				</div>
 	    </div>
 	  </div>
 	  <div class="row justify-content-center clip">
-    	<div class="col-lg-6 col-11 margin-bottom-50">
-    		<h2 class="margin-bottom-40">Get <span class="bg-gold">visual</span> information about any of your HTML page elements usage</h2>
+	  	<hr style="width: 80%">
+    	<div class="col-lg-6 col-11 margin-top-50">
+    		<h2 class="margin-bottom-40">Get <span class="bg-gold">visual</span> information about any of your web page elements usage</h2>
     		<h3>How it works</h3>
-    		<p>1. Import and initialize SDK in your HTML page:</p>
+    		<p class="font">1. Import and initialize SDK in your web page:</p>
     		<img src="https://www.dropbox.com/s/wxlueoiaycxfadt/import-dtu-sdk-js.png?raw=1" style="max-width: 600px;" class="image">
-    		<p>2. Add "data-dtu" attribute to any (of supported by SDK) web elements you wish to track on your HTML page:</p>
+    		<p class="font">2. Add "data-dtu" attribute to any (of supported by SDK) web elements you wish to track on your HTML page:</p>
     		<img src="https://www.dropbox.com/s/xd72zk77csmqw3a/tag-element-with-data-dtu.png?raw=1" style="max-width: 271px;" class="image">
-    		<p>3. Go to "Do They Use" service to see usage stats for each of your tagged element(s):</p>
-				<img src="https://www.dropbox.com/s/he4cn2ffsn6u355/get-charts-with-usage-data-for-those-elements.png?raw=1" style="max-width: 465px; border: 1px solid gray;" class="image">
-				<!--img src="img/filter-data-for-any-element-for-any-time.png" style="max-width: 1118px;"><br-->
+    		<p class="font">3. Go to "Do They Use" service to see usage stats for each of your tagged element(s):</p>
+				<!--img src="https://www.dropbox.com/s/he4cn2ffsn6u355/get-charts-with-usage-data-for-those-elements.png?raw=1" style="max-width: 465px; border: 1px solid gray;" class="image"-->
+				<img src="https://www.dropbox.com/s/j84dksv5h8drzp9/inside-dtu-account.png?raw=1" style="max-width: 541px; border: 1px solid gray;" class="image">
     	</div>
+    	
+    	<div class="d-grid gap-2 col-md-6 mx-auto center margin-bottom-7">
+  			<a class="btn btn-lg col-10 offset-1 btn-primary" href="app.html" data-dtu="try now">Try now</a>
+  			<p>no registration required</p>
+			</div>
     </div>
-
+		
     <!--script src="src/common/helpers.js"></script>
     <script src="src/db/dtu_db.js"></script>
     <script src="src/rx_api/dtu_rx_api.js"></script>
