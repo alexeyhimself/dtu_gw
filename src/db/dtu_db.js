@@ -24,7 +24,7 @@ class DB {
 
   select(table_name, topic) {
     const type_of_storage = this.get_type_of_storage(topic);
-
+    //console.log(this.db_m.table_reports);
     if (table_name == 'table_reports') {
       if (type_of_storage == 'in-memory')
         return this.db_m.table_reports;
@@ -39,32 +39,23 @@ class DB {
     }
   }
 
-  insert(records, table_name, topic) {
+  insert(record, table_name, topic) {
     const type_of_storage = this.get_type_of_storage(topic);
     //const existing_records = this.select(table_name, type_of_storage);
     //const new_records = existing_records.concat(records);
 
     if (table_name == 'table_reports') {
       if (type_of_storage == 'in-memory') {
-        let existing_records = this.select(table_name, type_of_storage);
-        this.db_m.table_reports = existing_records.concat(records);
+        this.db_m.table_reports.push(record);
       }
       else {
         let db_s_json = this.read_session_storage();
-        db_s_json.table_reports = db_s_json.table_reports.concat(records);
+        db_s_json.table_reports.push(record);
         window.sessionStorage.setItem('db', JSON.stringify(db_s_json));
       }
     }
     else if (table_name == 'table_elements') {
-      if (type_of_storage == 'in-memory') {
-        let existing_records = this.select(table_name, type_of_storage);
-        this.db_m.table_elements = existing_records.concat(records);
-      }
-      else {
-        let db_s_json = this.read_session_storage();
-        db_s_json.table_elements = db_s_json.table_elements.concat(records);
-        window.sessionStorage.setItem('db', JSON.stringify(db_s_json));
-      }
+      console.error('Insert into table_elements not supported');
     }
   }
 

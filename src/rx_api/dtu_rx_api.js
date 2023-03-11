@@ -8,7 +8,7 @@ function DB_INSERT_report(r) {
   if (r.element_path[0] !== '')
     r.element_path.unshift(''); // add to the beginning as "all" elements for filter
 
-  db2.insert([r], 'table_reports', r.topic);
+  db2.insert(r, 'table_reports', r.topic);
   //db.push(r);
 }
 
@@ -41,7 +41,7 @@ function DB_UPDATE_elements(r) {
 
 function RX_API_save_to_db(r) {
   debug_helper(arguments, DEBUG);
-  
+
   // let report = JSON.parse(r); // parse payload after receive
   let report = r; // till no real networking - no parse to save CPU time
   DB_INSERT_report(report);

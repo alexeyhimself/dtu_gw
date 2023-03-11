@@ -15,7 +15,7 @@ function EMULATOR_get_random_item_from_number(number) {
   return Math.floor(Math.random()*number);
 }
 
-const max_number_of_days_ago = 3;
+const max_number_of_days_ago = 50;
 const max_time_ago = Date.now() - 86400 * 1000 * max_number_of_days_ago;
 var emulated_time = max_time_ago;
 
