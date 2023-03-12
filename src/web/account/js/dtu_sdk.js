@@ -120,10 +120,10 @@ function ANALYTICS_PORTAL_SDK_make_element_dropdown_work() {
   let btn = document.getElementById('drpd:elements');
   btn.addEventListener("change", function(e) {
     let p = [''];
-    if (this.value != '-- all the elements --')
+    if (this.value != '-- all the marked with "data-dtu" elements on this website --')
       p = ['', this.value];
     document.getElementById('element_path').setAttribute('path', JSON.stringify(p));
-    ANALYTICS_PORTAL_SDK_refresh_elements_page_data_according_to_topic_change();
+    ANALYTICS_PORTAL_SDK_refresh_elements_page_data_according_to_user_filters_setup();
   })
 }
 
@@ -132,7 +132,7 @@ function ANALYTICS_PORTAL_SDK_make_topic_dropdown_work() {
 
   let btn = document.getElementById('drpd:topic');
   btn.addEventListener("change", function(e) {
-    ANALYTICS_PORTAL_SDK_refresh_elements_page_data_according_to_topic_change();
+    ANALYTICS_PORTAL_SDK_refresh_elements_page_data_according_to_user_filters_setup();
   })
 }
 
@@ -350,14 +350,6 @@ function ANALYTICS_PORTAL_SDK_reset_filters_on_elements_page() {
   ANALYTICS_PORTAL_SDK_refresh_elements_page_data_according_to_user_filters_setup();
 }
 
-function ANALYTICS_PORTAL_SDK_refresh_elements_page_data_according_to_topic_change() {
-  debug_helper(arguments, DEBUG);
-
-  const topic = document.getElementById('drpd:topic').value;
-  // window.localStorage.setItem('topic', topic);
-  ANALYTICS_PORTAL_SDK_refresh_elements_page_data_according_to_user_filters_setup();
-}
-
 /*
 function ANALYTICS_PORTAL_SDK_refresh_topics(kwargs) {
   debug_helper(arguments, DEBUG);
@@ -376,7 +368,7 @@ function ANALYTICS_PORTAL_SDK_refresh_elements_list(kwargs, user_filters) {
 
   const chosen_element = user_filters.chosen_element;
   const elements = kwargs.elements_match_ctag_topic;
-  let elements_html = '<option>-- all the elements --</option>';
+  let elements_html = '<option>-- all the marked with "data-dtu" elements on this website --</option>';
   for (let i in elements) {
     let element = elements[i];
     if (element == chosen_element)
