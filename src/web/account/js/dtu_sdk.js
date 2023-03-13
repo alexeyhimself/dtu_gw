@@ -264,7 +264,7 @@ function ANALYTICS_PORTAL_SDK_init_calls_over_time_chart_for_(chart_id) {
           }
         },
         title: {
-          display: true,
+          display: false,
         },
         tooltip: {
           callbacks: {
