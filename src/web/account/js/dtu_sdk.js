@@ -219,7 +219,7 @@ function ANALYTICS_PORTAL_SDK_init_calls_over_time_chart_for_(chart_id) {
           },
           ticks: {
             precision: 0,
-            stepSize: 1,
+            //stepSize: 1,
           }
         },
         x: {
