@@ -301,6 +301,7 @@ function TX_API_get_optimal_time_step_for_agregations(chart_width_px, ms_in_1_px
   };
 
   if (chart_width_px <= CHART_SIZE.xs) {
+    console.log("CHART_SIZE.xs")
     if (ms_in_1_px <= AGREGATION_TRESHOLDS.xs)
       step = 1;
     else if (ms_in_1_px <= AGREGATION_TRESHOLDS.s)
@@ -311,9 +312,11 @@ function TX_API_get_optimal_time_step_for_agregations(chart_width_px, ms_in_1_px
       step = 7;
   }
   else if (chart_width_px <= CHART_SIZE.s) {
+    console.log("CHART_SIZE.s")
     step = 1;
   }
   else if (chart_width_px <= CHART_SIZE.m) {
+    console.log("CHART_SIZE.m")
     if (ms_in_1_px <= AGREGATION_TRESHOLDS.xs)
       step = 1;
     else if (ms_in_1_px <= AGREGATION_TRESHOLDS.s)
@@ -322,6 +325,21 @@ function TX_API_get_optimal_time_step_for_agregations(chart_width_px, ms_in_1_px
       step = 5;
     else if (ms_in_1_px <= AGREGATION_TRESHOLDS.l)
       step = 7;
+  }
+  else if (chart_width_px <= CHART_SIZE.l) {
+    console.log("CHART_SIZE.l")
+    step = 1;
+  }
+  else {
+    console.log("else")
+    if (ms_in_1_px <= AGREGATION_TRESHOLDS.xs)
+      step = 1;
+    else if (ms_in_1_px <= AGREGATION_TRESHOLDS.s)
+      step = 10;
+    else if (ms_in_1_px <= AGREGATION_TRESHOLDS.m)
+      step = 10;
+    else if (ms_in_1_px <= AGREGATION_TRESHOLDS.l)
+      step = 10;
   }
   
   for (key in UNITS_NAMES_VALUES) {
@@ -338,12 +356,6 @@ function TX_API_get_data_for_chart_(chart_width_px, user_filters, kwargs) {
   let agregations = TX_API_prepare_time_windows_agregations(chart_width_px, user_filters, kwargs);
   let agregation_result = agregations.agregation_result;
 
-  /*
-  console.log("first: ", new Date(reports_with_elements_path_match[0].date_time));
-  console.log("last: ", new Date(reports_with_elements_path_match[reports_with_elements_path_match.length - 1].date_time));
-  console.log("first aggr: ", new Date(agregation_result[0]));
-  console.log("last aggr: ", new Date(agregation_result[agregation_result.length - 1]));
-  */
   let stats = [];
   let position_in_reports = 0; // to continue from this, not from the beginning again
   for (let i in agregation_result) {
@@ -361,7 +373,20 @@ function TX_API_get_data_for_chart_(chart_width_px, user_filters, kwargs) {
     }
   }
 
-  const step = TX_API_get_optimal_time_step_for_agregations(chart_width_px, agregations.ms_in_1_px);
+  let zeros = 0;
+  let non_zeros = 0;
+  for (let i in stats) {
+    let item = stats[i];
+    if (item == 0)
+      zeros++
+    else
+      non_zeros++
+  }
+  //console.log('>> ', zeros, non_zeros, chart_width_px / non_zeros)
+  let step = 1;
+  if (chart_width_px / non_zeros < 32)
+    step = TX_API_get_optimal_time_step_for_agregations(chart_width_px, agregations.ms_in_1_px);
+
   let aggr_dates = [];
   let mins = [];
   let maxes = [];

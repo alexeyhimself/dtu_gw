@@ -177,12 +177,14 @@ function ANALYTICS_PORTAL_SDK_init_calls_over_time_chart_for_(chart_id) {
       datasets: [{
           borderWidth: 1,
           tension: 0.2,
+          backgroundColor: '#f6f6b788',
           fill: false
         },
         {
-          borderWidth: 1,
+          borderWidth: 2,
           tension: 0.2,
-          borderColor: '#058dc7',
+          //borderColor: '#058dc7',
+          borderColor: '#0d6efdbb',
           //borderColor: '#777777',
           //backgroundColor: '#e7f4f988',
           backgroundColor: '#f6f6b788',
@@ -209,10 +211,16 @@ function ANALYTICS_PORTAL_SDK_init_calls_over_time_chart_for_(chart_id) {
       scales: {
         y: {
           //display: false,
-          min: 0,
+          //min: 0,
+          //suggestedMin: 2,
+          beginAtZero: true, 
           title: {
             display: false,
           },
+          ticks: {
+            precision: 0,
+            stepSize: 1,
+          }
         },
         x: {
           type: 'time',
