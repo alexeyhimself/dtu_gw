@@ -336,19 +336,50 @@ function ANALYTICS_PORTAL_SDK_refresh_calls_over_time_for_chart_id_(chart_id, us
   let chart = Chart.getChart(chart_id);
   chart.config.data.labels = config.labels;
 
-  chart.config.data.datasets[0].data = config.data[0];
-  chart.config.data.datasets[1].data = config.data[1];
-  chart.config.data.datasets[2].data = config.data[2];
+  const mins = config.data[0];
+  const medians = config.data[1];
+  const maxes = config.data[2];
+
+  chart.config.data.datasets[0].data = mins;
+  chart.config.data.datasets[1].data = medians;
+  chart.config.data.datasets[2].data = maxes;
   chart.config.options.scales.x.time.unit = config.unit;
   chart.config.options.scales.x.ticks.stepSize = config.step_size;
   //console.log("sec in 1 px: ", config.ms_in_pixel / 1000)
   chart.update();
+  
+  let aggr;
+  let aggr_unit;
+  const aggregation_ms = Math.floor(config.ms_in_pixel * config.step_size);
+  const em = [...UNITS_NAMES].reverse();
+  for (key in em) {
+    let v = Math.floor(aggregation_ms / UNITS_NAMES_VALUES[em[key]], 2);
+    if (v > 0) {
+      aggr = v;
+      aggr_unit = em[key];
+      break;
+    }
+  }
 
-  ANALYTICS_PORTAL_SDK_refresh_stats_for_chart_id_(chart_id, config);
+  ANALYTICS_PORTAL_SDK_refresh_stats_for_chart_id_(chart_id, aggr, aggr_unit, mins, maxes, medians);
 }
 
-function ANALYTICS_PORTAL_SDK_refresh_stats_for_chart_id_(chart_id, config) {
-  ; // here
+function ANALYTICS_PORTAL_SDK_refresh_stats_for_chart_id_(chart_id, aggr, aggr_unit, mins, maxes, medians) {
+  let m = document.getElementById('min');
+  let mins_sorted_by_value_asc = [...mins].sort(function(a, b){return a - b});
+  m.innerText = mins_sorted_by_value_asc[0];
+
+  m = document.getElementById('median');
+  mins_sorted_by_value_asc = [...medians].sort(function(a, b){return b - a});
+  console.log(mins_sorted_by_value_asc)
+  m.innerText = TX_API_get_median(mins_sorted_by_value_asc);
+
+  m = document.getElementById('max');
+  mins_sorted_by_value_asc = [...maxes].sort(function(a, b){return b - a});
+  m.innerText = mins_sorted_by_value_asc[0];
+
+  m = document.getElementById('aggregation interval');
+  m.innerText = aggr + ' ' + aggr_unit + '(s)';
 }
 
 function ANALYTICS_PORTAL_SDK_reset_filters_on_elements_page() {

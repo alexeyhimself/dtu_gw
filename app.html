@@ -30,6 +30,18 @@
       .margin-bottom-50 {
         margin-bottom: 50%;
       }
+      table {
+        margin-top: 8px;
+        border-top: 1px solid gray;
+        margin-left: auto;
+        margin-right: auto;
+      }
+      td {
+        padding: 0px 10px;
+        font-size: 13px;
+        color: #666666;
+        text-align: center;
+      }
     </style>
 	</head>
 	<body>
@@ -118,7 +130,23 @@
             <div class="canvas-wrapper">
               <canvas id="elements_calls_over_time_chart_id"></canvas>
             </div>
-            <p class="chart-name" style="font-weight: normal; text-align: center; color: white2; margin-bottom: 0; background-color: lightgray2; width: fit-content2; padding: 0 10px;">Median calls (with max and min bursts) for the selected element(s) in time</p>
+            <p class="chart-name" style="font-weight: normal; text-align: center; color: white2; margin-bottom: 0; background-color: lightgray2; width: fit-content2; padding: 0 10px;">Number of interactions with selected element(s) in time</p>
+            <table>
+              <tr>
+                <td>aggregation interval</td>
+                <!--td>last</td-->
+                <td>min</td>
+                <td>median</td>
+                <td>max</td>
+              </tr>
+              <tr>
+                <td id="aggregation interval"></td>
+                <!--td id="last"></td-->
+                <td id="min"></td>
+                <td id="median"></td>
+                <td id="max"></td>
+              </tr>
+            </table>
           </div>
         </div>
 
