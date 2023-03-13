@@ -1,6 +1,15 @@
 body {
-	font-family: 'Public Sans', sans-serif;
+	//font-family: 'Public Sans', sans-serif;
+	//font-family: 'Crimson Pro', serif;
+	//font-family: 'Gelasio', serif;
+	font-family: 'Vollkorn', serif;
+	//font-family: 'Averia Serif Libre', cursive;
+
 	background-color: ivory;
+}
+
+a.btn {
+	font-family: 'Averia Serif Libre', cursive;
 }
 h1 {
 	font-size: 10em;
