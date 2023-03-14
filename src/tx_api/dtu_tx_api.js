@@ -404,16 +404,45 @@ function TX_API_get_data_for_chart_(chart_width_px, user_filters, kwargs) {
   //console.table(TX_API_get_stats_for_list(stats))
 
   let labels = [];
-  let data = [];
+  let data = {};
   for (let i in aggr_dates) {
     labels.push(parseInt(aggr_dates[i]));
   }
-  data.push(mins);
-  data.push(medians);
-  data.push(maxes);
+  data['mins'] = mins;
+  data['medians'] = medians;
+  data['maxes'] = maxes;
 
   let displayed_time_range = agregations.displayed_time_range;
   let display_unit_and_step = TX_API_get_display_unit_and_step(displayed_time_range, chart_width_px);
 
-  return Object.assign({}, {'labels': labels, 'data': data, 'ms_in_pixel': agregations.ms_in_1_px}, display_unit_and_step);
+  console.log('prettify me')
+  // 8 hours
+  let aggr;
+  let aggr_unit;
+  const aggregation_ms = Math.floor(agregations.ms_in_1_px * display_unit_and_step.step_size);
+  const em = [...UNITS_NAMES].reverse();
+  for (key in em) {
+    let v = Math.round(aggregation_ms * 10 / UNITS_NAMES_VALUES[em[key]]) / 10; // https://stackoverflow.com/questions/7342957/how-do-you-round-to-1-decimal-place-in-javascript
+    if (v >= 1) {
+      aggr = v;
+      aggr_unit = em[key];
+      break;
+    }
+  }
+
+  if (aggr > 1)
+    aggr_unit += 's';
+
+  console.log('and me')
+  // min, medium, max
+  let min;
+  let median;
+  let max;
+  if (mins) {
+    min = [...mins].sort(function(a, b){return a - b})[0];
+    median = TX_API_get_median([...medians].sort(function(a, b){return b - a}));
+    max = [...maxes].sort(function(a, b){return b - a})[0];
+  }
+
+  return Object.assign({}, {'labels': labels, 'data': data, 'ms_in_pixel': agregations.ms_in_1_px, 'min': min, 'median': median, 'max': max, 'aggr': aggr, 'aggr_unit': aggr_unit}, display_unit_and_step);
 }
