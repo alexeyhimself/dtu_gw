@@ -1,22 +1,22 @@
 class DB {
   constructor() {
     this.db_m = {'table_reports': [], 'table_elements': {}};
-    this.init_session_storage();
+    this.init_local_storage();
   }
 
-  init_session_storage() {
-    if (!window.sessionStorage.getItem('db')) {
-      window.sessionStorage.setItem('db', JSON.stringify(this.db_m));
+  init_local_storage() {
+    if (!window.localStorage.getItem('db')) {
+      window.localStorage.setItem('db', JSON.stringify(this.db_m));
     }
   }
 
-  read_session_storage() {
-    const db_s = window.sessionStorage.getItem('db');
+  read_local_storage() {
+    const db_s = window.localStorage.getItem('db');
     return JSON.parse(db_s);
   }
 
   get_type_of_storage(topic) {
-    let type_of_storage = 'session';
+    let type_of_storage = 'local';
     if (topic != 'real usage')
       type_of_storage = 'in-memory';
     return type_of_storage;
@@ -29,13 +29,13 @@ class DB {
       if (type_of_storage == 'in-memory')
         return this.db_m.table_reports;
       else
-        return this.read_session_storage().table_reports;
+        return this.read_local_storage().table_reports;
     }
     else if (table_name == 'table_elements') {
       if (type_of_storage == 'in-memory')
         return this.db_m.table_elements;
       else
-        return this.read_session_storage().table_elements;
+        return this.read_local_storage().table_elements;
     }
   }
 
@@ -49,9 +49,9 @@ class DB {
         this.db_m.table_reports.push(record);
       }
       else {
-        let db_s_json = this.read_session_storage();
+        let db_s_json = this.read_local_storage();
         db_s_json.table_reports.push(record);
-        window.sessionStorage.setItem('db', JSON.stringify(db_s_json));
+        window.localStorage.setItem('db', JSON.stringify(db_s_json));
       }
     }
     else if (table_name == 'table_elements') {
@@ -69,9 +69,9 @@ class DB {
       if (type_of_storage == 'in-memory')
         this.db_m.table_elements = new_data;
       else {
-        let db_s_json = this.read_session_storage();
+        let db_s_json = this.read_local_storage();
         db_s_json.table_elements = new_data;
-        window.sessionStorage.setItem('db', JSON.stringify(db_s_json));
+        window.localStorage.setItem('db', JSON.stringify(db_s_json));
       }
     }
   }
