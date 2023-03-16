@@ -18,6 +18,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<title>Do They Use? Application</title>
 
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue:wght@400;800&display=swap" rel="stylesheet">
 		<link href="src/web/common/bootstrap/bootstrap.5.3.0-alpha.min.css" rel="stylesheet">
 		<link href="src/web/account/css/dtu_css.css" rel="stylesheet">
     <style type="text/css">
@@ -27,20 +28,20 @@
 	<body>
     <nav class="navbar navbar-expand-lg bg-light">
       <div class="container-fluid">
-        <a class="navbar-brand" href="#"></a>
+        <a class="navbar-brand" href="index.html">Do They Use?</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation" data-dtu="button: navbar-toggler">
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
           <ul class="navbar-nav margin-left-6">
             <li class="nav-item">
-              <a class="nav-link" href="index.html" data-dtu="menu item: about service">About service</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link active" href="app.html" data-dtu="menu item: app">Demo account</a>
+              <a class="nav-link active" href="app.html" data-dtu="menu item: app">Analytics app</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="how-this-works.html" data-dtu="menu item: how this works">How this demo account works</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="how-to-use.html" data-dtu="menu item: how to use">How to use</a>
             </li>
           </ul>
         </div>
@@ -69,22 +70,22 @@
   		          <input id="datetime_to" class="form-control" type="datetime-local" data-dtu="date-time to"/>
               </div>
   		      
-    		      <p class="custom-helper">Show last: 
-                <a class="time-shortcut" timedelta_ms="60000" data-dtu="quick-link: 1 min">1 min</a>
-    		      	<a class="time-shortcut" timedelta_ms="900000" data-dtu="quick-link: 15 min">15 min</a>
-    		      	<a class="time-shortcut" timedelta_ms="3600000" data-dtu="quick-link: 1 hour">1 hour</a>
-                <a class="time-shortcut" timedelta_ms="7200000" data-dtu="quick-link: 2 hour">2 hour</a>
-                <a class="time-shortcut" timedelta_ms="43200000" data-dtu="quick-link: 12 hour">12 hour</a>
-    		      	<a class="time-shortcut" timedelta_ms="86400000" data-dtu="quick-link: 24 hours">24 hours</a>
-                <a class="time-shortcut" timedelta_ms="259200000" data-dtu="quick-link: 3 days">3 days</a>
-    		      	<a class="time-shortcut" timedelta_ms="604800000" data-dtu="quick-link: 7 days">7 days</a>
-                <a class="time-shortcut" timedelta_ms="1209600000" data-dtu="quick-link: 14 days">14 days</a>
-                <a class="time-shortcut" timedelta_ms="1728000000" data-dtu="quick-link: 20 days">20 days</a>
-    		      	<a class="time-shortcut" timedelta_ms="2592000000" data-dtu="quick-link: 30 days">30 days</a>
-    		      	<a class="time-shortcut" timedelta_ms="8640000000" data-dtu="quick-link: 100 days">100 days</a>
-                <a class="time-shortcut" timedelta_ms="31536000000" data-dtu="quick-link: 365 days">365 days</a>
-                <a class="time-shortcut" timedelta_ms="63072000000" data-dtu="quick-link: 2 years">2 years</a>
-                <a class="time-shortcut" timedelta_ms="86400000000" data-dtu="quick-link: 1000 days">1000 days</a>
+    		      <p class="custom-helper"><label class="form-label no-margin-bottom custom-label">show last: </label>
+                <a class="time-shortcut" timedelta_ms="300000" data-dtu="quick-link: 5 min">5&nbsp;min</a>
+    		      	<a class="time-shortcut" timedelta_ms="900000" data-dtu="quick-link: 15 min">15&nbsp;min</a>
+                <a class="time-shortcut" timedelta_ms="1800000" data-dtu="quick-link: 30 min">30&nbsp;min</a>
+    		      	<a class="time-shortcut" timedelta_ms="3600000" data-dtu="quick-link: 1 hour">1&nbsp;hour</a>
+                <a class="time-shortcut" timedelta_ms="10800000" data-dtu="quick-link: 3 hours">3&nbsp;hours</a>
+                <a class="time-shortcut" timedelta_ms="21600000" data-dtu="quick-link: 6 hours">6&nbsp;hours</a>
+                <a class="time-shortcut" timedelta_ms="43200000" data-dtu="quick-link: 12 hours">12&nbsp;hours</a>
+    		      	<a class="time-shortcut" timedelta_ms="86400000" data-dtu="quick-link: 1 day">1&nbsp;day</a>
+                <a class="time-shortcut" timedelta_ms="172800000" data-dtu="quick-link: 2 days">2&nbsp;days</a>
+    		      	<a class="time-shortcut" timedelta_ms="604800000" data-dtu="quick-link: 7 days">7&nbsp;days</a>
+                <a class="time-shortcut" timedelta_ms="2592000000" data-dtu="quick-link: 30 days">30&nbsp;days</a>
+                <a class="time-shortcut" timedelta_ms="7776000000" data-dtu="quick-link: 3 months">3&nbsp;months</a>
+    		      	<a class="time-shortcut" timedelta_ms="15552000000" data-dtu="quick-link: 6 months">6&nbsp;months</a>
+                <a class="time-shortcut" timedelta_ms="31536000000" data-dtu="quick-link: 1 year">1&nbsp;year</a>
+                <a class="time-shortcut" timedelta_ms="63072000000" data-dtu="quick-link: 2 years">2&nbsp;years</a>
     		    	</p>
             </div>
           </div>
@@ -103,7 +104,7 @@
 
   			<div class="row margin-bottom-50">
           <div class="col-lg">
-            <h4>Usage stats for:</h4>
+            <label class="form-label no-margin-bottom custom-label">show usage stats for:</label>
             <p id="element_path" path='[""]'>
             	<select id="drpd:elements" class="form-control form-select" data-dtu="this dropdown: all the elements"></select>
             </p>
@@ -135,8 +136,6 @@
 		<script src="src/web/common/chartjs/chart-4.2.1.js"></script>
 		<script src="src/web/common/chartjs/chartjs-adapter-date-fns-3.0.0.bundle.min.js"></script>
 
-		<script src="src/common/helpers.js"></script>
-
     <script src="src/db/dtu_db.js"></script>
     <script src="src/rx_api/dtu_rx_api.js"></script>
     <script src="src/customer/dtu_client_emulator.js"></script>
@@ -149,7 +148,6 @@
       const dtu = dotheyuse({
         'ctag': 'DEMO MVP',
         'topic': 'real usage',
-        'callback': DTU_RX_API_submint_report_endpoint,
       });
     </script>
 	</body>

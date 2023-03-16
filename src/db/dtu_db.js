@@ -5,14 +5,14 @@ class DB {
   }
 
   init_local_storage() {
-    if (!window.localStorage.getItem('db')) {
-      window.localStorage.setItem('db', JSON.stringify(this.db_m));
+    if (!window.localStorage.getItem('dtu_db')) {
+      window.localStorage.setItem('dtu_db', JSON.stringify(this.db_m)); // yes, db_m, because on init both are empty and structure is the same
     }
   }
 
   read_local_storage() {
-    const db_s = window.localStorage.getItem('db');
-    return JSON.parse(db_s);
+    const db_ls = window.localStorage.getItem('dtu_db');
+    return JSON.parse(db_ls);
   }
 
   get_type_of_storage(topic) {
@@ -24,7 +24,6 @@ class DB {
 
   select(table_name, topic) {
     const type_of_storage = this.get_type_of_storage(topic);
-    //console.log(this.db_m.table_reports);
     if (table_name == 'table_reports') {
       if (type_of_storage == 'in-memory')
         return this.db_m.table_reports;
@@ -41,8 +40,6 @@ class DB {
 
   insert(record, table_name, topic) {
     const type_of_storage = this.get_type_of_storage(topic);
-    //const existing_records = this.select(table_name, type_of_storage);
-    //const new_records = existing_records.concat(records);
 
     if (table_name == 'table_reports') {
       if (type_of_storage == 'in-memory') {
@@ -51,7 +48,7 @@ class DB {
       else {
         let db_s_json = this.read_local_storage();
         db_s_json.table_reports.push(record);
-        window.localStorage.setItem('db', JSON.stringify(db_s_json));
+        window.localStorage.setItem('dtu_db', JSON.stringify(db_s_json));
       }
     }
     else if (table_name == 'table_elements') {
@@ -71,17 +68,15 @@ class DB {
       else {
         let db_s_json = this.read_local_storage();
         db_s_json.table_elements = new_data;
-        window.localStorage.setItem('db', JSON.stringify(db_s_json));
+        window.localStorage.setItem('dtu_db', JSON.stringify(db_s_json));
       }
     }
   }
 }
 
-let db2 = new DB();
+let dtu_db = new DB();
 
 function DB_SELECT_EMULATION_check_if_report_ctag_and_topic_match_them_in_user_filters(r, user_filters) {
-  debug_helper(arguments, DEBUG);
-
   if (r.ctag != user_filters.ctag)
     return false;
   if (r.topic != user_filters.topic)
@@ -91,7 +86,6 @@ function DB_SELECT_EMULATION_check_if_report_ctag_and_topic_match_them_in_user_f
 }
 
 function DB_SELECT_EMULATION_check_if_report_date_matches_dates_in_user_filters(r, user_filters) {
-  debug_helper(arguments, DEBUG);
   let datetime_from = user_filters['datetime_from'];
   let datetime_to = user_filters['datetime_to'];
   
@@ -118,8 +112,6 @@ function DB_SELECT_EMULATION_check_if_report_date_matches_dates_in_user_filters(
 }
 
 function DB_SELECT_EMULATION_check_if_report_ctag_topic_dates_match_user_filters(r, user_filters) {
-  debug_helper(arguments, DEBUG);
-
   if (!DB_SELECT_EMULATION_check_if_report_ctag_and_topic_match_them_in_user_filters(r, user_filters))
     return false;
   if (!DB_SELECT_EMULATION_check_if_report_date_matches_dates_in_user_filters(r, user_filters))
@@ -133,9 +125,8 @@ function DB_SELECT_all_WHERE_user_filters(user_filters) {
   // AND ctag = user_filters.ctag
   // AND topic = user_filters.topic
   // AND date_time BETWEEN (user_filters.date_time_from, user_filters.date_time_to)
-  debug_helper(arguments, DEBUG);
 
-  const table_reports = db2.select('table_reports', user_filters.topic);
+  const table_reports = dtu_db.select('table_reports', user_filters.topic);
 
   let found_reports = [];
   for (let i in table_reports) {
@@ -150,12 +141,11 @@ function DB_SELECT_DISTINCT_topics_AND_elements_WHERE_ctag_topic(user_filters) {
   // SELECT * FROM elements_table WHERE 1=1
   // AND ctag = user_filters.ctag
   // AND topic = user_filters.topic
-  debug_helper(arguments, DEBUG);
 
   const ctag = user_filters['ctag'];
   const topic = user_filters['topic'];
 
-  const table_elements = db2.select('table_elements', topic);
+  const table_elements = dtu_db.select('table_elements', topic);
 
   let found_elements = [];
   let found_topics = [];

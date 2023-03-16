@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+	<head>
+    <script type="text/javascript" src="https://dotheyuse.com/src/web/common/bootstrap/bootstrap.5.3.0-alpha.min.js"></script>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>Do They Use? Application</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue:wght@400;800&display=swap" rel="stylesheet">
+		<link href="https://dotheyuse.com/src/web/common/bootstrap/bootstrap.5.3.0-alpha.min.css" rel="stylesheet">
+		<link href="https://dotheyuse.com/src/web/account/css/dtu_css.css" rel="stylesheet">
+    <style type="text/css">
+      
+    </style>
+	</head>
+	<body>
+		<div class="container-fluid container-padding">
+			
+        <div class="row">
+          <div class="col-lg-2">
+            <label for="topic" class="form-label no-margin-bottom custom-label">topic:</label>
+            <select class="form-control form-select"  id="drpd:topic">
+              <option>real usage</option>
+            </select>
+          </div>
+        
+					<div class="col-lg">
+            <div class="row">
+              <div class="col-sm">
+                <label for="datetime_from" class="form-label no-margin-bottom custom-label">date-time from:</label>
+    		        <input id="datetime_from" class="form-control" type="datetime-local" />
+              </div>
+              <div class="col-sm">
+                <label for="datetime_to" class="form-label no-margin-bottom custom-label">date-time to:</label>
+  		          <input id="datetime_to" class="form-control" type="datetime-local" />
+              </div>
+  		      
+    		      <p class="custom-helper"><label class="form-label no-margin-bottom custom-label">show last: </label>
+                <a class="time-shortcut" timedelta_ms="300000" >5&nbsp;min</a>
+    		      	<a class="time-shortcut" timedelta_ms="900000" >15&nbsp;min</a>
+                <a class="time-shortcut" timedelta_ms="1800000" >30&nbsp;min</a>
+    		      	<a class="time-shortcut" timedelta_ms="3600000" >1&nbsp;hour</a>
+                <a class="time-shortcut" timedelta_ms="10800000" >3&nbsp;hours</a>
+                <a class="time-shortcut" timedelta_ms="21600000" >6&nbsp;hours</a>
+                <a class="time-shortcut" timedelta_ms="43200000" >12&nbsp;hours</a>
+    		      	<a class="time-shortcut" timedelta_ms="86400000" >1&nbsp;day</a>
+                <a class="time-shortcut" timedelta_ms="172800000" >2&nbsp;days</a>
+    		      	<a class="time-shortcut" timedelta_ms="604800000" >7&nbsp;days</a>
+                <a class="time-shortcut" timedelta_ms="2592000000" >30&nbsp;days</a>
+                <a class="time-shortcut" timedelta_ms="7776000000" >3&nbsp;months</a>
+    		      	<a class="time-shortcut" timedelta_ms="15552000000" >6&nbsp;months</a>
+                <a class="time-shortcut" timedelta_ms="31536000000" >1&nbsp;year</a>
+                <a class="time-shortcut" timedelta_ms="63072000000" >2&nbsp;years</a>
+    		    	</p>
+            </div>
+          </div>
+
+  		    <div class="col-lg-3 refresh_reset_buttons">
+            <div class="row">
+              <div class="col-lg-7 d-grid margin-bottom-5">
+  		          <button id="btn:refresh_elements_page_data_according_to_filters_setup" type="button" class="btn btn-primary btn-sm" >Apply filter</button>
+              </div>
+              <div class="col-lg-5 d-grid margin-bottom-5">
+  		          <button id="btn:reset_elements_page_filters" type="button" class="btn btn-secondary btn-sm" >Reset filter</button>
+              </div>
+            </div>
+  		    </div>
+  			</div>
+
+  			<div class="row margin-bottom-50">
+          <div class="col-lg">
+            <label class="form-label no-margin-bottom custom-label">show usage stats for:</label>
+            <p id="element_path" path='[""]'>
+            	<select id="drpd:elements" class="form-control form-select" ></select>
+            </p>
+            <div class="canvas-wrapper">
+              <canvas id="elements_calls_over_time_chart_id"></canvas>
+            </div>
+            <p class="chart-name" style="font-weight: normal; text-align: center; color: white2; margin-bottom: 0; background-color: lightgray2; width: fit-content2; padding: 0 10px;">Number of interactions with selected element(s) in time</p>
+            <table>
+              <tr>
+                <td>aggregation interval</td>
+                <!--td>last</td-->
+                <td>min</td>
+                <td>median</td>
+                <td>max</td>
+              </tr>
+              <tr>
+                <td id="aggregation interval"></td>
+                <!--td id="last"></td-->
+                <td id="min"></td>
+                <td id="median"></td>
+                <td id="max"></td>
+              </tr>
+            </table>
+          </div>
+        </div>
+
+    </div>
+
+		<script src="https://dotheyuse.com/src/web/common/chartjs/chart-4.2.1.js"></script>
+		<script src="https://dotheyuse.com/src/web/common/chartjs/chartjs-adapter-date-fns-3.0.0.bundle.min.js"></script>
+
+    <script src="https://dotheyuse.com/src/db/dtu_db.js"></script>
+    <script src="https://dotheyuse.com/src/rx_api/dtu_rx_api.js"></script>
+    <script src="https://dotheyuse.com/src/customer/dtu_client_emulator.js"></script>
+
+		<script src="https://dotheyuse.com/src/tx_api/dtu_tx_api.js"></script>
+		<script src="https://dotheyuse.com/src/web/account/js/dtu_sdk.js"></script>
+    
+	</body>
+</html>

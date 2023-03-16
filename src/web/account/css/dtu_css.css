@@ -29,7 +29,7 @@
 }
 .refresh_reset_buttons {
   padding-top: 25px;
-  margin-bottom: 1rem;
+  margin-bottom: 5px;
 }
 @media screen and (max-width: 991px) {
     .refresh_reset_buttons {
@@ -65,9 +65,10 @@
   border: 0px;
 }
 .navbar-brand {
-  width: 0px;
-  padding: 0px;
-  margin: 0;
+  margin-left: 5px;
+  font-family: 'Bebas Neue';
+  font-size: 20px;
+  padding: 3px 0 0 0;
 }
 @media screen and (min-width: 991px) {
   .navbar {

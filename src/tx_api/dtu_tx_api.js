@@ -5,8 +5,6 @@ function TX_API_sum_values_of_dict(obj) { // https://stackoverflow.com/questions
 */
 
 function TX_API_get_sum(list_sorted_by_value_desc) {
-  debug_helper(arguments, DEBUG);
-
   let sum = 0;
   for (let i in list_sorted_by_value_desc)
     sum += list_sorted_by_value_desc[i];
@@ -15,16 +13,12 @@ function TX_API_get_sum(list_sorted_by_value_desc) {
 }
 
 function TX_API_get_avg(list_sorted_by_value_desc) {
-  debug_helper(arguments, DEBUG);
-
   let items_number = list_sorted_by_value_desc.length;
   const sum = TX_API_get_sum(list_sorted_by_value_desc);
   return sum / items_number;
 }
 
 function TX_API_get_median(list_sorted_by_value_desc) {
-  debug_helper(arguments, DEBUG);
-
   const items_number = list_sorted_by_value_desc.length;
   const middle_item_id = Math.floor(items_number / 2); // floor because arr ids count from 0, not 1
   const middle_item_value = list_sorted_by_value_desc[middle_item_id];
@@ -37,8 +31,6 @@ function TX_API_get_median(list_sorted_by_value_desc) {
 }
 
 function TX_API_get_mode(list_sorted_by_value_desc) {
-  debug_helper(arguments, DEBUG);
-
   let arr = list_sorted_by_value_desc;
   return arr.sort((a,b) => // https://stackoverflow.com/questions/1053843/get-the-element-with-the-highest-occurrence-in-an-array
       arr.filter(v => v===a).length
@@ -47,26 +39,20 @@ function TX_API_get_mode(list_sorted_by_value_desc) {
 }
 
 function TX_API_get_range(list_sorted_by_value_desc) {
-  debug_helper(arguments, DEBUG);
-
   const max = TX_API_get_max(list_sorted_by_value_desc);
   const min = TX_API_get_min(list_sorted_by_value_desc);
   return max - min;
 }
 
 function TX_API_get_min(list_sorted_by_value_desc) {
-  debug_helper(arguments, DEBUG);
   return list_sorted_by_value_desc[list_sorted_by_value_desc.length - 1];
 }
 
 function TX_API_get_max(list_sorted_by_value_desc) {
-  debug_helper(arguments, DEBUG);
   return list_sorted_by_value_desc[0];
 }
 
 function TX_API_get_stats_for_list(list) {
-  debug_helper(arguments, DEBUG);
-
   const list_sorted_by_value_desc = list.sort(function(a, b){return b - a})
   //console.log(list_sorted_by_value_desc)
 
@@ -81,8 +67,6 @@ function TX_API_get_stats_for_list(list) {
 }
 
 function TX_API_process_user_filters_request(user_filters) {
-  debug_helper(arguments, DEBUG);
-
   let kwargs = {};
 
   const reports_match_user_filters  = DB_SELECT_all_WHERE_user_filters(user_filters);
@@ -101,8 +85,6 @@ const TX_API_arrays_are_equal = (a, b) => // https://www.freecodecamp.org/news/h
   a.length === b.length && a.every((element, index) => element === b[index]);
 
 function TX_API_get_dates_from_to(user_filters, kwargs) {
-  debug_helper(arguments, DEBUG);
-
   const reports_match_user_filters_length = kwargs['reports_match_user_filters_length'];
   let datetime_from = user_filters['datetime_from'];
   let datetime_to = user_filters['datetime_to'];
@@ -126,8 +108,6 @@ function TX_API_get_dates_from_to(user_filters, kwargs) {
 }
 
 function TX_API_get_ms_in_1_px(chart_width_px, displayed_time_range) {
-  debug_helper(arguments, DEBUG);
-
   return Math.floor(displayed_time_range / chart_width_px); // how many milliseconds in 1 px
 }
 
@@ -154,7 +134,6 @@ const UNITS_NAMES_VALUES = {
 };
 
 function TX_API_get_display_unit_and_step(displayed_time_range, chart_width_px) {
-  debug_helper(arguments, DEBUG);
   
   // CHART_SIZE.l and higher
   let min_pixels_for_tick = 100;
@@ -234,8 +213,6 @@ function TX_API_get_display_unit_and_step(displayed_time_range, chart_width_px) 
 }
 
 function TX_API_prepare_time_windows_agregations(chart_width_px, user_filters, kwargs) {
-  debug_helper(arguments, DEBUG);
-
   let dates = TX_API_get_dates_from_to(user_filters, kwargs)
   let ms_in_1_px = TX_API_get_ms_in_1_px(chart_width_px, dates.time_range);
 
@@ -264,7 +241,6 @@ function TX_API_prepare_time_windows_agregations(chart_width_px, user_filters, k
 }
 
 function TX_API_get_reports_with_elements_path_match(user_filters, kwargs) {
-  debug_helper(arguments, DEBUG);
   let reports_with_matched_element_paths = [];
 
   const element_path_user_filters = user_filters['element_path'];
@@ -350,8 +326,6 @@ function TX_API_get_optimal_time_step_for_agregations(chart_width_px, ms_in_1_px
 }
 
 function TX_API_get_data_for_chart_(chart_width_px, user_filters, kwargs) {
-  debug_helper(arguments, DEBUG);
-
   const reports_with_elements_path_match = TX_API_get_reports_with_elements_path_match(user_filters, kwargs)
   let agregations = TX_API_prepare_time_windows_agregations(chart_width_px, user_filters, kwargs);
   let agregation_result = agregations.agregation_result;

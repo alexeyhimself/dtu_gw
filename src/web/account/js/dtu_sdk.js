@@ -4,8 +4,6 @@
 const ctag = "DEMO MVP"; // somehow via session ID mapping in DB, not in request
 
 function ANALYTICS_PORTAL_SDK_get_chart_size(chart_id) {
-  debug_helper(arguments, DEBUG);
-
   const chart = Chart.getChart(chart_id);
   let chart_width_px = chart.canvas.style.width; // Math.floor(chart.chartArea.width); - not work due to constant recalcs, so, base on canvas.style.width
   chart_width_px = chart_width_px.slice(0, chart_width_px.length - 2); // cut 'px'
@@ -13,21 +11,16 @@ function ANALYTICS_PORTAL_SDK_get_chart_size(chart_id) {
 }
 
 function ANALYTICS_PORTAL_SDK_reset_datetime_filter() {
-  debug_helper(arguments, DEBUG);
   ANALYTICS_PORTAL_SDK_set_datetime_filter();
 }
 
 function ANALYTICS_PORTAL_SDK_format_date_time_for_filter(date_time) {
-  debug_helper(arguments, DEBUG);
-
   date = new Date(date_time).toLocaleDateString('en-GB').split('/');
   time = new Date(date_time).toLocaleTimeString('en-GB');
   return date[2] + '-' + date[1] + '-' + date[0] + 'T' + time;
 }
 
 function ANALYTICS_PORTAL_SDK_set_datetime_filter(timedelta_ms) {
-  debug_helper(arguments, DEBUG);
-
   let datetime_to = "";
   let datetime_from = "";
   if (timedelta_ms) { // if not reset
@@ -44,8 +37,6 @@ function ANALYTICS_PORTAL_SDK_set_datetime_filter(timedelta_ms) {
 }
 
 function ANALYTICS_PORTAL_SDK_init_time_shortcut_listeners() {
-  debug_helper(arguments, DEBUG);
-
   const elements_to_track = document.querySelectorAll('.time-shortcut');
   for (let i = 0; i < elements_to_track.length; i++) {
     let el = elements_to_track[i];
@@ -69,8 +60,6 @@ function ANALYTICS_PORTAL_SDK_remove_all_active_filter_class_from_time_shortcuts
 }
 
 function ANALYTICS_PORTAL_SDK_collect_user_filters_on_the_page() {
-  debug_helper(arguments, DEBUG);
-
   //let topic = window.localStorage.getItem('topic');
   //if (!topic)
     topic = document.getElementById('drpd:topic').value;
@@ -98,8 +87,6 @@ function ANALYTICS_PORTAL_SDK_collect_user_filters_on_the_page() {
 }
 
 function ANALYTICS_PORTAL_SDK_start() {
-  debug_helper(arguments, DEBUG);
-
   // detect which tab now is opened and update accordingly
   ANALYTICS_PORTAL_SDK_init_calls_over_time_chart_for_('elements_calls_over_time_chart_id');
   ANALYTICS_PORTAL_SDK_init_time_shortcut_listeners();
@@ -115,8 +102,6 @@ function ANALYTICS_PORTAL_SDK_start() {
 }
 
 function ANALYTICS_PORTAL_SDK_make_element_dropdown_work() {
-  debug_helper(arguments, DEBUG);
-
   let btn = document.getElementById('drpd:elements');
   btn.addEventListener("change", function(e) {
     let p = [''];
@@ -128,8 +113,6 @@ function ANALYTICS_PORTAL_SDK_make_element_dropdown_work() {
 }
 
 function ANALYTICS_PORTAL_SDK_make_topic_dropdown_work() {
-  debug_helper(arguments, DEBUG);
-
   let btn = document.getElementById('drpd:topic');
   btn.addEventListener("change", function(e) {
     ANALYTICS_PORTAL_SDK_refresh_elements_page_data_according_to_user_filters_setup();
@@ -137,8 +120,6 @@ function ANALYTICS_PORTAL_SDK_make_topic_dropdown_work() {
 }
 
 function ANALYTICS_PORTAL_SDK_make_refresh_button_work() {
-  debug_helper(arguments, DEBUG);
-
   let btn = document.getElementById('btn:refresh_elements_page_data_according_to_filters_setup');
   btn.addEventListener("click", function(e) {
     ANALYTICS_PORTAL_SDK_refresh_elements_page_data_according_to_user_filters_setup();
@@ -146,8 +127,6 @@ function ANALYTICS_PORTAL_SDK_make_refresh_button_work() {
 }
 
 function ANALYTICS_PORTAL_SDK_make_reset_filters_button_work() {
-  debug_helper(arguments, DEBUG);
-
   let btn = document.getElementById('btn:reset_elements_page_filters');
   btn.addEventListener("click", function(e) {
     ANALYTICS_PORTAL_SDK_remove_all_active_filter_class_from_time_shortcuts();
@@ -156,8 +135,6 @@ function ANALYTICS_PORTAL_SDK_make_reset_filters_button_work() {
 }
 
 function ANALYTICS_PORTAL_SDK_make_reset_active_time_filters_work() {
-  debug_helper(arguments, DEBUG);
-
   const from = document.getElementById('datetime_from');
   from.addEventListener("change", function(e) {
     ANALYTICS_PORTAL_SDK_remove_all_active_filter_class_from_time_shortcuts();
@@ -170,7 +147,6 @@ function ANALYTICS_PORTAL_SDK_make_reset_active_time_filters_work() {
 }
 
 function ANALYTICS_PORTAL_SDK_init_calls_over_time_chart_for_(chart_id) {
-  debug_helper(arguments, DEBUG);
   const config = {
     type: 'line',
     data: {
@@ -312,7 +288,6 @@ function ANALYTICS_PORTAL_SDK_display_message_on_chart(chart, message) {
 }
 
 function ANALYTICS_PORTAL_SDK_update_element_path(element) {
-  debug_helper(arguments, DEBUG);
   let element_path_element = document.getElementById("element_path");
   let current_element_path = element_path_element.getAttribute("path");
   
@@ -322,8 +297,7 @@ function ANALYTICS_PORTAL_SDK_update_element_path(element) {
   element_path_element.setAttribute("path", new_element_path);
 }
 
-function ANALYTICS_PORTAL_SDK_refresh_calls_over_time_for_chart_id_(chart_id, user_filters, kwargs) {
-  debug_helper(arguments, DEBUG); 
+function ANALYTICS_PORTAL_SDK_refresh_calls_over_time_for_chart_id_(chart_id, user_filters, kwargs) { 
 
   const chart_width_px = ANALYTICS_PORTAL_SDK_get_chart_size(chart_id);
   const reports_match_user_filters_length = kwargs['reports_match_user_filters_length'];
@@ -358,16 +332,12 @@ function ANALYTICS_PORTAL_SDK_refresh_stats_for_chart_id_(chart_id, aggr, aggr_u
 }
 
 function ANALYTICS_PORTAL_SDK_reset_filters_on_elements_page() {
-  debug_helper(arguments, DEBUG);
-
   ANALYTICS_PORTAL_SDK_reset_datetime_filter();
   ANALYTICS_PORTAL_SDK_refresh_elements_page_data_according_to_user_filters_setup();
 }
 
 /*
 function ANALYTICS_PORTAL_SDK_refresh_topics(kwargs) {
-  debug_helper(arguments, DEBUG);
-
   const topics = kwargs.topics_match_ctag;
   let topics_html = '';
   for (let i in topics) {
@@ -378,8 +348,6 @@ function ANALYTICS_PORTAL_SDK_refresh_topics(kwargs) {
 }
 */
 function ANALYTICS_PORTAL_SDK_refresh_elements_list(kwargs, user_filters) {
-  debug_helper(arguments, DEBUG);
-
   const chosen_element = user_filters.chosen_element;
   const elements = kwargs.elements_match_ctag_topic;
   let elements_html = '<option>-- all the marked with "data-dtu" elements on this website --</option>';
@@ -396,8 +364,6 @@ function ANALYTICS_PORTAL_SDK_refresh_elements_list(kwargs, user_filters) {
 }
 
 function ANALYTICS_PORTAL_SDK_refresh_elements_page_data_according_to_user_filters_setup() {
-  debug_helper(arguments, DEBUG);
-
   let user_filters = ANALYTICS_PORTAL_SDK_collect_user_filters_on_the_page();
   let kwargs = TX_API_process_user_filters_request(user_filters);
 
@@ -409,8 +375,6 @@ function ANALYTICS_PORTAL_SDK_refresh_elements_page_data_according_to_user_filte
 
 /*
 function ANALYTICS_PORTAL_SDK_refresh_element_path(user_filters, kwargs) {
-  debug_helper(arguments, DEBUG);
-
   const elements = ANALYTICS_PORTAL_SDK_get_elements_in_reports(kwargs);
   let element_path_element = document.getElementById("element_path");
   let element_path = user_filters.element_path;
@@ -418,8 +382,6 @@ function ANALYTICS_PORTAL_SDK_refresh_element_path(user_filters, kwargs) {
 */
 
 function ANALYTICS_PORTAL_SDK_get_elements_in_reports(kwargs) {
-  debug_helper(arguments, DEBUG);
-
   // TODO: not in reports, but overall.
   let elements = [''];
   const reports_match_user_filters = kwargs['reports_match_user_filters'];

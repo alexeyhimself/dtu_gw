@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Simple Demo App</title>
+  </head>
+  <body>
+    <a href="#" data-dtu="some link">link</a><br>
+
+    <select data-dtu="some dropdown">
+      <option>value 1</option>
+      <option>value 2</option>
+    </select><br>
+
+    <button data-dtu="some button">button</button>
+
+    <!--script src="https://dotheyuse.com/src/common/helpers.js"></script-->
+    <script src="https://dotheyuse.com/src/db/dtu_db.js"></script>
+    <script src="https://dotheyuse.com/src/rx_api/dtu_rx_api.js"></script>
+
+    <script src="https://dotheyuse.com/src/customer/dtu_sdk_js/dtu_sdk.js"></script>
+    <script type="text/javascript">
+      const dtu = dotheyuse({
+        'ctag': 'DEMO MVP',
+        'topic': 'real usage',
+      });
+    </script>
+  </body>
+</html>
