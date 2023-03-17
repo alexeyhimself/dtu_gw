@@ -7,24 +7,49 @@
       .col {
         margin: 10px;
       }
+      .helping-block {
+        margin-top: 30px;
+        font-size: 12px;
+      }
     </style>
   </head>
   <body>
     <div class="col">
 
       <div class="col">
-        <a href="#" data-dtu="some link">link</a>
+        <a href="#" data-dtu="some link 1">link 1</a>
+        <a href="#" data-dtu="some link 2">link 2</a>
       </div>
 
       <div class="col">
-        <select class="form-select" data-dtu="some dropdown">
-          <option>dropdown value 1</option>
-          <option>dropdown value 2</option>
+        <select class="form-control form-select" data-dtu="some drop-down">
+          <option>drop-down value 1</option>
+          <option>drop-down value 2</option>
         </select>
       </div>
 
       <div class="col">
+        <input type="email" class="form-control" data-dtu="some email" placeholder="email@example.com">
+      </div>
+
+      <div class="col">
+        <input type="checkbox" data-dtu="some checkbox" value="checkbox value">
+        <label>enable / disable something</label>
+      </div>
+
+      <div class="col">
+        <input type="radio" data-dtu="some input radio" name="some radio" value="input radio value 1" checked>
+        <input type="radio" data-dtu="some input radio" name="some radio" value="input radio value 2">
+        <label>choose something</label>
+      </div>
+
+      <div class="col">
         <button class="btn btn-primary" data-dtu="some button">button</button>
+      </div>
+
+      <div class="col helping-block">
+        <p>Full list of currently supported by default elements and their monitored events see in <a href="https://alexeyhimself.github.io/dtu_sdk_js/dtu_sdk_story_book.html" target="_blank" data-dtu="JS SDK story book link">JavaScript SDK Story Book</a>.<br>
+          If you want other elements that are not supported yet, you can make your pull request into <a href="https://github.com/alexeyhimself/dtu_sdk_js" target="_blank" data-dtu="JS SDK repository link">JavaScript SDK repository</a>.</p>
       </div>
 
     </div>
