@@ -1,6 +1,12 @@
 //import("src/web/common/chartjs/chart-4.2.1.js");
 //import("src/web/common/chartjs/chartjs-adapter-date-fns-3.0.0.bundle.min.js");
 
+// to adjuste phrase "all the marked with "data-dtu" elements on <better_phrase> website"
+let better_phrase = 'monitored';
+if (window.location.hostname == 'dotheyuse.com')
+  better_phrase = 'this';
+const drpd_elements_all = '-- all the marked with "data-dtu" elements on ' + better_phrase + ' website --';
+
 const ctag = "DEMO MVP"; // somehow via session ID mapping in DB, not in request
 
 function ANALYTICS_PORTAL_SDK_get_chart_size(chart_id) {
@@ -105,7 +111,7 @@ function ANALYTICS_PORTAL_SDK_make_element_dropdown_work() {
   let btn = document.getElementById('drpd:elements');
   btn.addEventListener("change", function(e) {
     let p = [''];
-    if (this.value != '-- all the marked with "data-dtu" elements on this website --')
+    if (this.value != drpd_elements_all)
       p = ['', this.value];
     document.getElementById('element_path').setAttribute('path', JSON.stringify(p));
     ANALYTICS_PORTAL_SDK_refresh_elements_page_data_according_to_user_filters_setup();
@@ -350,7 +356,7 @@ function ANALYTICS_PORTAL_SDK_refresh_topics(kwargs) {
 function ANALYTICS_PORTAL_SDK_refresh_elements_list(kwargs, user_filters) {
   const chosen_element = user_filters.chosen_element;
   const elements = kwargs.elements_match_ctag_topic;
-  let elements_html = '<option>-- all the marked with "data-dtu" elements on this website --</option>';
+  let elements_html = '<option>' + drpd_elements_all + '</option>';
   for (let i in elements) {
     let element = elements[i];
     if (element == chosen_element)
