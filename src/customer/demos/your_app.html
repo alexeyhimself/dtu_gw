@@ -2,18 +2,33 @@
 <html>
   <head>
     <title>Simple Demo App</title>
+    <link href="https://dotheyuse.com/src/web/common/bootstrap/bootstrap.5.3.0-alpha.min.css" rel="stylesheet">
+    <style type="text/css">
+      .col {
+        margin: 10px;
+      }
+    </style>
   </head>
   <body>
-    <a href="#" data-dtu="some link">link</a><br>
+    <div class="col">
 
-    <select data-dtu="some dropdown">
-      <option>value 1</option>
-      <option>value 2</option>
-    </select><br>
+      <div class="col">
+        <a href="#" data-dtu="some link">link</a>
+      </div>
 
-    <button data-dtu="some button">button</button>
+      <div class="col">
+        <select class="form-select" data-dtu="some dropdown">
+          <option>dropdown value 1</option>
+          <option>dropdown value 2</option>
+        </select>
+      </div>
 
-    <!--script src="https://dotheyuse.com/src/common/helpers.js"></script-->
+      <div class="col">
+        <button class="btn btn-primary" data-dtu="some button">button</button>
+      </div>
+
+    </div>
+
     <script src="https://dotheyuse.com/src/db/dtu_db.js"></script>
     <script src="https://dotheyuse.com/src/rx_api/dtu_rx_api.js"></script>
 
