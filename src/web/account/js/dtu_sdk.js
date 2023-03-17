@@ -2,10 +2,10 @@
 //import("src/web/common/chartjs/chartjs-adapter-date-fns-3.0.0.bundle.min.js");
 
 // to adjuste phrase "all the marked with "data-dtu" elements on <better_phrase> website"
-let better_phrase = 'monitored';
+let better_phrase = 'this web app';
 if (window.location.hostname == 'dotheyuse.com')
-  better_phrase = 'this';
-const drpd_elements_all = '-- all the marked with "data-dtu" elements on ' + better_phrase + ' website --';
+  better_phrase = 'this web site';
+const drpd_elements_all = '-- all the monitored elements of ' + better_phrase + ' --';
 
 const ctag = "DEMO MVP"; // somehow via session ID mapping in DB, not in request
 
