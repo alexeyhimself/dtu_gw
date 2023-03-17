@@ -3,16 +3,16 @@ NEW_FILE_NAME=dtu_app.html
 cp app.html $NEW_FILE_NAME
 
 # delete google analytics
-sed -i '' '4,15d' $NEW_FILE_NAME
+sed -i '' '/googletagmanager/,/<\/script-->/d' $NEW_FILE_NAME
 
 # delete nav bar
-sed -i '' '17,37d' $NEW_FILE_NAME
+sed -i '' '/navbar-expand-lg/,/<\/nav>/d' $NEW_FILE_NAME
 
 # delete autogen options in topic drop-down
 sed -i '' '/auto-generated/d' $NEW_FILE_NAME
 
 # delete SDK import
-sed -i '' '111,117d' $NEW_FILE_NAME
+sed -i '' '/customer\/dtu_sdk_js/,/<\/script>/d' $NEW_FILE_NAME
 
 # replace all ="src/ with ="https://dotheyuse.com/src/
 sed -i '' 's/href="src/href="https:\/\/dotheyuse.com\/src/g' $NEW_FILE_NAME
