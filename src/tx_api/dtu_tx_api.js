@@ -219,7 +219,7 @@ function TX_API_prepare_time_windows_agregations(chart_width_px, user_filters, k
   let agregation_result = [];
   if (ms_in_1_px > 0) {
     if (dates.datetime_from != dates.datetime_to) {
-      for (let t = dates.datetime_to - ms_in_1_px; // from "datetime_to -" to make most recent window always available
+      for (let t = dates.datetime_to - ms_in_1_px *0; // from "datetime_to -" to make most recent window always available
                t >= dates.datetime_from + ms_in_1_px * 1; // till "datetime_from +" - to not to include oldest partial frame data
                t -= ms_in_1_px) {
         agregation_result.push(t);
