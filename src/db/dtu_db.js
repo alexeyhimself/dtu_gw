@@ -1,12 +1,14 @@
+const emty_db_schema = {'table_reports': [], 'table_elements': {}}; // https://www.digitalocean.com/community/tutorials/copying-objects-in-javascript#deep-copying-objects
+
 class DB {
   constructor() {
-    this.db_m = {'table_reports': [], 'table_elements': {}};
+    this.db_m = JSON.parse(JSON.stringify(emty_db_schema));
     this.init_local_storage();
   }
 
   init_local_storage() {
     if (!window.localStorage.getItem('dtu_db')) {
-      window.localStorage.setItem('dtu_db', JSON.stringify(this.db_m)); // yes, db_m, because on init both are empty and structure is the same
+      window.localStorage.setItem('dtu_db', JSON.stringify(emty_db_schema));
     }
   }
 
@@ -71,6 +73,10 @@ class DB {
         window.localStorage.setItem('dtu_db', JSON.stringify(db_s_json));
       }
     }
+  }
+
+  cleanup() {
+    window.localStorage.setItem('dtu_db', JSON.stringify(emty_db_schema));
   }
 }
 
