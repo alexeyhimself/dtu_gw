@@ -8,8 +8,8 @@ sed -i '' '/googletagmanager/,/<\/script-->/d' $NEW_FILE_NAME
 # delete nav bar
 sed -i '' '/navbar-expand-lg/,/<\/nav>/d' $NEW_FILE_NAME
 
-# delete autogen options in topic drop-down
-sed -i '' '/auto-generated/d' $NEW_FILE_NAME
+# delete emulator
+sed -i '' '/dtu_client_emulator/d' $NEW_FILE_NAME
 
 # delete SDK import
 sed -i '' '/customer\/dtu_sdk_js/,/<\/script>/d' $NEW_FILE_NAME
