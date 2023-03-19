@@ -19,24 +19,33 @@ class DB {
 
   get_type_of_storage(topic) {
     let type_of_storage = 'local';
-    if (topic != 'real usage')
+    const in_memory_ones = ['auto-generated (lite)', 'auto-generated (heavy)'];
+    if (in_memory_ones.includes(topic))
       type_of_storage = 'in-memory';
     return type_of_storage;
   }
 
   select(table_name, topic) {
-    const type_of_storage = this.get_type_of_storage(topic);
-    if (table_name == 'table_reports') {
-      if (type_of_storage == 'in-memory')
-        return this.db_m.table_reports;
-      else
-        return this.read_local_storage().table_reports;
+    if (topic) {
+      const type_of_storage = this.get_type_of_storage(topic);
+      if (table_name == 'table_reports') {
+        if (type_of_storage == 'in-memory')
+          return this.db_m.table_reports;
+        else
+          return this.read_local_storage().table_reports;
+      }
+      else if (table_name == 'table_elements') {
+        if (type_of_storage == 'in-memory')
+          return this.db_m.table_elements;
+        else
+          return this.read_local_storage().table_elements;
+      }
     }
-    else if (table_name == 'table_elements') {
-      if (type_of_storage == 'in-memory')
-        return this.db_m.table_elements;
-      else
-        return this.read_local_storage().table_elements;
+    else  {
+      const ctag = table_name; // facepalm)
+      const in_memory = this.db_m.table_elements;
+      const in_local_storage = this.read_local_storage().table_elements;
+      return Object.assign({}, in_memory[ctag], in_local_storage[ctag]);
     }
   }
 
@@ -143,8 +152,8 @@ function DB_SELECT_all_WHERE_user_filters(user_filters) {
   return found_reports;
 }
 
-function DB_SELECT_DISTINCT_topics_AND_elements_WHERE_ctag_topic(user_filters) {
-  // SELECT * FROM elements_table WHERE 1=1
+function DB_SELECT_DISTINCT_elements_WHERE_ctag_topic(user_filters) {
+  // SELECT element FROM elements_table WHERE 1=1
   // AND ctag = user_filters.ctag
   // AND topic = user_filters.topic
 
@@ -154,15 +163,27 @@ function DB_SELECT_DISTINCT_topics_AND_elements_WHERE_ctag_topic(user_filters) {
   const table_elements = dtu_db.select('table_elements', topic);
 
   let found_elements = [];
-  let found_topics = [];
 
   if (table_elements) {
     let topics = table_elements[ctag];
-    if (topics) {
+    if (topics)
       found_elements = table_elements[ctag][topic];
-      found_topics = Object.keys(table_elements[ctag]);  
-    }
   }
 
-  return {'topics': found_topics, 'elements': found_elements};
+  return {'ctag': ctag, 'topic': topic, 'elements': found_elements};
+}
+
+function DB_SELECT_DISTINCT_topics_WHERE_ctag_topic(user_filters) {
+  // SELECT topic FROM elements_table WHERE 1=1
+  // AND ctag = user_filters.ctag
+
+  const ctag = user_filters['ctag'];
+  const table_elements = dtu_db.select(ctag);
+  
+  let found_topics = [];
+
+  if (table_elements)
+    found_topics = Object.keys(table_elements);
+
+  return {'ctag': ctag, 'topics': found_topics};
 }

@@ -69,15 +69,18 @@ function TX_API_get_stats_for_list(list) {
 function TX_API_process_user_filters_request(user_filters) {
   let kwargs = {};
 
+  const topics_match_ctag = DB_SELECT_DISTINCT_topics_WHERE_ctag_topic(user_filters);
+  if (!user_filters.topic)
+    user_filters.topic = topics_match_ctag.topics[0]; // select first available then to show data for this topic
+
+  kwargs['topics_match_ctag'] = topics_match_ctag.topics;
+  kwargs['elements_match_ctag_topic'] = DB_SELECT_DISTINCT_elements_WHERE_ctag_topic(user_filters).elements;
+  kwargs['current_topic'] = user_filters.topic;
+
   const reports_match_user_filters  = DB_SELECT_all_WHERE_user_filters(user_filters);
   kwargs['reports_match_user_filters'] = reports_match_user_filters;
   kwargs['reports_match_user_filters_length'] = reports_match_user_filters.length;
 
-  const topics_and_elements  = DB_SELECT_DISTINCT_topics_AND_elements_WHERE_ctag_topic(user_filters);
-  kwargs['elements_match_ctag_topic'] = topics_and_elements.elements;
-  kwargs['topics_match_ctag'] = topics_and_elements.topics;
-
-  //console.log(kwargs)
   return kwargs;
 }
 
