@@ -1,12 +1,16 @@
 function DB_INSERT_report(r) {
-  if (!r.topic) // enrich
+  DB_INSERT_enrich_report(r);
+  dtu_db.insert(r, 'table_reports', r.topic);
+}
+
+function DB_INSERT_enrich_report(r) {
+  if (!r.topic)
     r.topic = "default";
+
   if (!r.element_path) // enrich
-    r.element_path = [''];
+    r.element_path = ['', r.element];
   if (r.element_path[0] !== '')
     r.element_path.unshift(''); // add to the beginning as "all" elements for filter
-
-  dtu_db.insert(r, 'table_reports', r.topic);
 }
 
 function DB_UPDATE_elements(r) {
