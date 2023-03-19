@@ -33,12 +33,9 @@ for (let i in EMULATOR_DTU_ELEMENTS_TO_TRACK) {
 
 const topic_dropdown = document.getElementById('drpd:topic');
 const topics = [
-    //null,  // null - for 'default' by back-end
-  ];
-for (let i in topic_dropdown.options) {
-  const topic = topic_dropdown.options[i].value;
-  topics.push(topic);
-}
+  'auto-generated (lite)',
+  'auto-generated (heavy)'
+];
 
 function EMULATOR_make_report(topic, random_time_unit) {
   let c = {};
