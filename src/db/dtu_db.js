@@ -1,8 +1,8 @@
-const emty_db_schema = {'table_reports': [], 'table_elements': {}}; // https://www.digitalocean.com/community/tutorials/copying-objects-in-javascript#deep-copying-objects
+const emty_db_schema = {'table_reports': []};
 
 class DB {
   constructor() {
-    this.db_m = JSON.parse(JSON.stringify(emty_db_schema));
+    this.db_m = JSON.parse(JSON.stringify(emty_db_schema)); // https://www.digitalocean.com/community/tutorials/copying-objects-in-javascript#deep-copying-objects
     this.init_local_storage();
   }
 
@@ -17,70 +17,62 @@ class DB {
     return JSON.parse(db_ls);
   }
 
-  get_type_of_storage(topic) {
-    let type_of_storage = 'local';
-    const in_memory_ones = ['auto-generated (lite)', 'auto-generated (heavy)'];
-    if (in_memory_ones.includes(topic))
-      type_of_storage = 'in-memory';
-    return type_of_storage;
+  get_storage_engine(topic) {
+    if (!topic)
+      return 'both';
+
+    const in_memory_topics = ['auto-generated (lite)', 'auto-generated (heavy)'];
+    if (in_memory_topics.includes(topic))
+      return 'in-memory';
+
+    return 'local';
   }
 
-  select(table_name, topic) {
-    if (topic) {
-      const type_of_storage = this.get_type_of_storage(topic);
-      if (table_name == 'table_reports') {
-        if (type_of_storage == 'in-memory')
-          return this.db_m.table_reports;
-        else
-          return this.read_local_storage().table_reports;
-      }
-      else if (table_name == 'table_elements') {
-        if (type_of_storage == 'in-memory')
-          return this.db_m.table_elements;
-        else
-          return this.read_local_storage().table_elements;
-      }
-    }
-    else  {
-      const ctag = table_name; // facepalm)
-      const in_memory = this.db_m.table_elements;
-      const in_local_storage = this.read_local_storage().table_elements;
-      return Object.assign({}, in_memory[ctag], in_local_storage[ctag]);
+  get_records_by_engine(ctag, topic) {
+    const storage_engine = this.get_storage_engine(topic);
+    console.log(storage_engine, topic)
+    if (storage_engine == 'in-memory')
+      return this.db_m.table_reports;
+    else if (storage_engine == 'local')
+      return this.read_local_storage().table_reports;
+    else { // both
+      const in_memory = this.db_m.table_reports;
+      const in_local_storage = this.read_local_storage().table_reports;
+      return in_memory.concat(in_local_storage);
     }
   }
 
-  insert(record, table_name, topic) {
-    const type_of_storage = this.get_type_of_storage(topic);
+  select(ctag, topic) {
+    let records = this.get_records_by_engine(ctag, topic)
 
-    if (table_name == 'table_reports') {
-      if (type_of_storage == 'in-memory') {
-        this.db_m.table_reports.push(record);
+    let found_reports = [];
+    for (let i in records) {
+      let r = records[i];
+      if (topic) {
+        if (r.ctag == ctag && r.topic == topic)
+          found_reports.push(r);
       }
       else {
-        let db_s_json = this.read_local_storage();
-        db_s_json.table_reports.push(record);
-        window.localStorage.setItem('dtu_db', JSON.stringify(db_s_json));
+        if (r.ctag == ctag)
+          found_reports.push(r);
       }
     }
-    else if (table_name == 'table_elements') {
-      console.error('Insert into table_elements not supported');
-    }
+    return found_reports;
   }
 
-  update(table_name, topic, new_data) {
-    const type_of_storage = this.get_type_of_storage(topic);
-
-    if (table_name == 'table_reports') {
-      console.error('Update table_reports not supported');
+  insert(record) {
+    const topic = record.topic;
+    const storage_engine = this.get_storage_engine(topic);
+    if (storage_engine == 'in-memory') {
+      this.db_m.table_reports.push(record);
     }
-    else if (table_name == 'table_elements') {
-      if (type_of_storage == 'in-memory')
-        this.db_m.table_elements = new_data;
-      else {
-        let db_s_json = this.read_local_storage();
-        db_s_json.table_elements = new_data;
-        window.localStorage.setItem('dtu_db', JSON.stringify(db_s_json));
-      }
+    else if (storage_engine == 'local') {
+      let db_s_json = this.read_local_storage();
+      db_s_json.table_reports.push(record);
+      window.localStorage.setItem('dtu_db', JSON.stringify(db_s_json));
+    }
+    else {
+      console.error("here", record, topic)
     }
   }
 
@@ -90,15 +82,6 @@ class DB {
 }
 
 let dtu_db = new DB();
-
-function DB_SELECT_EMULATION_check_if_report_ctag_and_topic_match_them_in_user_filters(r, user_filters) {
-  if (r.ctag != user_filters.ctag)
-    return false;
-  if (r.topic != user_filters.topic)
-    return false;
-
-  return true;
-}
 
 function DB_SELECT_EMULATION_check_if_report_date_matches_dates_in_user_filters(r, user_filters) {
   let datetime_from = user_filters['datetime_from'];
@@ -126,64 +109,57 @@ function DB_SELECT_EMULATION_check_if_report_date_matches_dates_in_user_filters(
   return true;
 }
 
-function DB_SELECT_EMULATION_check_if_report_ctag_topic_dates_match_user_filters(r, user_filters) {
-  if (!DB_SELECT_EMULATION_check_if_report_ctag_and_topic_match_them_in_user_filters(r, user_filters))
-    return false;
-  if (!DB_SELECT_EMULATION_check_if_report_date_matches_dates_in_user_filters(r, user_filters))
-    return false;
-
-  return true;
-}
-
 function DB_SELECT_all_WHERE_user_filters(user_filters) {
   // SELECT * FROM reports_table WHERE 1=1
   // AND ctag = user_filters.ctag
   // AND topic = user_filters.topic
   // AND date_time BETWEEN (user_filters.date_time_from, user_filters.date_time_to)
 
-  const table_reports = dtu_db.select('table_reports', user_filters.topic);
+  const ctag = user_filters['ctag'];
+  const topic = user_filters['topic'];
+  const table_reports = dtu_db.select(ctag, topic);
 
   let found_reports = [];
   for (let i in table_reports) {
     let report = table_reports[i];
-    if (DB_SELECT_EMULATION_check_if_report_ctag_topic_dates_match_user_filters(report, user_filters))
+    if (DB_SELECT_EMULATION_check_if_report_date_matches_dates_in_user_filters(report, user_filters))
       found_reports.push(report);
   }
   return found_reports;
 }
 
+function DB_SELECT_DISTINCT_something_FROM_somewhere(something, somewhere) {
+  let found_items = [];
+  if (somewhere) {
+    for (let i in somewhere) {
+      let r = somewhere[i];
+      if (!found_items.includes(r[something]))
+        found_items.push(r[something]);
+    }
+  }
+  return found_items;
+}
+
 function DB_SELECT_DISTINCT_elements_WHERE_ctag_topic(user_filters) {
-  // SELECT element FROM elements_table WHERE 1=1
+  // SELECT DISTINCT element FROM reports_table WHERE 1=1
   // AND ctag = user_filters.ctag
   // AND topic = user_filters.topic
 
   const ctag = user_filters['ctag'];
   const topic = user_filters['topic'];
+  const table_reports = dtu_db.select(ctag, topic);
 
-  const table_elements = dtu_db.select('table_elements', topic);
-
-  let found_elements = [];
-
-  if (table_elements) {
-    let topics = table_elements[ctag];
-    if (topics)
-      found_elements = table_elements[ctag][topic];
-  }
-
+  let found_elements = DB_SELECT_DISTINCT_something_FROM_somewhere('element', table_reports);
   return {'ctag': ctag, 'topic': topic, 'elements': found_elements};
 }
 
 function DB_SELECT_DISTINCT_topics_WHERE_ctag_topic(user_filters) {
-  // SELECT topic FROM elements_table WHERE 1=1
+  // SELECT DISTINCT topic FROM reports_table WHERE 1=1
   // AND ctag = user_filters.ctag
 
   const ctag = user_filters['ctag'];
-  const table_elements = dtu_db.select(ctag);
+  const table_reports = dtu_db.select(ctag);
   
-  let found_topics = [];
-
-  if (table_elements)
-    found_topics = Object.keys(table_elements);
-
+  let found_topics = DB_SELECT_DISTINCT_something_FROM_somewhere('topic', table_reports);
   return {'ctag': ctag, 'topics': found_topics};
 }
