@@ -1,4 +1,5 @@
 const emty_db_schema = {'table_reports': []};
+const db_name = 'dtu_db2';
 
 class DB {
   constructor() {
@@ -7,13 +8,13 @@ class DB {
   }
 
   init_local_storage() {
-    if (!window.localStorage.getItem('dtu_db')) {
-      window.localStorage.setItem('dtu_db', JSON.stringify(emty_db_schema));
+    if (!window.localStorage.getItem(db_name)) {
+      window.localStorage.setItem(db_name, JSON.stringify(emty_db_schema));
     }
   }
 
   read_local_storage() {
-    const db_ls = window.localStorage.getItem('dtu_db');
+    const db_ls = window.localStorage.getItem(db_name);
     return JSON.parse(db_ls);
   }
 
@@ -69,7 +70,7 @@ class DB {
     else if (storage_engine == 'local') {
       let db_s_json = this.read_local_storage();
       db_s_json.table_reports.push(record);
-      window.localStorage.setItem('dtu_db', JSON.stringify(db_s_json));
+      window.localStorage.setItem(db_name, JSON.stringify(db_s_json));
     }
     else {
       console.error("here", record, topic)
@@ -77,7 +78,7 @@ class DB {
   }
 
   cleanup() {
-    window.localStorage.setItem('dtu_db', JSON.stringify(emty_db_schema));
+    window.localStorage.setItem(db_name, JSON.stringify(emty_db_schema));
   }
 }
 
