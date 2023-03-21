@@ -7,6 +7,7 @@ a.btn {
 p {
   font-family: 'Crimson Pro';
   font-size: 17pt;
+  text-indent: 10px;
 }
 
 h1 {
@@ -32,7 +33,6 @@ h3 {
 .btn {
 	margin-top: 1em;
 }
-
 .bg-gold {
 	background-color: gold;
 	padding: 0 8px 0px 8px;
@@ -71,12 +71,9 @@ h2 {
 .center {
 	text-align: center;
 }
-p {
-text-indent: 10px;
-}
 .hidden {
-display: none;
+  display: none;
 }
 .h2-span {
-font-size: 0.8em;
+  font-size: 0.8em;
 }
