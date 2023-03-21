@@ -9,6 +9,9 @@ p {
   font-size: 17pt;
   text-indent: 10px;
 }
+a {
+  color: #0250C0; // https://dequeuniversity.com/rules/axe/4.4/color-contrast
+}
 
 h1 {
 	font-size: 10em;
