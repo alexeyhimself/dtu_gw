@@ -51,7 +51,6 @@
       </div>
     </nav>
 		<div class="container-fluid container-padding">
-			
         <div class="row">
           <div class="col-lg-2">
             <label for="topic" class="form-label no-margin-bottom custom-label">topic:</label>
@@ -70,22 +69,23 @@
   		          <input id="datetime_to" class="form-control" type="datetime-local" data-dtu="date-time to"/>
               </div>
   		      
-    		      <p class="custom-helper"><label class="form-label no-margin-bottom custom-label">show last: </label>
-                <a class="time-shortcut" timedelta_ms="300000" data-dtu="quick-link: 5 min">5&nbsp;min</a>
-    		      	<a class="time-shortcut" timedelta_ms="900000" data-dtu="quick-link: 15 min">15&nbsp;min</a>
-                <a class="time-shortcut" timedelta_ms="1800000" data-dtu="quick-link: 30 min">30&nbsp;min</a>
-    		      	<a class="time-shortcut" timedelta_ms="3600000" data-dtu="quick-link: 1 hour">1&nbsp;hour</a>
-                <a class="time-shortcut" timedelta_ms="10800000" data-dtu="quick-link: 3 hours">3&nbsp;hours</a>
-                <a class="time-shortcut" timedelta_ms="21600000" data-dtu="quick-link: 6 hours">6&nbsp;hours</a>
-                <a class="time-shortcut" timedelta_ms="43200000" data-dtu="quick-link: 12 hours">12&nbsp;hours</a>
-    		      	<a class="time-shortcut" timedelta_ms="86400000" data-dtu="quick-link: 1 day">1&nbsp;day</a>
-                <a class="time-shortcut" timedelta_ms="172800000" data-dtu="quick-link: 2 days">2&nbsp;days</a>
-    		      	<a class="time-shortcut" timedelta_ms="604800000" data-dtu="quick-link: 7 days">7&nbsp;days</a>
-                <a class="time-shortcut" timedelta_ms="2592000000" data-dtu="quick-link: 30 days">30&nbsp;days</a>
-                <a class="time-shortcut" timedelta_ms="7776000000" data-dtu="quick-link: 3 months">3&nbsp;months</a>
-    		      	<a class="time-shortcut" timedelta_ms="15552000000" data-dtu="quick-link: 6 months">6&nbsp;months</a>
-                <a class="time-shortcut" timedelta_ms="31536000000" data-dtu="quick-link: 1 year">1&nbsp;year</a>
-                <a class="time-shortcut" timedelta_ms="63072000000" data-dtu="quick-link: 2 years">2&nbsp;years</a>
+    		      <p class="custom-helper">
+                <label class="form-label no-margin-bottom custom-label" data-dtu="quick-link">show last: </label>
+                <a class="time-shortcut" timedelta_ms="300000" data-dtu="5 min">5&nbsp;min</a>
+    		      	<a class="time-shortcut" timedelta_ms="900000" data-dtu="15 min">15&nbsp;min</a>
+                <a class="time-shortcut" timedelta_ms="1800000" data-dtu="30 min">30&nbsp;min</a>
+    		      	<a class="time-shortcut" timedelta_ms="3600000" data-dtu="1 hour">1&nbsp;hour</a>
+                <a class="time-shortcut" timedelta_ms="10800000" data-dtu="3 hours">3&nbsp;hours</a>
+                <a class="time-shortcut" timedelta_ms="21600000" data-dtu="6 hours">6&nbsp;hours</a>
+                <a class="time-shortcut" timedelta_ms="43200000" data-dtu="12 hours">12&nbsp;hours</a>
+    		      	<a class="time-shortcut" timedelta_ms="86400000" data-dtu="1 day">1&nbsp;day</a>
+                <a class="time-shortcut" timedelta_ms="172800000" data-dtu="2 days">2&nbsp;days</a>
+    		      	<a class="time-shortcut" timedelta_ms="604800000" data-dtu="7 days">7&nbsp;days</a>
+                <a class="time-shortcut" timedelta_ms="2592000000" data-dtu="30 days">30&nbsp;days</a>
+                <a class="time-shortcut" timedelta_ms="7776000000" data-dtu="3 months">3&nbsp;months</a>
+    		      	<a class="time-shortcut" timedelta_ms="15552000000" data-dtu="6 months">6&nbsp;months</a>
+                <a class="time-shortcut" timedelta_ms="31536000000" data-dtu="1 year">1&nbsp;year</a>
+                <a class="time-shortcut" timedelta_ms="63072000000" data-dtu="2 years">2&nbsp;years</a>
     		    	</p>
             </div>
           </div>
@@ -104,7 +104,7 @@
 
   			<div class="row margin-bottom-50">
           <div class="col-lg">
-            <label class="form-label no-margin-bottom custom-label">show usage stats for:</label>
+            <label class="form-label no-margin-bottom custom-label">show usage stats for the element:</label>
             <p id="element_path" path='[""]'>
             	<select id="drpd:elements" class="form-control form-select" data-dtu="this dropdown: all the elements"></select>
             </p>
