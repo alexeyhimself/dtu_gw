@@ -64,11 +64,16 @@
 .navbar-toggler {
   border: 0px;
 }
+.navbar-toggler-icon {
+  width: 1.4em;
+  height: 1.4em;
+  color: red;
+}
 .navbar-brand {
   margin-left: 5px;
   font-family: 'Bebas Neue';
-  font-size: 20px;
-  padding: 3px 0 0 0;
+  font-size: 24px;
+  padding: 1px 0 0 0;
 }
 @media screen and (min-width: 991px) {
   .navbar {
@@ -79,6 +84,10 @@
 .chart-name {
   font-size: 14px;
   color: #666666;
+  font-weight: normal; 
+  text-align: center; 
+  margin-bottom: 0; 
+  padding: 0 10px;
 }
 
 .margin-left-6 {
@@ -101,4 +110,8 @@ td {
   font-size: 13px;
   color: #666666;
   text-align: center;
+}
+ul {
+  font-family: 'Bebas Neue';
+  font-size: large;
 }
