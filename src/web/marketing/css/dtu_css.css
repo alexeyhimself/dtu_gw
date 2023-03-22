@@ -136,7 +136,9 @@ h4- {
 	border: 1px solid lightgray;
 	border-radius: 5px;
 	font-size: 16px;
+	background-color: #2e3842;
 }
 pre {
 	margin-bottom: 0;
+	color: ivory;
 }
