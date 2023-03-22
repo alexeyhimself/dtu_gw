@@ -23,6 +23,7 @@ h2 {
   font-family: 'Vollkorn';
   margin-top: 50px;
   margin-bottom: 30px;
+  text-align: center;
 }
 p.no-registration {
   font-family: 'Vollkorn';
@@ -33,6 +34,13 @@ h3 {
   font-family: 'Vollkorn';
   text-align: center;
 }
+
+h4 {
+	font-size: 1.2em;	
+  font-family: 'Vollkorn';
+  //text-align: center;
+}
+
 .container {
 	margin-top: 15%;
 }
@@ -49,10 +57,7 @@ h3 {
 .margin-bottom-7 {
 	margin-bottom: 10%;
 }
-h2 {
-	text-align: center;
-}
-ul {
+ul, ol {
 	font-family: 'Crimson Pro';
 	font-size: 17pt;
 }
@@ -78,4 +83,60 @@ img {
 }
 .h2-span {
   font-size: 0.8em;
+}
+
+
+
+.navbar {
+	background-color: ivory!important;
+	border-bottom: 1px solid lightgray;
+}
+
+
+.margin-top-50- {
+	margin-top: 50px;
+}
+h2- {
+	text-align: center;
+	font-size: 2.5em;
+}
+.font- {
+	font-family: 'Crimson Pro', serif;
+	font-size: 15pt;
+}
+.container- {
+	margin-bottom: 50px;
+}
+.margin-bottom-40- {
+	margin-bottom: 25px;
+}
+body- {
+	background-color: transparent;
+}
+.bg-light- {
+  background-color: transparent!important;
+  border-bottom: 1px solid;
+  border-color: #dee2e6;
+}
+
+.margin-left-6 {
+  margin-left: 6px;
+}
+h3- {
+	margin-top: 60px;
+	margin-bottom: 15px;
+}
+h4- {
+	font-size: 20px;
+	margin-top: 15px;
+}
+.code {
+	margin: 5px;
+	padding: 10px;
+	border: 1px solid lightgray;
+	border-radius: 5px;
+	font-size: 16px;
+}
+pre {
+	margin-bottom: 0;
 }
