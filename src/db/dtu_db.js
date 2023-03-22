@@ -1,10 +1,13 @@
 const emty_db_schema = {'table_reports': []};
 const db_name = 'dtu_db2';
+const ex_db_names_to_cleanup = ['dtu_db']; // previously used, schema changed - so, need to create new and cleanup old
+
 
 class DB {
   constructor() {
     this.db_m = JSON.parse(JSON.stringify(emty_db_schema)); // https://www.digitalocean.com/community/tutorials/copying-objects-in-javascript#deep-copying-objects
     this.init_local_storage();
+    this.cleanup_ex_dbs();
   }
 
   init_local_storage() {
@@ -31,7 +34,6 @@ class DB {
 
   get_records_by_engine(ctag, topic) {
     const storage_engine = this.get_storage_engine(topic);
-    console.log(storage_engine, topic)
     if (storage_engine == 'in-memory')
       return this.db_m.table_reports;
     else if (storage_engine == 'local')
@@ -72,13 +74,15 @@ class DB {
       db_s_json.table_reports.push(record);
       window.localStorage.setItem(db_name, JSON.stringify(db_s_json));
     }
-    else {
-      console.error("here", record, topic)
-    }
   }
 
   cleanup() {
     window.localStorage.setItem(db_name, JSON.stringify(emty_db_schema));
+  }
+
+  cleanup_ex_dbs() {
+    for (let i in ex_db_names_to_cleanup)
+      window.localStorage.removeItem(ex_db_names_to_cleanup[i]);
   }
 }
 
