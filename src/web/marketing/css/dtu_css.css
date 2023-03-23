@@ -30,15 +30,19 @@ p.no-registration {
   font-size: 1em;
 }
 h3 {
-	font-size: 1.4em;	
+	font-size: 1.6em;	
   font-family: 'Vollkorn';
   text-align: center;
+  margin-top: 40px;
+	margin-bottom: 15px;
 }
 
 h4 {
-	font-size: 1.2em;	
+	font-size: 1.4em;	
   font-family: 'Vollkorn';
-  //text-align: center;
+  text-align: center;
+  margin-top: 30px;
+  margin-bottom: 17px;
 }
 
 .container {
@@ -84,51 +88,12 @@ img {
 .h2-span {
   font-size: 0.8em;
 }
-
-
-
 .navbar {
 	background-color: ivory!important;
 	border-bottom: 1px solid lightgray;
 }
-
-
-.margin-top-50- {
-	margin-top: 50px;
-}
-h2- {
-	text-align: center;
-	font-size: 2.5em;
-}
-.font- {
-	font-family: 'Crimson Pro', serif;
-	font-size: 15pt;
-}
-.container- {
-	margin-bottom: 50px;
-}
-.margin-bottom-40- {
-	margin-bottom: 25px;
-}
-body- {
-	background-color: transparent;
-}
-.bg-light- {
-  background-color: transparent!important;
-  border-bottom: 1px solid;
-  border-color: #dee2e6;
-}
-
 .margin-left-6 {
   margin-left: 6px;
-}
-h3- {
-	margin-top: 60px;
-	margin-bottom: 15px;
-}
-h4- {
-	font-size: 20px;
-	margin-top: 15px;
 }
 .code {
 	margin: 5px;
