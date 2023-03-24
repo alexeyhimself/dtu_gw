@@ -280,7 +280,7 @@ function TX_API_get_optimal_time_step_for_agregations(chart_width_px, ms_in_1_px
   };
 
   if (chart_width_px <= CHART_SIZE.xs) {
-    console.log("CHART_SIZE.xs")
+    //console.log("CHART_SIZE.xs")
     if (ms_in_1_px <= AGREGATION_TRESHOLDS.xs)
       step = 7;
     else if (ms_in_1_px <= AGREGATION_TRESHOLDS.s)
@@ -291,11 +291,11 @@ function TX_API_get_optimal_time_step_for_agregations(chart_width_px, ms_in_1_px
       step = 10;
   }
   else if (chart_width_px <= CHART_SIZE.s) {
-    console.log("CHART_SIZE.s")
+    //console.log("CHART_SIZE.s")
     step = 1;
   }
   else if (chart_width_px <= CHART_SIZE.m) {
-    console.log("CHART_SIZE.m")
+    //console.log("CHART_SIZE.m")
     if (ms_in_1_px <= AGREGATION_TRESHOLDS.xs)
       step = 1;
     else if (ms_in_1_px <= AGREGATION_TRESHOLDS.s)
@@ -306,11 +306,11 @@ function TX_API_get_optimal_time_step_for_agregations(chart_width_px, ms_in_1_px
       step = 7;
   }
   else if (chart_width_px <= CHART_SIZE.l) {
-    console.log("CHART_SIZE.l")
+    //console.log("CHART_SIZE.l")
     step = 1;
   }
   else {
-    console.log("else")
+    //console.log("else")
     if (ms_in_1_px <= AGREGATION_TRESHOLDS.xs)
       step = 7;
     else if (ms_in_1_px <= AGREGATION_TRESHOLDS.s)
@@ -321,10 +321,12 @@ function TX_API_get_optimal_time_step_for_agregations(chart_width_px, ms_in_1_px
       step = 10;
   }
   
+  /*
   for (key in UNITS_NAMES_VALUES) {
     console.log(key, ms_in_1_px / UNITS_NAMES_VALUES[key]);
   }
   console.log('chart_width_px:', chart_width_px, 'ms_in_1_px:', ms_in_1_px, 'step:', step, AGREGATION_TRESHOLDS);
+  */
   return step;
 }
 

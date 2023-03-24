@@ -358,7 +358,6 @@ function ANALYTICS_PORTAL_SDK_refresh_topics(kwargs) {
   const drpd_topic = document.getElementById('drpd:topic');
   drpd_topic.innerHTML = topics_html;
 
-  console.log(topics.length)
   if (topics.length <= 1)
     drpd_topic.parentElement.style.display = 'none';
   else
