@@ -150,12 +150,12 @@ function DB_SELECT_all_WHERE_user_filters(user_filters) {
   return found_reports;
 }
 
-function DB_SELECT_DISTINCT_something_FROM_somewhere(something, somewhere) {
+function DB_SELECT_DISTINCT_something_distinct_FROM_somewhere(something_distinct, somewhere) {
   let found_items = [];
   if (somewhere) {
     for (let i in somewhere) {
       let r = somewhere[i];
-      let item = r[something];
+      let item = r[something_distinct];
       if (typeof(item) == 'object')
         item = JSON.stringify(item); // to allow filtering for arrays as strings as well https://www.freecodecamp.org/news/how-to-compare-arrays-in-javascript/
       if (!found_items.includes(item))
@@ -174,7 +174,7 @@ function DB_SELECT_DISTINCT_elements_WHERE_ctag_topic(user_filters) {
   const topic = user_filters['topic'];
   const table_reports = dtu_db.select({'ctag': ctag, 'topic': topic});
 
-  let found_elements = DB_SELECT_DISTINCT_something_FROM_somewhere('element', table_reports);
+  let found_elements = DB_SELECT_DISTINCT_something_distinct_FROM_somewhere('element', table_reports);
   return {'ctag': ctag, 'topic': topic, 'elements': found_elements};
 }
 
@@ -185,23 +185,20 @@ function DB_SELECT_DISTINCT_topics_WHERE_ctag_topic(user_filters) {
   const ctag = user_filters['ctag'];
   const table_reports = dtu_db.select({'ctag': ctag});
   
-  let found_topics = DB_SELECT_DISTINCT_something_FROM_somewhere('topic', table_reports);
+  let found_topics = DB_SELECT_DISTINCT_something_distinct_FROM_somewhere('topic', table_reports);
   return {'ctag': ctag, 'topics': found_topics};
 }
 
-function DB_SELECT_DISTINCT_something_WHERE_ctag_topic(user_filters, something) {
-  // SELECT DISTINCT domain FROM reports_table WHERE 1=1
+function DB_SELECT_DISTINCT_something_distinct_WHERE_ctag_topic_AND_something(user_filters, something_distinct, something) {
+  // SELECT DISTINCT something_distinct FROM reports_table WHERE 1=1
   // AND ctag = user_filters.ctag
   // AND topic = user_filters.topic
+  // AND something.key1 = something.value1
+  // AND ...
+  // AND something.keyN = something.valueN
 
-  const ctag = user_filters['ctag'];
-  const topic = user_filters['topic'];
-  const table_reports = dtu_db.select({'ctag': ctag, 'topic': topic});
-  
-  let found_topics = DB_SELECT_DISTINCT_something_FROM_somewhere(something, table_reports);
-  let result = {'ctag': ctag, 'topic': topic};
-  result[something] = found_topics;
-  return result
+  const filtered_something = DB_SELECT_all_WHERE_ctag_topic_AND_something(user_filters, something);
+  return DB_SELECT_DISTINCT_something_distinct_FROM_somewhere(something_distinct, filtered_something);
 }
 
 function DB_SELECT_all_WHERE_ctag_topic_AND_something(user_filters, something) {
@@ -211,6 +208,9 @@ function DB_SELECT_all_WHERE_ctag_topic_AND_something(user_filters, something) {
   // AND something.key1 = something.value1
   // AND ...
   // AND something.keyN = something.valueN
+
+  if (!something)
+    something = {};
 
   something['ctag'] = user_filters['ctag'];
   something['topic'] = user_filters['topic'];

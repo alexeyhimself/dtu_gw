@@ -72,15 +72,25 @@ function TX_API_process_user_filters_request(user_filters) {
   const topics_match_ctag = DB_SELECT_DISTINCT_topics_WHERE_ctag_topic(user_filters);
   if (!user_filters.topic)
     user_filters.topic = topics_match_ctag.topics[0]; // select first available then to show data for this topic
+  kwargs['current_topic'] = user_filters.topic;
+
+  kwargs['topics_match_ctag'] = topics_match_ctag.topics;
 
   //let em = ['url_domain_name', 'url_path', 'element_path']
   //for (let i in em)
   //  console.log(DB_SELECT_DISTINCT_something_WHERE_ctag_topic(user_filters, em[i]))
+  const url_domains_match_ctag_topic = DB_SELECT_DISTINCT_something_distinct_WHERE_ctag_topic_AND_something(user_filters, 'url_domain_name');
+  kwargs['url_domains_match_ctag_topic'] = url_domains_match_ctag_topic;
 
-  kwargs['topics_match_ctag'] = topics_match_ctag.topics;
+  if (user_filters.url_domain) {
+    const url_path_match_url_domain = DB_SELECT_DISTINCT_something_distinct_WHERE_ctag_topic_AND_something(user_filters, 'url_path', {'url_domain_name': user_filters.url_domain});
+    // ...
+  }
+
+  //console.log();
+  //, {'url_domain_name': '', 'url_path': "/Users/pro/Documents/repos/dtu_mvp/app.html"
+
   kwargs['elements_match_ctag_topic'] = DB_SELECT_DISTINCT_elements_WHERE_ctag_topic(user_filters).elements;
-  kwargs['current_topic'] = user_filters.topic;
-
   const reports_match_user_filters  = DB_SELECT_all_WHERE_user_filters(user_filters);
   kwargs['reports_match_user_filters'] = reports_match_user_filters;
   kwargs['reports_match_user_filters_length'] = reports_match_user_filters.length;
