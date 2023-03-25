@@ -32,7 +32,7 @@ class DB {
     return 'local';
   }
 
-  get_records_by_engine(ctag, topic) {
+  get_records_by_engine_type(ctag, topic) {
     const storage_engine = this.get_storage_engine(topic);
     if (storage_engine == 'in-memory')
       return this.db_m.table_reports;
@@ -45,27 +45,36 @@ class DB {
     }
   }
 
-  select(ctag, topic, something) {
-    let records = this.get_records_by_engine(ctag, topic)
+  select(asked) {
+    let records = this.get_records_by_engine_type(asked.ctag, asked.topic)
 
     let found_reports = [];
     for (let i in records) {
-      let r = records[i];
-      if (topic) {
-        /*
-        if (something) {
-          if (r.ctag == ctag && r.topic == topic && r[something.key] == something.value)
-            found_reports.push(r);
-        }
-        else {
-        */
-          if (r.ctag == ctag && r.topic == topic)
-            found_reports.push(r);
-        //}
+      const r = records[i];
+      if (r.ctag != asked.ctag) {
+        continue;
       }
-      else {
-        if (r.ctag == ctag)
+      if (!asked.topic) {
+        found_reports.push(r);
+        continue;
+      }
+
+      const asked_keys = Object.keys(asked);
+
+      if (asked_keys.length == 2) { // only ctag and topic
+        if (r.ctag == asked.ctag && r.topic == asked.topic) {
           found_reports.push(r);
+          continue;
+        }
+      }
+
+      for (let i in asked_keys) {
+        let key = asked_keys[i];
+        let value = asked[key];
+        if (r[key] != value)
+          break;
+
+        found_reports.push(r);
       }
     }
     return found_reports;
@@ -130,7 +139,7 @@ function DB_SELECT_all_WHERE_user_filters(user_filters) {
 
   const ctag = user_filters['ctag'];
   const topic = user_filters['topic'];
-  const table_reports = dtu_db.select(ctag, topic);
+  const table_reports = dtu_db.select({'ctag': ctag, 'topic': topic});
 
   let found_reports = [];
   for (let i in table_reports) {
@@ -163,7 +172,7 @@ function DB_SELECT_DISTINCT_elements_WHERE_ctag_topic(user_filters) {
 
   const ctag = user_filters['ctag'];
   const topic = user_filters['topic'];
-  const table_reports = dtu_db.select(ctag, topic);
+  const table_reports = dtu_db.select({'ctag': ctag, 'topic': topic});
 
   let found_elements = DB_SELECT_DISTINCT_something_FROM_somewhere('element', table_reports);
   return {'ctag': ctag, 'topic': topic, 'elements': found_elements};
@@ -174,7 +183,7 @@ function DB_SELECT_DISTINCT_topics_WHERE_ctag_topic(user_filters) {
   // AND ctag = user_filters.ctag
 
   const ctag = user_filters['ctag'];
-  const table_reports = dtu_db.select(ctag);
+  const table_reports = dtu_db.select({'ctag': ctag});
   
   let found_topics = DB_SELECT_DISTINCT_something_FROM_somewhere('topic', table_reports);
   return {'ctag': ctag, 'topics': found_topics};
@@ -187,10 +196,23 @@ function DB_SELECT_DISTINCT_something_WHERE_ctag_topic(user_filters, something) 
 
   const ctag = user_filters['ctag'];
   const topic = user_filters['topic'];
-  const table_reports = dtu_db.select(ctag, topic);
+  const table_reports = dtu_db.select({'ctag': ctag, 'topic': topic});
   
   let found_topics = DB_SELECT_DISTINCT_something_FROM_somewhere(something, table_reports);
   let result = {'ctag': ctag, 'topic': topic};
   result[something] = found_topics;
   return result
+}
+
+function DB_SELECT_all_WHERE_ctag_topic_AND_something(user_filters, something) {
+  // SELECT DISTINCT domain FROM reports_table WHERE 1=1
+  // AND ctag = user_filters.ctag
+  // AND topic = user_filters.topic
+  // AND something.key1 = something.value1
+  // AND ...
+  // AND something.keyN = something.valueN
+
+  something['ctag'] = user_filters['ctag'];
+  something['topic'] = user_filters['topic'];
+  return dtu_db.select(something);
 }
