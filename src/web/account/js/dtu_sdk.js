@@ -344,26 +344,29 @@ function ANALYTICS_PORTAL_SDK_reset_filters_on_elements_page() {
   ANALYTICS_PORTAL_SDK_refresh_elements_page_data_according_to_user_filters_setup();
 }
 
+function ANALYTICS_PORTAL_SDK_draw_dropdown_options(element_id, options, selected_option) {
+  let html = '';
+  for (let i in options) {
+    let option = options[i];
+    html += '<option';
+    if (option == selected_option)
+      html += ' selected';
+    html += '>' + option + '</option>';
+  }
+  const drpd_topic = document.getElementById(element_id);
+  drpd_topic.innerHTML = html;
+
+  if (options.length <= 1)
+    drpd_topic.parentElement.style.display = 'none';
+  else
+    drpd_topic.parentElement.style.display = 'unset';
+}
+
 function ANALYTICS_PORTAL_SDK_refresh_topics(kwargs) {
   const topics = kwargs.topics_match_ctag;
   const currently_selected = kwargs.current_topic;
 
-  let topics_html = '';
-  for (let i in topics) {
-    let topic = topics[i];
-    topics_html += '<option';
-    if (topic == currently_selected)
-      topics_html += ' selected';
-    
-    topics_html += '>' + topic + '</option>';
-  }
-  const drpd_topic = document.getElementById('drpd:topic');
-  drpd_topic.innerHTML = topics_html;
-
-  if (topics.length <= 1)
-    drpd_topic.parentElement.style.display = 'none';
-  else
-    drpd_topic.parentElement.style.display = 'unset';
+  ANALYTICS_PORTAL_SDK_draw_dropdown_options('drpd:topic', topics, currently_selected);
 }
 
 function ANALYTICS_PORTAL_SDK_refresh_elements_list(kwargs, user_filters) {
@@ -382,11 +385,25 @@ function ANALYTICS_PORTAL_SDK_refresh_elements_list(kwargs, user_filters) {
   document.getElementById('drpd:elements').innerHTML = elements_html;
 }
 
+function ANALYTICS_PORTAL_SDK_refresh_domain_urls(kwargs) {
+  const domains = kwargs.url_domains_match_ctag_topic;
+  const currently_selected = kwargs.current_domain;
+  ANALYTICS_PORTAL_SDK_draw_dropdown_options('drpd:url_domains', domains, currently_selected)
+}
+
+function ANALYTICS_PORTAL_SDK_refresh_url_paths(kwargs) {
+  const paths = kwargs.url_paths_match_url_domain;
+  const currently_selected = kwargs.current_url_path;
+  ANALYTICS_PORTAL_SDK_draw_dropdown_options('drpd:url_paths', paths, currently_selected)
+}
+
 function ANALYTICS_PORTAL_SDK_refresh_elements_page_data_according_to_user_filters_setup() {
   let user_filters = ANALYTICS_PORTAL_SDK_collect_user_filters_on_the_page();
   let kwargs = TX_API_process_user_filters_request(user_filters);
 
   ANALYTICS_PORTAL_SDK_refresh_topics(kwargs);
+  ANALYTICS_PORTAL_SDK_refresh_domain_urls(kwargs);
+  ANALYTICS_PORTAL_SDK_refresh_url_paths(kwargs);
   ANALYTICS_PORTAL_SDK_refresh_elements_list(kwargs, user_filters);
   // ANALYTICS_PORTAL_SDK_refresh_element_path(user_filters, kwargs);
   ANALYTICS_PORTAL_SDK_refresh_calls_over_time_for_chart_id_('elements_calls_over_time_chart_id', user_filters, kwargs);

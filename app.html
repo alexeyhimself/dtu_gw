@@ -100,18 +100,14 @@
           <div class="col-lg">
             <div class="row">
               <!--label class="form-label no-margin-bottom custom-label" style="color: black2;">Show usage stats for:</label-->
-              <!--div class="col-sm col-lg-2">
+              <div class="col-sm col-lg-2 hidden">
                 <label for="datetime_to" class="form-label no-margin-bottom custom-label">domain:</label>
-                <select id="drpd..." class="form-control form-select" data-dtu="">
-                  <option>dotheyuse.com</option>
-                </select>
+                <select id="drpd:url_domains" class="form-control form-select" data-dtu></select>
               </div>
-              <div class="col-sm col-lg-3">
+              <div class="col-sm col-lg-3 hidden">
                 <label for="datetime_to" class="form-label no-margin-bottom custom-label">web page:</label>
-                <select id="drpd..." class="form-control form-select" data-dtu="">
-                  <option>/app.html</option>
-                </select>
-              </div-->
+                <select id="drpd:url_paths" class="form-control form-select" data-dtu="url path(s)"></select>
+              </div>
               <div class="col-sm col-lg margin-bottom-5" id="element_path" path='[""]'>
                 <label for="datetime_to" class="form-label no-margin-bottom custom-label">page element(s):</label>
               	<select id="drpd:elements" class="form-control form-select" data-dtu="page element(s)"></select>
