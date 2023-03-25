@@ -2,10 +2,10 @@
 //import("src/web/common/chartjs/chartjs-adapter-date-fns-3.0.0.bundle.min.js");
 
 // to adjuste phrase "all the marked with "data-dtu" elements on <better_phrase> website"
-let better_phrase = 'this web app';
+let better_phrase = ''; //'this resource';
 if (window.location.hostname == 'dotheyuse.com')
-  better_phrase = 'this web site';
-const drpd_elements_all = '-- all the monitored elements of ' + better_phrase + ' --';
+  better_phrase = ' on this web site';
+const drpd_elements_all = '-- all the monitored elements' + better_phrase + ' --';
 
 const ctag = "DEMO MVP"; // somehow via session ID mapping in DB, not in request
 
@@ -100,7 +100,7 @@ function ANALYTICS_PORTAL_SDK_start() {
   ANALYTICS_PORTAL_SDK_refresh_elements_page_data_according_to_user_filters_setup();
 
   // add listeners
-  ANALYTICS_PORTAL_SDK_make_refresh_button_work();
+  // ANALYTICS_PORTAL_SDK_make_refresh_button_work();
   ANALYTICS_PORTAL_SDK_make_element_dropdown_work();
   ANALYTICS_PORTAL_SDK_make_reset_filters_button_work();
   ANALYTICS_PORTAL_SDK_make_reset_active_time_filters_work();
@@ -125,12 +125,14 @@ function ANALYTICS_PORTAL_SDK_make_topic_dropdown_work() {
   })
 }
 
+/*
 function ANALYTICS_PORTAL_SDK_make_refresh_button_work() {
   let btn = document.getElementById('btn:refresh_elements_page_data_according_to_filters_setup');
   btn.addEventListener("click", function(e) {
     ANALYTICS_PORTAL_SDK_refresh_elements_page_data_according_to_user_filters_setup();
   })
 }
+*/
 
 function ANALYTICS_PORTAL_SDK_make_reset_filters_button_work() {
   let btn = document.getElementById('btn:reset_elements_page_filters');
