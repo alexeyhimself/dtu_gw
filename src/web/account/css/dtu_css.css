@@ -92,3 +92,9 @@ td {
   color: #666666;
   text-align: center;
 }
+body {
+  background-color: snow;
+}
+.navbar {
+  background-color: snow!important;
+}
