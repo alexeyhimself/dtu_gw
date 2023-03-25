@@ -82,8 +82,11 @@ function ANALYTICS_PORTAL_SDK_collect_user_filters_on_the_page() {
   if (dt != '')
     user_filters["datetime_to"] = Date.parse(dt);
 
-  let element_path = document.getElementById("element_path").getAttribute("path");
-  user_filters["element_path"] = JSON.parse(element_path);
+  let element_path = [''];
+  const drpd_elements = document.getElementById("drpd:elements");
+  if (drpd_elements.value != drpd_elements_all && drpd_elements.value != '')
+    element_path.push(drpd_elements.value);
+  user_filters["element_path"] = element_path;
 
   const e = document.getElementById("drpd:elements").value;
   if (e != '')
@@ -100,7 +103,6 @@ function ANALYTICS_PORTAL_SDK_start() {
   ANALYTICS_PORTAL_SDK_refresh_elements_page_data_according_to_user_filters_setup();
 
   // add listeners
-  // ANALYTICS_PORTAL_SDK_make_refresh_button_work();
   ANALYTICS_PORTAL_SDK_make_element_dropdown_work();
   ANALYTICS_PORTAL_SDK_make_reset_filters_button_work();
   ANALYTICS_PORTAL_SDK_make_reset_active_time_filters_work();
@@ -110,10 +112,6 @@ function ANALYTICS_PORTAL_SDK_start() {
 function ANALYTICS_PORTAL_SDK_make_element_dropdown_work() {
   let btn = document.getElementById('drpd:elements');
   btn.addEventListener("change", function(e) {
-    let p = [''];
-    if (this.value != drpd_elements_all)
-      p = ['', this.value];
-    document.getElementById('element_path').setAttribute('path', JSON.stringify(p));
     ANALYTICS_PORTAL_SDK_refresh_elements_page_data_according_to_user_filters_setup();
   })
 }
@@ -124,15 +122,6 @@ function ANALYTICS_PORTAL_SDK_make_topic_dropdown_work() {
     ANALYTICS_PORTAL_SDK_refresh_elements_page_data_according_to_user_filters_setup();
   })
 }
-
-/*
-function ANALYTICS_PORTAL_SDK_make_refresh_button_work() {
-  let btn = document.getElementById('btn:refresh_elements_page_data_according_to_filters_setup');
-  btn.addEventListener("click", function(e) {
-    ANALYTICS_PORTAL_SDK_refresh_elements_page_data_according_to_user_filters_setup();
-  })
-}
-*/
 
 function ANALYTICS_PORTAL_SDK_make_reset_filters_button_work() {
   let btn = document.getElementById('btn:reset_elements_page_filters');
@@ -295,16 +284,6 @@ function ANALYTICS_PORTAL_SDK_display_message_on_chart(chart, message) {
   ctx.restore();
 }
 
-function ANALYTICS_PORTAL_SDK_update_element_path(element) {
-  let element_path_element = document.getElementById("element_path");
-  let current_element_path = element_path_element.getAttribute("path");
-  
-  new_element_path = JSON.parse(current_element_path);
-  new_element_path.push(element);
-  new_element_path = JSON.stringify(new_element_path);
-  element_path_element.setAttribute("path", new_element_path);
-}
-
 function ANALYTICS_PORTAL_SDK_refresh_calls_over_time_for_chart_id_(chart_id, user_filters, kwargs) { 
 
   const chart_width_px = ANALYTICS_PORTAL_SDK_get_chart_size(chart_id);
@@ -405,17 +384,9 @@ function ANALYTICS_PORTAL_SDK_refresh_elements_page_data_according_to_user_filte
   ANALYTICS_PORTAL_SDK_refresh_domain_urls(kwargs);
   ANALYTICS_PORTAL_SDK_refresh_url_paths(kwargs);
   ANALYTICS_PORTAL_SDK_refresh_elements_list(kwargs, user_filters);
-  // ANALYTICS_PORTAL_SDK_refresh_element_path(user_filters, kwargs);
+
   ANALYTICS_PORTAL_SDK_refresh_calls_over_time_for_chart_id_('elements_calls_over_time_chart_id', user_filters, kwargs);
 }
-
-/*
-function ANALYTICS_PORTAL_SDK_refresh_element_path(user_filters, kwargs) {
-  const elements = ANALYTICS_PORTAL_SDK_get_elements_in_reports(kwargs);
-  let element_path_element = document.getElementById("element_path");
-  let element_path = user_filters.element_path;
-}
-*/
 
 function ANALYTICS_PORTAL_SDK_get_elements_in_reports(kwargs) {
   // TODO: not in reports, but overall.
@@ -428,13 +399,5 @@ function ANALYTICS_PORTAL_SDK_get_elements_in_reports(kwargs) {
   }
   return elements;
 }
-
-/*
-function ANALYTICS_PORTAL_SDK_element_path_click(element) {
-  let new_element_path = element.getAttribute("path");
-  document.getElementById("element_path").setAttribute("path", new_element_path);
-  ANALYTICS_PORTAL_SDK_refresh_elements_page_data_according_to_user_filters_setup();
-}
-*/
 
 ANALYTICS_PORTAL_SDK_start();

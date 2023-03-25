@@ -39,7 +39,6 @@ for (let i in EMULATOR_DTU_ELEMENTS_TO_TRACK) {
   }
 }
 
-const topic_dropdown = document.getElementById('drpd:topic');
 const topics = [
   'auto-generated (lite)',
   'auto-generated (heavy)'

@@ -1,6 +1,6 @@
 const emty_db_schema = {'table_reports': []};
-const db_name = 'dtu_db2';
-const ex_db_names_to_cleanup = ['dtu_db']; // previously used, schema changed - so, need to create new and cleanup old
+const db_name = 'dtu_db3';
+const ex_db_names_to_cleanup = ['dtu_db', 'dtu_db2']; // previously used, schema changed - so, need to create new and cleanup old
 
 
 class DB {
@@ -51,21 +51,22 @@ class DB {
     let found_reports = [];
     for (let i in records) {
       const r = records[i];
-      if (r.ctag != asked.ctag) {
+      if (r['ctag'] != asked['ctag']) {
         continue;
       }
-      if (!asked.topic) {
+      if (!asked['topic']) {
         found_reports.push(r);
+        continue;
+      }
+      if (r['topic'] != asked['topic']) {
         continue;
       }
 
       const asked_keys = Object.keys(asked);
 
       if (asked_keys.length == 2) { // only ctag and topic
-        if (r.ctag == asked.ctag && r.topic == asked.topic) {
-          found_reports.push(r);
-          continue;
-        }
+        found_reports.push(r);
+        continue;
       }
 
       for (let i in asked_keys) {
@@ -144,8 +145,10 @@ function DB_SELECT_all_WHERE_user_filters(user_filters) {
   let found_reports = [];
   for (let i in table_reports) {
     let report = table_reports[i];
-    if (DB_SELECT_EMULATION_check_if_report_date_matches_dates_in_user_filters(report, user_filters))
+    if (DB_SELECT_EMULATION_check_if_report_date_matches_dates_in_user_filters(report, user_filters)) {
+      //console.log(new Date(report.date_time))
       found_reports.push(report);
+    }
   }
   return found_reports;
 }

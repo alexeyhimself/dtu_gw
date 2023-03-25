@@ -103,8 +103,8 @@ function TX_API_process_user_filters_request(user_filters) {
     }
   }
 
-  //kwargs['elements_match_ctag_topic'] = DB_SELECT_DISTINCT_elements_WHERE_ctag_topic(user_filters).elements;
-  const reports_match_user_filters  = DB_SELECT_all_WHERE_user_filters(user_filters);
+  // kwargs['elements_match_ctag_topic'] = DB_SELECT_DISTINCT_elements_WHERE_ctag_topic(user_filters).elements;
+  const reports_match_user_filters = DB_SELECT_all_WHERE_user_filters(user_filters);
   kwargs['reports_match_user_filters'] = reports_match_user_filters;
   kwargs['reports_match_user_filters_length'] = reports_match_user_filters.length;
 
@@ -134,6 +134,7 @@ function TX_API_get_dates_from_to(user_filters, kwargs) {
     datetime_from = reports_match_user_filters[0].date_time; // if not set then from first date in all related reports
 
   let time_range = datetime_to - datetime_from;
+
   return {'datetime_from': datetime_from, 'datetime_to': datetime_to, 'time_range': time_range};
 }
 
@@ -280,6 +281,7 @@ function TX_API_get_reports_with_elements_path_match(user_filters, kwargs) {
 
   for (let i = 0; i < reports_match_user_filters_length; i++) {
     let report = reports_match_user_filters[i];
+    //console.log(new Date(report.date_time))
     let reports_match = true;
     if (!(element_path_user_filters_length == 1 && element_path_user_filters[0] == '')) { // if not [""]
       for (let j = 0; j < element_path_user_filters_length; j++) {
@@ -370,6 +372,10 @@ function TX_API_get_data_for_chart_(chart_width_px, user_filters, kwargs) {
     for (let j = position_in_reports; j < reports_with_elements_path_match.length; j++) {
       let r = reports_with_elements_path_match[j];
       if (r.date_time <= date) { // this report is in this time frame, so collect it
+        //console.log(new Date(r.date_time))
+        if (stats[i] > 1000) {
+          debugger
+        }
         stats[i] += 1;
         position_in_reports += 1;
       }
