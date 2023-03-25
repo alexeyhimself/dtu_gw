@@ -47,7 +47,7 @@ class DB {
 
   select(asked) {
     let records = this.get_records_by_engine_type(asked.ctag, asked.topic)
-
+    //console.log(records.length)
     let found_reports = [];
     for (let i in records) {
       const r = records[i];
@@ -69,15 +69,22 @@ class DB {
         continue;
       }
 
+      let matched = true;
       for (let i in asked_keys) {
         let key = asked_keys[i];
         let value = asked[key];
-        if (r[key] != value)
+        //console.log(key, value, r)
+        if (r[key] != value) {
+          matched = false;
           break;
-
-        found_reports.push(r);
+        }
       }
+
+      if (matched)
+        found_reports.push(r);
     }
+    //console.log(asked)
+    //console.log(found_reports)
     return found_reports;
   }
 
@@ -203,6 +210,8 @@ function DB_SELECT_DISTINCT_something_distinct_WHERE_ctag_topic_AND_something(us
   // AND something.keyN = something.valueN
 
   const filtered_something = DB_SELECT_all_WHERE_ctag_topic_AND_something(user_filters, something);
+  //console.log(something)
+  //console.log(filtered_something)
   return DB_SELECT_DISTINCT_something_distinct_FROM_somewhere(something_distinct, filtered_something);
 }
 

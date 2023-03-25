@@ -83,15 +83,20 @@ function ANALYTICS_PORTAL_SDK_collect_user_filters_on_the_page() {
     user_filters["datetime_to"] = Date.parse(dt);
 
   let element_path = [''];
-  const drpd_elements = document.getElementById("drpd:elements");
+  const drpd_elements = document.getElementById("drpd:element");
   if (drpd_elements.value != drpd_elements_all && drpd_elements.value != '')
     element_path.push(drpd_elements.value);
   user_filters["element_path"] = element_path;
 
-  const e = document.getElementById("drpd:elements").value;
-  if (e != '')
-    user_filters["chosen_element"] = e;
+  const path = ['url_domain', 'url_path', 'element'];
+  for (let i in path) {
+    let el = path[i];
+    let e = document.getElementById("drpd:" + el).value;
+    if (e != '')
+      user_filters[el] = e;
+  }
 
+  //console.log(user_filters)
   return user_filters;
 }
 
@@ -103,24 +108,19 @@ function ANALYTICS_PORTAL_SDK_start() {
   ANALYTICS_PORTAL_SDK_refresh_elements_page_data_according_to_user_filters_setup();
 
   // add listeners
-  ANALYTICS_PORTAL_SDK_make_element_dropdown_work();
+  ANALYTICS_PORTAL_SDK_make_dropdown_elements_work();
   ANALYTICS_PORTAL_SDK_make_reset_filters_button_work();
-  ANALYTICS_PORTAL_SDK_make_reset_active_time_filters_work();
-  ANALYTICS_PORTAL_SDK_make_topic_dropdown_work();
 }
 
-function ANALYTICS_PORTAL_SDK_make_element_dropdown_work() {
-  let btn = document.getElementById('drpd:elements');
-  btn.addEventListener("change", function(e) {
-    ANALYTICS_PORTAL_SDK_refresh_elements_page_data_according_to_user_filters_setup();
-  })
-}
-
-function ANALYTICS_PORTAL_SDK_make_topic_dropdown_work() {
-  let btn = document.getElementById('drpd:topic');
-  btn.addEventListener("change", function(e) {
-    ANALYTICS_PORTAL_SDK_refresh_elements_page_data_according_to_user_filters_setup();
-  })
+function ANALYTICS_PORTAL_SDK_make_dropdown_elements_work() {
+  const elements_ids = ['drpd:topic', 'drpd:url_domain', 'drpd:url_path', 'drpd:element'];
+  for (let i in elements_ids) {
+    let element_id = elements_ids[i];
+    let element = document.getElementById(element_id);
+    element.addEventListener("change", function(e) {
+      ANALYTICS_PORTAL_SDK_refresh_elements_page_data_according_to_user_filters_setup();
+    });
+  }
 }
 
 function ANALYTICS_PORTAL_SDK_make_reset_filters_button_work() {
@@ -129,18 +129,6 @@ function ANALYTICS_PORTAL_SDK_make_reset_filters_button_work() {
     ANALYTICS_PORTAL_SDK_remove_all_active_filter_class_from_time_shortcuts();
     ANALYTICS_PORTAL_SDK_reset_filters_on_elements_page();
   })
-}
-
-function ANALYTICS_PORTAL_SDK_make_reset_active_time_filters_work() {
-  const from = document.getElementById('datetime_from');
-  from.addEventListener("change", function(e) {
-    ANALYTICS_PORTAL_SDK_remove_all_active_filter_class_from_time_shortcuts();
-  });
-
-  const to = document.getElementById('datetime_to');
-  to.addEventListener("change", function(e) {
-    ANALYTICS_PORTAL_SDK_remove_all_active_filter_class_from_time_shortcuts();
-  });
 }
 
 function ANALYTICS_PORTAL_SDK_init_calls_over_time_chart_for_(chart_id) {
@@ -324,12 +312,13 @@ function ANALYTICS_PORTAL_SDK_reset_filters_on_elements_page() {
 }
 
 function ANALYTICS_PORTAL_SDK_draw_dropdown_options(element_id, options, selected_option) {
+  //console.log(element_id)
   let html = '';
-  if (element_id == 'drpd:elements')
+  if (element_id == 'drpd:element')
     html = '<option>' + drpd_elements_all + '</option>';
-  else if (element_id == 'drpd:url_domains')
+  else if (element_id == 'drpd:url_domain')
     html = '<option>-- any domain --</option>';
-  else if (element_id == 'drpd:url_paths')
+  else if (element_id == 'drpd:url_path')
     html = '<option>-- any page --</option>';
 
   for (let i in options) {
@@ -339,13 +328,13 @@ function ANALYTICS_PORTAL_SDK_draw_dropdown_options(element_id, options, selecte
       html += ' selected';
     html += '>' + option + '</option>';
   }
-  const drpd_topic = document.getElementById(element_id);
-  drpd_topic.innerHTML = html;
+  const drpd_element = document.getElementById(element_id);
+  drpd_element.innerHTML = html;
 
-  if (options.length <= 1)
-    drpd_topic.parentElement.style.display = 'none';
+  if (options.length <= 0)
+    drpd_element.parentElement.style.display = 'none';
   else
-    drpd_topic.parentElement.style.display = 'unset';
+    drpd_element.parentElement.style.display = 'unset';
 }
 
 function ANALYTICS_PORTAL_SDK_refresh_topics(kwargs) {
@@ -358,27 +347,30 @@ function ANALYTICS_PORTAL_SDK_refresh_topics(kwargs) {
 function ANALYTICS_PORTAL_SDK_refresh_domain_urls(kwargs) {
   const domains = kwargs.url_domains_match_ctag_topic;
   const currently_selected = kwargs.current_domain;
-
-  ANALYTICS_PORTAL_SDK_draw_dropdown_options('drpd:url_domains', domains, currently_selected)
+  //console.log(domains)
+  ANALYTICS_PORTAL_SDK_draw_dropdown_options('drpd:url_domain', domains, currently_selected)
 }
 
 function ANALYTICS_PORTAL_SDK_refresh_url_paths(kwargs) {
   const paths = kwargs.url_paths_match_url_domain;
-  const currently_selected = kwargs.current_url_path;
+  const currently_selected = kwargs.current_page;
 
-  ANALYTICS_PORTAL_SDK_draw_dropdown_options('drpd:url_paths', paths, currently_selected)
+  ANALYTICS_PORTAL_SDK_draw_dropdown_options('drpd:url_path', paths, currently_selected)
 }
 
 function ANALYTICS_PORTAL_SDK_refresh_elements_list(kwargs, user_filters) {
   const elements = kwargs.elements_match_ctag_topic;
-  const currently_selected = user_filters.chosen_element;
+  const currently_selected = user_filters.element;
 
-  ANALYTICS_PORTAL_SDK_draw_dropdown_options('drpd:elements', elements, currently_selected);
+  ANALYTICS_PORTAL_SDK_draw_dropdown_options('drpd:element', elements, currently_selected);
 }
 
 function ANALYTICS_PORTAL_SDK_refresh_elements_page_data_according_to_user_filters_setup() {
   let user_filters = ANALYTICS_PORTAL_SDK_collect_user_filters_on_the_page();
   let kwargs = TX_API_process_user_filters_request(user_filters);
+
+  //console.log(user_filters)
+  //console.log(kwargs)
 
   ANALYTICS_PORTAL_SDK_refresh_topics(kwargs);
   ANALYTICS_PORTAL_SDK_refresh_domain_urls(kwargs);

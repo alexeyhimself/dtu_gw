@@ -76,30 +76,33 @@ function TX_API_process_user_filters_request(user_filters) {
 
   kwargs['topics_match_ctag'] = topics_match_ctag.topics;
 
-  //let em = ['url_domain_name', 'url_path', 'element_path']
-  //for (let i in em)
-  //  console.log(DB_SELECT_DISTINCT_something_WHERE_ctag_topic(user_filters, em[i]))
   const url_domains_match_ctag_topic = DB_SELECT_DISTINCT_something_distinct_WHERE_ctag_topic_AND_something(user_filters, 'url_domain_name');
   kwargs['url_domains_match_ctag_topic'] = url_domains_match_ctag_topic;
 
   if (url_domains_match_ctag_topic.length == 1)
     user_filters.url_domain = url_domains_match_ctag_topic[0]; // if only one then assume as selected because selector is hiddden on UI in this case
 
-  if (user_filters.url_domain !== null) {
+  if (user_filters.url_domain === 'undefined')
+    user_filters.url_domain = undefined;
+
+  if (user_filters.url_domain !== '-- any domain --') {
     kwargs['current_domain'] = user_filters.url_domain;
     const url_paths_match_url_domain = DB_SELECT_DISTINCT_something_distinct_WHERE_ctag_topic_AND_something(user_filters, 'url_path', {'url_domain_name': user_filters.url_domain});
     kwargs['url_paths_match_url_domain'] = url_paths_match_url_domain;
 
-    user_filters.url_path = url_paths_match_url_domain[1];
-    if (user_filters.url_path !== null) {
+    //console.log(user_filters.url_path, typeof(user_filters.url_path))
+    if (user_filters.url_path !== '-- any page --') {
       kwargs['current_page'] = user_filters.url_path;
       const elements_match_page = DB_SELECT_DISTINCT_something_distinct_WHERE_ctag_topic_AND_something(user_filters, 'element', 
         {
           'url_domain_name': user_filters.url_domain,
           'url_path': user_filters.url_path,
         });
-      
+      //console.log(elements_match_page)
       kwargs['elements_match_ctag_topic'] = elements_match_page;
+    }
+    else {
+      kwargs['elements_match_ctag_topic'] = []; 
     }
   }
 
@@ -372,10 +375,6 @@ function TX_API_get_data_for_chart_(chart_width_px, user_filters, kwargs) {
     for (let j = position_in_reports; j < reports_with_elements_path_match.length; j++) {
       let r = reports_with_elements_path_match[j];
       if (r.date_time <= date) { // this report is in this time frame, so collect it
-        //console.log(new Date(r.date_time))
-        if (stats[i] > 1000) {
-          debugger
-        }
         stats[i] += 1;
         position_in_reports += 1;
       }
