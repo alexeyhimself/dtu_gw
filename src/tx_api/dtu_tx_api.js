@@ -73,6 +73,10 @@ function TX_API_process_user_filters_request(user_filters) {
   if (!user_filters.topic)
     user_filters.topic = topics_match_ctag.topics[0]; // select first available then to show data for this topic
 
+  //let em = ['url_domain_name', 'url_path', 'element_path']
+  //for (let i in em)
+  //  console.log(DB_SELECT_DISTINCT_something_WHERE_ctag_topic(user_filters, em[i]))
+
   kwargs['topics_match_ctag'] = topics_match_ctag.topics;
   kwargs['elements_match_ctag_topic'] = DB_SELECT_DISTINCT_elements_WHERE_ctag_topic(user_filters).elements;
   kwargs['current_topic'] = user_filters.topic;

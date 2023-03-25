@@ -45,15 +45,23 @@ class DB {
     }
   }
 
-  select(ctag, topic) {
+  select(ctag, topic, something) {
     let records = this.get_records_by_engine(ctag, topic)
 
     let found_reports = [];
     for (let i in records) {
       let r = records[i];
       if (topic) {
-        if (r.ctag == ctag && r.topic == topic)
-          found_reports.push(r);
+        /*
+        if (something) {
+          if (r.ctag == ctag && r.topic == topic && r[something.key] == something.value)
+            found_reports.push(r);
+        }
+        else {
+        */
+          if (r.ctag == ctag && r.topic == topic)
+            found_reports.push(r);
+        //}
       }
       else {
         if (r.ctag == ctag)
@@ -138,8 +146,11 @@ function DB_SELECT_DISTINCT_something_FROM_somewhere(something, somewhere) {
   if (somewhere) {
     for (let i in somewhere) {
       let r = somewhere[i];
-      if (!found_items.includes(r[something]))
-        found_items.push(r[something]);
+      let item = r[something];
+      if (typeof(item) == 'object')
+        item = JSON.stringify(item); // to allow filtering for arrays as strings as well https://www.freecodecamp.org/news/how-to-compare-arrays-in-javascript/
+      if (!found_items.includes(item))
+        found_items.push(item);
     }
   }
   return found_items;
@@ -167,4 +178,19 @@ function DB_SELECT_DISTINCT_topics_WHERE_ctag_topic(user_filters) {
   
   let found_topics = DB_SELECT_DISTINCT_something_FROM_somewhere('topic', table_reports);
   return {'ctag': ctag, 'topics': found_topics};
+}
+
+function DB_SELECT_DISTINCT_something_WHERE_ctag_topic(user_filters, something) {
+  // SELECT DISTINCT domain FROM reports_table WHERE 1=1
+  // AND ctag = user_filters.ctag
+  // AND topic = user_filters.topic
+
+  const ctag = user_filters['ctag'];
+  const topic = user_filters['topic'];
+  const table_reports = dtu_db.select(ctag, topic);
+  
+  let found_topics = DB_SELECT_DISTINCT_something_FROM_somewhere(something, table_reports);
+  let result = {'ctag': ctag, 'topic': topic};
+  result[something] = found_topics;
+  return result
 }
