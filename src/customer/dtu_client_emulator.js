@@ -27,8 +27,16 @@ function EMULATOR_get_random_date(random_time_frame, random_time_unit) {
 const elements = [];
 for (let i in EMULATOR_DTU_ELEMENTS_TO_TRACK) {
   const element = EMULATOR_DTU_ELEMENTS_TO_TRACK[i];
-  if (element.dataset)
-    elements.push(element.dataset[EMULATOR_DTU_TAG]);
+  if (element.dataset) {
+    let dtu_value = element.dataset[EMULATOR_DTU_TAG];
+    if (dtu_value)
+      elements.push(dtu_value);
+    else {
+      if (['A', 'BUTTON'].includes(element.tagName)) {
+        elements.push(element.innerText);
+      }
+    }
+  }
 }
 
 const topic_dropdown = document.getElementById('drpd:topic');
