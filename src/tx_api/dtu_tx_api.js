@@ -91,7 +91,7 @@ function TX_API_process_user_filters_request(user_filters) {
     kwargs['url_paths_match_url_domain'] = url_paths_match_url_domain;
 
     //console.log(user_filters.url_path, typeof(user_filters.url_path))
-    if (user_filters.url_path !== '-- any page --') {
+    if (user_filters.url_path !== '-- any page --' && user_filters.url_path !== undefined) {
       kwargs['current_page'] = user_filters.url_path;
       const elements_match_page = DB_SELECT_DISTINCT_something_distinct_WHERE_ctag_topic_AND_something(user_filters, 'element', 
         {
@@ -102,7 +102,12 @@ function TX_API_process_user_filters_request(user_filters) {
       kwargs['elements_match_ctag_topic'] = elements_match_page;
     }
     else {
-      kwargs['elements_match_ctag_topic'] = []; 
+      const elements_match_page = DB_SELECT_DISTINCT_something_distinct_WHERE_ctag_topic_AND_something(user_filters, 'element', 
+        {
+          'url_domain_name': user_filters.url_domain,
+        });
+      //console.log(elements_match_page)
+      kwargs['elements_match_ctag_topic'] = elements_match_page;
     }
   }
 
