@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-J69ENZY4TQ"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-J69ENZY4TQ');
+    </script>
+
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+
+		<title>Make data-driven decisions for your digital products with Do They Use product intelligence app</title>
+		<meta name="description" content="Do They Use app helps empowered product teams to get quantitative product metrics and visualise product analytics faster and easier than any other Product Intelligence tool in the market now.">
+		<meta name="keywords" content="Product Intelligence, Quantitative analysis, Product Management tools, Product Metrics">
+
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		
+		<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet"> <!-- menu font -->
+		<link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@400;500;600&display=swap" rel="stylesheet"> <!-- p text font -->
+		<link href="https://fonts.googleapis.com/css2?family=Vollkorn:wght@400;500;800&display=swap" rel="stylesheet"> <!-- h2, h3 font -->
+		<link href="https://fonts.googleapis.com/css2?family=Averia+Serif+Libre:wght@400&display=swap" rel="stylesheet"> <!-- smooth nice font for action button -->
+
+		<script type="text/javascript" src="src/web/common/bootstrap/bootstrap.5.3.0-alpha.min.js"></script>
+
+		<link href="src/web/common/bootstrap/bootstrap.5.3.0-alpha.min.css" rel="stylesheet">
+		<link href="src/web/common/css/dtu_css.css" rel="stylesheet">
+		<link href="src/web/marketing/css/dtu_css.css" rel="stylesheet">
+		<style type="text/css">
+			
+		</style>
+	</head>
+	<body>
+		<nav class="navbar navbar-expand-lg bg-light">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="index.html">Do They Use</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation" data-dtu="button: navbar-toggler">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+          <ul class="navbar-nav margin-left-6" data-dtu="navbar">
+          	<li class="nav-item">
+              <a class="nav-link" href="problem.html" data-dtu>Problem to solve</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" href="vision.html" data-dtu>Vision</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+	  <div class="row justify-content-center clip">
+	  	<hr style="width: 80%">
+    	<div class="col-lg-6 col-11">
+				<h2>Vision for the service. Where it goes</h2>
+				<p><b>Hierarchy.</b> As for now service monitors only web elements usage. Stats are flat (not hierarchical) and have no visual comparison to each other (to see which elements are used the most and which the least). That's why next steps are to display hierarchical models of data (for example: for which of "Cancel" buttons is this stats for?) and show elements usage volumes compared to each other (on sankey diagrams).</p>
+				
+				<p><b>Data.</b> When users interact with elements they choose options and enter data. We want to display analysis for that data as well. For example, to get answers on questions like: "which options are most often selected in dropdown list and which never selected?". So, you have not "based on database it is checked now", but "how many and how often do they check this" (in our example with "Brawl Stars" game: not just "number of users with currently selected El Primo brawler", but "how often do they choose El Primo brawler? Is he popular? Who is the most popular for the selected time period among the selected range of users? Who is the least?").</p>
+				
+				<p><b>Features usage.</b> Elements here and there &mdash; are the parts of more global things &mdash; features. Features must be tagged and monitored and analysed as well. And the same as elements, features are hierarchical items.</p>
+
+				<p><b>Users.</b> Okay, someone uses that element or feature or enters that data into the input field. Why should we care at all? Maybe it's just our QA or PM or Designers or Sales or Marketing or Support teams interact with the app or service in production? We want stats that include our, specified UID(s) and UGID(s) &mdash; so we could filter only users and users groups that matter or to exclude users and groups that irrelevant to us. We don't want to optimise something just because "someone uses this". We want to know who exactly uses "this" and optimise for those users groups who matter to us in this case at this time. For example, "to optimize UX for users from accounts that bring 80% of revenue" &mdash; is a clear user group to analyse and focus on.</p>
+    	</div>
+    </div>
+    <div class="row justify-content-center">
+    	<div class="col-lg-6 col-md-6 center  margin-bottom-7">
+  			<a class="btn btn-lg col-10 btn-primary" href="app.html" data-dtu="button at the end: try demo account now">Try demo account now</a>
+  			<p class="no-registration" style="margin-top: 10px">no registration required</p>
+			</div>
+    </div>
+		
+    <script src="src/db/dtu_db.js"></script>
+    <script src="src/rx_api/dtu_rx_api.js"></script>
+    
+    <script src="src/customer/dtu_sdk_js/dtu_sdk.js"></script>
+    <script type="text/javascript">
+      const dtu = dotheyuse({
+        'ctag': 'DEMO MVP',
+        'topic': 'your real usage now',
+      });
+    </script>
+	</body>
+</html>
