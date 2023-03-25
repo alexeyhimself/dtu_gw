@@ -346,6 +346,13 @@ function ANALYTICS_PORTAL_SDK_reset_filters_on_elements_page() {
 
 function ANALYTICS_PORTAL_SDK_draw_dropdown_options(element_id, options, selected_option) {
   let html = '';
+  if (element_id == 'drpd:elements')
+    html = '<option>' + drpd_elements_all + '</option>';
+  else if (element_id == 'drpd:url_domains')
+    html = '<option>-- any domain --</option>';
+  else if (element_id == 'drpd:url_paths')
+    html = '<option>-- any page --</option>';
+
   for (let i in options) {
     let option = options[i];
     html += '<option';
@@ -369,32 +376,25 @@ function ANALYTICS_PORTAL_SDK_refresh_topics(kwargs) {
   ANALYTICS_PORTAL_SDK_draw_dropdown_options('drpd:topic', topics, currently_selected);
 }
 
-function ANALYTICS_PORTAL_SDK_refresh_elements_list(kwargs, user_filters) {
-  const chosen_element = user_filters.chosen_element;
-  const elements = kwargs.elements_match_ctag_topic;
-  let elements_html = '<option>' + drpd_elements_all + '</option>';
-  for (let i in elements) {
-    let element = elements[i];
-    if (element == chosen_element)
-      elements_html += '<option selected>';
-    else 
-      elements_html += '<option>';
-
-    elements_html += element + '</option>';
-  }
-  document.getElementById('drpd:elements').innerHTML = elements_html;
-}
-
 function ANALYTICS_PORTAL_SDK_refresh_domain_urls(kwargs) {
   const domains = kwargs.url_domains_match_ctag_topic;
   const currently_selected = kwargs.current_domain;
+
   ANALYTICS_PORTAL_SDK_draw_dropdown_options('drpd:url_domains', domains, currently_selected)
 }
 
 function ANALYTICS_PORTAL_SDK_refresh_url_paths(kwargs) {
   const paths = kwargs.url_paths_match_url_domain;
   const currently_selected = kwargs.current_url_path;
+
   ANALYTICS_PORTAL_SDK_draw_dropdown_options('drpd:url_paths', paths, currently_selected)
+}
+
+function ANALYTICS_PORTAL_SDK_refresh_elements_list(kwargs, user_filters) {
+  const elements = kwargs.elements_match_ctag_topic;
+  const currently_selected = user_filters.chosen_element;
+
+  ANALYTICS_PORTAL_SDK_draw_dropdown_options('drpd:elements', elements, currently_selected);
 }
 
 function ANALYTICS_PORTAL_SDK_refresh_elements_page_data_according_to_user_filters_setup() {

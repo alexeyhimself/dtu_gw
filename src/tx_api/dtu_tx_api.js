@@ -89,9 +89,21 @@ function TX_API_process_user_filters_request(user_filters) {
     kwargs['current_domain'] = user_filters.url_domain;
     const url_paths_match_url_domain = DB_SELECT_DISTINCT_something_distinct_WHERE_ctag_topic_AND_something(user_filters, 'url_path', {'url_domain_name': user_filters.url_domain});
     kwargs['url_paths_match_url_domain'] = url_paths_match_url_domain;
+
+    user_filters.url_path = url_paths_match_url_domain[1];
+    if (user_filters.url_path !== null) {
+      kwargs['current_page'] = user_filters.url_path;
+      const elements_match_page = DB_SELECT_DISTINCT_something_distinct_WHERE_ctag_topic_AND_something(user_filters, 'element', 
+        {
+          'url_domain_name': user_filters.url_domain,
+          'url_path': user_filters.url_path,
+        });
+      
+      kwargs['elements_match_ctag_topic'] = elements_match_page;
+    }
   }
 
-  kwargs['elements_match_ctag_topic'] = DB_SELECT_DISTINCT_elements_WHERE_ctag_topic(user_filters).elements;
+  //kwargs['elements_match_ctag_topic'] = DB_SELECT_DISTINCT_elements_WHERE_ctag_topic(user_filters).elements;
   const reports_match_user_filters  = DB_SELECT_all_WHERE_user_filters(user_filters);
   kwargs['reports_match_user_filters'] = reports_match_user_filters;
   kwargs['reports_match_user_filters_length'] = reports_match_user_filters.length;

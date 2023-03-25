@@ -165,6 +165,7 @@ function DB_SELECT_DISTINCT_something_distinct_FROM_somewhere(something_distinct
   return found_items;
 }
 
+/*
 function DB_SELECT_DISTINCT_elements_WHERE_ctag_topic(user_filters) {
   // SELECT DISTINCT element FROM reports_table WHERE 1=1
   // AND ctag = user_filters.ctag
@@ -177,6 +178,7 @@ function DB_SELECT_DISTINCT_elements_WHERE_ctag_topic(user_filters) {
   let found_elements = DB_SELECT_DISTINCT_something_distinct_FROM_somewhere('element', table_reports);
   return {'ctag': ctag, 'topic': topic, 'elements': found_elements};
 }
+*/
 
 function DB_SELECT_DISTINCT_topics_WHERE_ctag_topic(user_filters) {
   // SELECT DISTINCT topic FROM reports_table WHERE 1=1
