@@ -3,7 +3,7 @@ NEW_FILE_NAME=dtu_app.html
 cp app.html $NEW_FILE_NAME
 
 # delete google analytics
-sed -i '' '/googletagmanager/,/<\/script-->/d' $NEW_FILE_NAME
+sed -i '' '/googletagmanager/,/<\/script>/d' $NEW_FILE_NAME
 
 # delete nav bar
 sed -i '' '/navbar-expand-lg/,/<\/nav>/d' $NEW_FILE_NAME
