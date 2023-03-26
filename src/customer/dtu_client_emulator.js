@@ -82,7 +82,7 @@ function generate_fake_data() {
   }
 }
 
-//generate_fake_data();
+generate_fake_data();
 
 // SDK APP FUNCTIONS
 //const excluded_events = "mousedown mouseup mousemove mouseover mouseout mousewheel";
