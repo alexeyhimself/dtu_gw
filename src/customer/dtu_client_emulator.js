@@ -53,7 +53,7 @@ function EMULATOR_make_report(topic, random_time_unit) {
   let el = EMULATOR_get_random_item_from_list(elements);
   c.element = el;
   c.element_path = ['', el];
-  c.url_domain_name = 'dotheyuse.com';
+  c.url_domain_name = window.location.hostname;
   c.url_path = '/app.html';
   return c;
 }
