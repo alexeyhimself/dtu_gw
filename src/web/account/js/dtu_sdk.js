@@ -29,7 +29,8 @@ function ANALYTICS_PORTAL_SDK_format_date_time_for_filter(date_time) {
 function ANALYTICS_PORTAL_SDK_set_datetime_filter(timedelta_ms) {
   let datetime_to = "";
   let datetime_from = "";
-  if (timedelta_ms) { // if not reset
+  if (timedelta_ms != 0) { // if not reset
+    console.log(timedelta_ms)
     const now = new Date();
     const back = now - timedelta_ms;
     datetime_from = ANALYTICS_PORTAL_SDK_format_date_time_for_filter(back);
