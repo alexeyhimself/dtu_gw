@@ -45,9 +45,13 @@ class DB {
     }
   }
 
-  select(asked) {
+  select(asked, mute) {
+    let mute_list = ['datetime_to', 'datetime_from', 'element_path'];
+    if (mute)
+      mute_list = mute_list.concat(mute);
+
     let records = this.get_records_by_engine_type(asked.ctag, asked.topic)
-    //console.log(records.length)
+    //console.log(asked)
     let found_reports = [];
     for (let i in records) {
       const r = records[i];
@@ -73,15 +77,19 @@ class DB {
       for (let i in asked_keys) {
         let key = asked_keys[i];
         let value = asked[key];
-        //console.log(key, value, r)
-        if (r[key] != value) {
-          matched = false;
-          break;
+        if (!mute_list.includes(key)) {
+          //console.log(key, value, r)
+          if (r[key] != value) {
+            matched = false;
+            break;
+          }
         }
       }
 
-      if (matched)
+      if (matched) {
+        //console.log(r)
         found_reports.push(r);
+      }
     }
     //console.log(asked)
     //console.log(found_reports)
@@ -147,7 +155,7 @@ function DB_SELECT_all_WHERE_user_filters(user_filters) {
 
   const ctag = user_filters['ctag'];
   const topic = user_filters['topic'];
-  const table_reports = dtu_db.select({'ctag': ctag, 'topic': topic});
+  const table_reports = dtu_db.select(user_filters);
 
   let found_reports = [];
   for (let i in table_reports) {
@@ -201,7 +209,7 @@ function DB_SELECT_DISTINCT_topics_WHERE_ctag_topic(user_filters) {
   return {'ctag': ctag, 'topics': found_topics};
 }
 
-function DB_SELECT_DISTINCT_something_distinct_WHERE_ctag_topic_AND_something(user_filters, something_distinct, something) {
+function DB_SELECT_DISTINCT_something_distinct_WHERE_ctag_topic_AND_something(user_filters, something_distinct, mute) {
   // SELECT DISTINCT something_distinct FROM reports_table WHERE 1=1
   // AND ctag = user_filters.ctag
   // AND topic = user_filters.topic
@@ -209,13 +217,13 @@ function DB_SELECT_DISTINCT_something_distinct_WHERE_ctag_topic_AND_something(us
   // AND ...
   // AND something.keyN = something.valueN
 
-  const filtered_something = DB_SELECT_all_WHERE_ctag_topic_AND_something(user_filters, something);
+  const filtered_something = DB_SELECT_all_WHERE_ctag_topic_AND_something(user_filters, mute);
   //console.log(something)
   //console.log(filtered_something)
   return DB_SELECT_DISTINCT_something_distinct_FROM_somewhere(something_distinct, filtered_something);
 }
 
-function DB_SELECT_all_WHERE_ctag_topic_AND_something(user_filters, something) {
+function DB_SELECT_all_WHERE_ctag_topic_AND_something(user_filters, mute) {
   // SELECT DISTINCT domain FROM reports_table WHERE 1=1
   // AND ctag = user_filters.ctag
   // AND topic = user_filters.topic
@@ -223,10 +231,5 @@ function DB_SELECT_all_WHERE_ctag_topic_AND_something(user_filters, something) {
   // AND ...
   // AND something.keyN = something.valueN
 
-  if (!something)
-    something = {};
-
-  something['ctag'] = user_filters['ctag'];
-  something['topic'] = user_filters['topic'];
-  return dtu_db.select(something);
+  return dtu_db.select(user_filters, mute);
 }

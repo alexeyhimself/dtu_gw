@@ -2,10 +2,10 @@
 //import("src/web/common/chartjs/chartjs-adapter-date-fns-3.0.0.bundle.min.js");
 
 // to adjuste phrase "all the marked with "data-dtu" elements on <better_phrase> website"
-let better_phrase = ''; //'this resource';
-if (window.location.hostname == 'dotheyuse.com')
-  better_phrase = ' on this web site';
-const drpd_elements_all = '-- all the monitored elements' + better_phrase + ' --';
+//let better_phrase = ''; //'this resource';
+//if (window.location.hostname == 'dotheyuse.com')
+//  better_phrase = ' on this web site';
+const drpd_elements_all = '-- all the monitored elements --';// + better_phrase + ' --';
 
 const ctag = "DEMO MVP"; // somehow via session ID mapping in DB, not in request
 
@@ -88,7 +88,7 @@ function ANALYTICS_PORTAL_SDK_collect_user_filters_on_the_page() {
     element_path.push(drpd_elements.value);
   user_filters["element_path"] = element_path;
 
-  const path = ['url_domain', 'url_path', 'element'];
+  const path = ['url_domain_name', 'url_path', 'element'];
   for (let i in path) {
     let el = path[i];
     let e = document.getElementById("drpd:" + el).value;
@@ -113,7 +113,7 @@ function ANALYTICS_PORTAL_SDK_start() {
 }
 
 function ANALYTICS_PORTAL_SDK_make_dropdown_elements_work() {
-  const elements_ids = ['drpd:topic', 'drpd:url_domain', 'drpd:url_path', 'drpd:element'];
+  const elements_ids = ['drpd:topic', 'drpd:url_domain_name', 'drpd:url_path', 'drpd:element'];
   for (let i in elements_ids) {
     let element_id = elements_ids[i];
     let element = document.getElementById(element_id);
@@ -316,7 +316,7 @@ function ANALYTICS_PORTAL_SDK_draw_dropdown_options(element_id, options, selecte
   let html = '';
   if (element_id == 'drpd:element')
     html = '<option>' + drpd_elements_all + '</option>';
-  else if (element_id == 'drpd:url_domain')
+  else if (element_id == 'drpd:url_domain_name')
     html = '<option>-- any domain --</option>';
   else if (element_id == 'drpd:url_path')
     html = '<option>-- any page --</option>';
@@ -331,7 +331,7 @@ function ANALYTICS_PORTAL_SDK_draw_dropdown_options(element_id, options, selecte
   const drpd_element = document.getElementById(element_id);
   drpd_element.innerHTML = html;
 
-  if (options.length <= 1 && element_id != 'drpd:element')
+  if (options.length <= 1 && element_id == 'drpd:url_domain_name')
     drpd_element.parentElement.style.display = 'none';
   else
     drpd_element.parentElement.style.display = 'unset';
@@ -348,7 +348,7 @@ function ANALYTICS_PORTAL_SDK_refresh_domain_urls(kwargs) {
   const domains = kwargs.url_domains_match_ctag_topic;
   const currently_selected = kwargs.current_domain;
   //console.log(domains)
-  ANALYTICS_PORTAL_SDK_draw_dropdown_options('drpd:url_domain', domains, currently_selected)
+  ANALYTICS_PORTAL_SDK_draw_dropdown_options('drpd:url_domain_name', domains, currently_selected)
 }
 
 function ANALYTICS_PORTAL_SDK_refresh_url_paths(kwargs) {

@@ -80,38 +80,29 @@ function TX_API_process_user_filters_request(user_filters) {
   kwargs['url_domains_match_ctag_topic'] = url_domains_match_ctag_topic;
 
   if (url_domains_match_ctag_topic.length == 1)
-    user_filters.url_domain = url_domains_match_ctag_topic[0]; // if only one then assume as selected because selector is hiddden on UI in this case
+    user_filters.url_domain_name = url_domains_match_ctag_topic[0]; // if only one then assume as selected because selector is hiddden on UI in this case
 
-  if (user_filters.url_domain === 'undefined')
-    user_filters.url_domain = undefined;
+  if (user_filters.url_domain_name === 'undefined')
+    user_filters.url_domain_name = undefined;
 
-  if (user_filters.url_domain !== '-- any domain --') {
-    kwargs['current_domain'] = user_filters.url_domain;
-    const url_paths_match_url_domain = DB_SELECT_DISTINCT_something_distinct_WHERE_ctag_topic_AND_something(user_filters, 'url_path', {'url_domain_name': user_filters.url_domain});
-    kwargs['url_paths_match_url_domain'] = url_paths_match_url_domain;
+  //console.log('before', user_filters)
+  if (user_filters.url_domain_name == '-- any domain --')
+    delete user_filters.url_domain_name;
+  if (user_filters.url_path == '-- any page --' || user_filters.url_path == undefined)
+    delete user_filters.url_path;
+  if (user_filters.element == '-- all the monitored elements --')
+    delete user_filters.element;
 
-    //console.log(user_filters.url_path, typeof(user_filters.url_path))
-    if (user_filters.url_path !== '-- any page --' && user_filters.url_path !== undefined) {
-      kwargs['current_page'] = user_filters.url_path;
-      const elements_match_page = DB_SELECT_DISTINCT_something_distinct_WHERE_ctag_topic_AND_something(user_filters, 'element', 
-        {
-          'url_domain_name': user_filters.url_domain,
-          'url_path': user_filters.url_path,
-        });
-      //console.log(elements_match_page)
-      kwargs['elements_match_ctag_topic'] = elements_match_page;
-    }
-    else {
-      const elements_match_page = DB_SELECT_DISTINCT_something_distinct_WHERE_ctag_topic_AND_something(user_filters, 'element', 
-        {
-          'url_domain_name': user_filters.url_domain,
-        });
-      //console.log(elements_match_page)
-      kwargs['elements_match_ctag_topic'] = elements_match_page;
-    }
-  }
+  //console.log('after', user_filters)
 
-  // kwargs['elements_match_ctag_topic'] = DB_SELECT_DISTINCT_elements_WHERE_ctag_topic(user_filters).elements;
+  kwargs['current_domain'] = user_filters.url_domain_name;
+  const url_paths_match_url_domain = DB_SELECT_DISTINCT_something_distinct_WHERE_ctag_topic_AND_something(user_filters, 'url_path', ['url_path', 'element']);
+  kwargs['url_paths_match_url_domain'] = url_paths_match_url_domain;
+
+  kwargs['current_page'] = user_filters.url_path;
+  const elements_match_page = DB_SELECT_DISTINCT_something_distinct_WHERE_ctag_topic_AND_something(user_filters, 'element', ['element']);
+  kwargs['elements_match_ctag_topic'] = elements_match_page;
+
   const reports_match_user_filters = DB_SELECT_all_WHERE_user_filters(user_filters);
   kwargs['reports_match_user_filters'] = reports_match_user_filters;
   kwargs['reports_match_user_filters_length'] = reports_match_user_filters.length;
