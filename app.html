@@ -42,13 +42,13 @@
         <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
           <ul class="navbar-nav margin-left-6" data-dtu="menu">
             <li class="nav-item">
-              <a class="nav-link active" href="app.html" data-dtu="app">Analytics app</a>
+              <a class="nav-link active" href="app.html" data-dtu>Analytics app</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="how-this-works.html" data-dtu="how this works">How this demo works</a>
+              <a class="nav-link" href="how-this-works.html" data-dtu>How this demo works</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="how-to-use.html" data-dtu="how to use">How to setup for your app</a>
+              <a class="nav-link" href="how-to-use.html" data-dtu>How to setup for your app</a>
             </li>
           </ul>
         </div>
@@ -58,7 +58,7 @@
         <div class="row">
           <div class="col-lg-2">
             <label for="topic" class="form-label no-margin-bottom custom-label">data source:</label>
-            <select class="form-control form-select" data-dtu="topic" id="drpd:topic">
+            <select class="form-control form-select" data-dtu="data source" id="drpd:topic">
             </select>
           </div>
         
@@ -73,8 +73,8 @@
   		          <input id="datetime_to" class="form-control" type="datetime-local" data-dtu="date-time to"/>
               </div>
   		      
-    		      <p class="custom-helper">
-                <label class="form-label no-margin-bottom custom-label" data-dtu="quick-link">show data for the last:</label>
+    		      <p class="custom-helper" data-dtu="quick-link">
+                <label class="form-label no-margin-bottom custom-label">show data for the last:</label>
                 <br>
                 <a class="time-shortcut" timedelta_ms="300000" data-dtu>5&nbsp;min</a>
     		      	<a class="time-shortcut" timedelta_ms="900000" data-dtu>15&nbsp;min</a>
@@ -109,12 +109,11 @@
                 <label for="drpd:url_path" class="form-label no-margin-bottom custom-label">web page:</label>
                 <select id="drpd:url_path" class="form-control form-select" data-dtu="page(s)"></select>
               </div>
-              <div class="col-sm col-lg margin-bottom-5" id="element_path">
+              <div class="col-sm col-lg margin-bottom-5" id="element_path" path='[""]'>
                 <label for="drpd:element" class="form-label no-margin-bottom custom-label">page element(s):</label>
-                <select id="drpd:element" class="form-control form-select" data-dtu="page element(s)"></select>
+                <select id="drpd:element" class="form-control form-select hidden" data-dtu="page element(s)"></select>
               </div>
-              <div class="col-lg-2 d-grid2 refresh_reset_buttons hidden">
-                <button id="btn:reset_elements_page_filters" type="button" class="btn btn-warning btn-sm" data-dtu>Reset filters</button>
+              <div class="col-sm col-lg margin-bottom-5" id="element_path2" path='[""]'>
               </div>
             </div>
             <div class="canvas-wrapper">

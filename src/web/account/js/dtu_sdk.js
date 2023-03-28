@@ -83,11 +83,22 @@ function ANALYTICS_PORTAL_SDK_collect_user_filters_on_the_page() {
   if (dt != '')
     user_filters["datetime_to"] = Date.parse(dt);
 
-  let element_path = [''];
-  const drpd_elements = document.getElementById("drpd:element");
-  if (drpd_elements.value != drpd_elements_all && drpd_elements.value != '')
-    element_path.push(drpd_elements.value);
-  user_filters["element_path"] = element_path;
+  //const element_path_element = document.getElementById("element_path");
+  //let element_path = JSON.parse(element_path_element.getAttribute("path"));
+  //user_filters["element_path"] = element_path;
+
+  const element_path_element = document.getElementById("element_path2");
+  let children = element_path_element.children;
+  let in_page_path = [''];
+  for (let i = 0; i < children.length; i++) {
+    let child = children[i];
+    if (child.type == 'select-one' && child.value && !child.value.startsWith('-- any '))
+      in_page_path.push(child.value);
+    if (child.hasAttribute("changed")) {
+      break;
+    }
+  }
+  user_filters["element_path"] = in_page_path;
 
   const path = ['url_domain_name', 'url_path', 'element'];
   for (let i in path) {
@@ -109,11 +120,19 @@ function ANALYTICS_PORTAL_SDK_start() {
   ANALYTICS_PORTAL_SDK_refresh_elements_page_data_according_to_user_filters_setup();
 
   // add listeners
-  ANALYTICS_PORTAL_SDK_make_dropdown_elements_work();
-  ANALYTICS_PORTAL_SDK_make_reset_filters_button_work();
+  ANALYTICS_PORTAL_SDK_make_dropdowns_work();
+  // ANALYTICS_PORTAL_SDK_make_element_dropdown_work();
+  // ANALYTICS_PORTAL_SDK_make_reset_filters_button_work();
 }
 
-function ANALYTICS_PORTAL_SDK_make_dropdown_elements_work() {
+function ANALYTICS_PORTAL_SDK_make_element_path(element) {
+  let p = [''];
+  if (element.value != drpd_elements_all)
+    p = ['', element.value];
+  //document.getElementById('element_path').setAttribute('path', JSON.stringify(p));
+}
+
+function ANALYTICS_PORTAL_SDK_make_dropdowns_work() {
   const elements_ids = ['drpd:topic', 'drpd:url_domain_name', 'drpd:url_path', 'drpd:element'];
   for (let i in elements_ids) {
     let element_id = elements_ids[i];
@@ -124,12 +143,15 @@ function ANALYTICS_PORTAL_SDK_make_dropdown_elements_work() {
   }
 }
 
-function ANALYTICS_PORTAL_SDK_make_reset_filters_button_work() {
-  let btn = document.getElementById('btn:reset_elements_page_filters');
-  btn.addEventListener("click", function(e) {
-    ANALYTICS_PORTAL_SDK_remove_all_active_filter_class_from_time_shortcuts();
-    ANALYTICS_PORTAL_SDK_reset_filters_on_elements_page();
-  })
+function ANALYTICS_PORTAL_SDK_make_element_dropdown_work() {
+  let elements = document.getElementsByClassName("element_path");
+  for (let i = 0; i < elements.length; i++) {
+    let element = elements[i];
+    element.addEventListener("change", function(e) {
+      element.setAttribute("changed", "true");
+      ANALYTICS_PORTAL_SDK_refresh_elements_page_data_according_to_user_filters_setup();
+    });
+  }
 }
 
 function ANALYTICS_PORTAL_SDK_init_calls_over_time_chart_for_(chart_id) {
@@ -316,11 +338,13 @@ function ANALYTICS_PORTAL_SDK_draw_dropdown_options(element_id, options, selecte
   //console.log(element_id)
   let html = '';
   if (element_id == 'drpd:element')
-    html = '<option>' + drpd_elements_all + '</option>';
+    html += '<option>' + drpd_elements_all + '</option>';
   else if (element_id == 'drpd:url_domain_name')
-    html = '<option>-- any domain --</option>';
+    html += '<option>-- any domain --</option>';
   else if (element_id == 'drpd:url_path')
-    html = '<option>-- any page --</option>';
+    html += '<option>-- any page --</option>';
+  else
+    html += '<option>-- any element --</option>';
 
   for (let i in options) {
     let option = options[i];
@@ -332,7 +356,7 @@ function ANALYTICS_PORTAL_SDK_draw_dropdown_options(element_id, options, selecte
   const drpd_element = document.getElementById(element_id);
   drpd_element.innerHTML = html;
 
-  if (options.length <= 1 && element_id != 'drpd:element')
+  if (options.length <= 1 && element_id != 'drpd:element' && element_id != 'drpd:element0' && element_id != 'drpd:element1' && element_id != 'drpd:element2' && element_id != 'drpd:element3')
     drpd_element.parentElement.style.display = 'none';
   else
     drpd_element.parentElement.style.display = 'unset';
@@ -343,6 +367,31 @@ function ANALYTICS_PORTAL_SDK_refresh_topics(kwargs) {
   const currently_selected = kwargs.current_topic;
 
   ANALYTICS_PORTAL_SDK_draw_dropdown_options('drpd:topic', topics, currently_selected);
+}
+
+function ANALYTICS_PORTAL_SDK_draw_elements_hierarchy(kwargs) {
+  const elements_hierarchy = kwargs['elements_hierarchy'];
+  const element_path = kwargs['element_path'];
+  let parent = document.getElementById('element_path2');
+  console.log(elements_hierarchy)
+  let html = '';
+  for (let i = 0; i < elements_hierarchy.length; i++) {
+    let id = 'drpd:element' + String(i);
+    let filter_elements = elements_hierarchy[i].elements;
+    if (filter_elements.length > 0) {
+      html += '<select id="' + id + '" class="form-control form-select element_path margin-bottom-5" data-dtu="page element(s) hierarchy"></select>';
+    }
+  }
+  parent.innerHTML = html;
+console.log(kwargs)
+  for (let i = 0; i < elements_hierarchy.length; i++) {
+    let id = 'drpd:element' + String(i);
+    let path = elements_hierarchy[i].path;
+    let filter_elements = elements_hierarchy[i].elements;
+    if (filter_elements.length > 0) {
+      ANALYTICS_PORTAL_SDK_draw_dropdown_options(id, filter_elements, element_path[i+1]);
+    }
+  }
 }
 
 function ANALYTICS_PORTAL_SDK_refresh_domain_urls(kwargs) {
@@ -371,7 +420,10 @@ function ANALYTICS_PORTAL_SDK_refresh_elements_page_data_according_to_user_filte
   let kwargs = TX_API_process_user_filters_request(user_filters);
 
   //console.log(user_filters)
-  //console.log(kwargs)
+  //console.log(kwargs.elements_hierarchy)
+
+  ANALYTICS_PORTAL_SDK_draw_elements_hierarchy(kwargs);
+  ANALYTICS_PORTAL_SDK_make_element_dropdown_work();
 
   ANALYTICS_PORTAL_SDK_refresh_topics(kwargs);
   ANALYTICS_PORTAL_SDK_refresh_domain_urls(kwargs);

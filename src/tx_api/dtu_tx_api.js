@@ -69,14 +69,18 @@ function TX_API_get_stats_for_list(list) {
 function TX_API_process_user_filters_request(user_filters) {
   let kwargs = {};
 
-  const topics_match_ctag = DB_SELECT_DISTINCT_topics_WHERE_ctag_topic(user_filters);
+  console.log('asking for topics')
+  let mute_list = {...user_filters}
+  delete mute_list['ctag'];
+  const topics_match_ctag = DB_SELECT_DISTINCT_something_WHERE_user_filers_AND_NOT_mute(user_filters, 'topic', Object.keys(mute_list));
   if (!user_filters.topic)
-    user_filters.topic = topics_match_ctag.topics[0]; // select first available then to show data for this topic
+    user_filters.topic = topics_match_ctag[0]; // select first available then to show data for this topic
   kwargs['current_topic'] = user_filters.topic;
 
-  kwargs['topics_match_ctag'] = topics_match_ctag.topics;
+  kwargs['topics_match_ctag'] = topics_match_ctag;
 
-  const url_domains_match_ctag_topic = DB_SELECT_DISTINCT_something_distinct_WHERE_ctag_topic_AND_something(user_filters, 'url_domain_name');
+  console.log('asking for domains')
+  const url_domains_match_ctag_topic = DB_SELECT_DISTINCT_something_WHERE_user_filers_AND_NOT_mute(user_filters, 'url_domain_name', ['element_path']);
   kwargs['url_domains_match_ctag_topic'] = url_domains_match_ctag_topic;
 
   if (url_domains_match_ctag_topic.length == 1)
@@ -94,15 +98,38 @@ function TX_API_process_user_filters_request(user_filters) {
     delete user_filters.element;
 
   //console.log('after', user_filters)
-
+  console.log('asking for pages')
   kwargs['current_domain'] = user_filters.url_domain_name;
-  const url_paths_match_url_domain = DB_SELECT_DISTINCT_something_distinct_WHERE_ctag_topic_AND_something(user_filters, 'url_path', ['url_path', 'element']);
+  const url_paths_match_url_domain = DB_SELECT_DISTINCT_something_WHERE_user_filers_AND_NOT_mute(user_filters, 'url_path', ['url_path', 'element', 'element_path']);
   kwargs['url_paths_match_url_domain'] = url_paths_match_url_domain;
 
+  console.log('asking for elements')
   kwargs['current_page'] = user_filters.url_path;
-  const elements_match_page = DB_SELECT_DISTINCT_something_distinct_WHERE_ctag_topic_AND_something(user_filters, 'element', ['element']);
+  const elements_match_page = DB_SELECT_DISTINCT_something_WHERE_user_filers_AND_NOT_mute(user_filters, 'element', ['element', 'element_path']);
   kwargs['elements_match_ctag_topic'] = elements_match_page;
 
+  const element_path = user_filters.element_path;
+  console.log(element_path)
+  let paths = [];
+  for (let i = 0; i < element_path.length; i++) {
+    paths.push(element_path.slice(0, i+1));
+  }
+  console.log(paths);
+  //const paths = [['']];
+  let elements_hierarchy = [];
+  for (let i in paths) {
+    user_filters['element_path'] = paths[i];
+    console.log('asking for elements 2')
+    let elements_for_path = DB_SELECT_DISTINCT_element_path_items_WHERE_user_filers_AND_path_AND_NOT_mute(user_filters, paths[i], ['element2', 'element_path2']);
+    if (elements_for_path.length == 1 && elements_for_path[0] == paths[i][paths.length - 1])
+      break;
+    elements_hierarchy.push({'path': paths[i], 'elements': elements_for_path});
+    //console.log(DB_SELECT_DISTINCT_something_WHERE_user_filers_AND_NOT_mute(user_filters, 'element', ['element']))
+  }
+  kwargs['elements_hierarchy'] = elements_hierarchy;
+  kwargs['element_path'] = element_path;
+
+  console.log('asking for content')
   const reports_match_user_filters = DB_SELECT_all_WHERE_user_filters(user_filters);
   kwargs['reports_match_user_filters'] = reports_match_user_filters;
   kwargs['reports_match_user_filters_length'] = reports_match_user_filters.length;
@@ -283,6 +310,7 @@ function TX_API_get_reports_with_elements_path_match(user_filters, kwargs) {
     //console.log(new Date(report.date_time))
     let reports_match = true;
     if (!(element_path_user_filters_length == 1 && element_path_user_filters[0] == '')) { // if not [""]
+      //console.log(element_path_user_filters, report)
       for (let j = 0; j < element_path_user_filters_length; j++) {
         if (report.element_path[j] != element_path_user_filters[j]) {
           reports_match = false;
