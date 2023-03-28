@@ -379,7 +379,7 @@ function ANALYTICS_PORTAL_SDK_draw_elements_hierarchy(kwargs) {
     let id = 'drpd:element' + String(i);
     let filter_elements = elements_hierarchy[i].elements;
     if (filter_elements.length > 0) {
-      html += '<select id="' + id + '" class="form-control form-select element_path margin-bottom-5" data-dtu="page element(s) hierarchy"></select>';
+      html += '<select id="' + id + '" class="form-control form-select element_path margin-bottom-5" data-dtu="page element(s)"></select>';
     }
   }
   parent.innerHTML = html;
@@ -427,6 +427,7 @@ function ANALYTICS_PORTAL_SDK_refresh_elements_page_data_according_to_user_filte
 
   ANALYTICS_PORTAL_SDK_refresh_topics(kwargs);
   ANALYTICS_PORTAL_SDK_refresh_domain_urls(kwargs);
+  ANALYTICS_PORTAL_SDK_draw_elements_hierarchy(kwargs);
   ANALYTICS_PORTAL_SDK_refresh_url_paths(kwargs);
   ANALYTICS_PORTAL_SDK_refresh_elements_list(kwargs, user_filters);
 
