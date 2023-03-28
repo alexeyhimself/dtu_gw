@@ -374,7 +374,7 @@ function ANALYTICS_PORTAL_SDK_draw_elements_hierarchy(kwargs) {
   const element_path = kwargs['element_path'];
   let parent = document.getElementById('element_path2');
   console.log(elements_hierarchy)
-  let html = '';
+  let html = '<label for="drpd:element" class="form-label no-margin-bottom custom-label">page element(s):</label>';
   for (let i = 0; i < elements_hierarchy.length; i++) {
     let id = 'drpd:element' + String(i);
     let filter_elements = elements_hierarchy[i].elements;
@@ -427,7 +427,6 @@ function ANALYTICS_PORTAL_SDK_refresh_elements_page_data_according_to_user_filte
 
   ANALYTICS_PORTAL_SDK_refresh_topics(kwargs);
   ANALYTICS_PORTAL_SDK_refresh_domain_urls(kwargs);
-  ANALYTICS_PORTAL_SDK_draw_elements_hierarchy(kwargs);
   ANALYTICS_PORTAL_SDK_refresh_url_paths(kwargs);
   ANALYTICS_PORTAL_SDK_refresh_elements_list(kwargs, user_filters);
 
