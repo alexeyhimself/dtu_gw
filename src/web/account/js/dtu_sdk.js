@@ -87,26 +87,30 @@ function ANALYTICS_PORTAL_SDK_collect_user_filters_on_the_page() {
   //let element_path = JSON.parse(element_path_element.getAttribute("path"));
   //user_filters["element_path"] = element_path;
 
-  const element_path_element = document.getElementById("element_path");
-  let children = element_path_element.children;
   let in_page_path = [''];
-  for (let i = 0; i < children.length; i++) {
-    let child = children[i];
-    if (child.type == 'select-one' && child.value && !child.value.startsWith('-- any '))
-      in_page_path.push(child.value);
-    if (child.hasAttribute("changed")) {
-      break;
-    }
-  }
   user_filters["element_path"] = in_page_path;
 
   const path = ['url_domain_name', 'url_path'];
   for (let i in path) {
-    let el = path[i];
-    let e = document.getElementById("drpd:" + el).value;
-    if (e != '')
-      user_filters[el] = e;
+    let drpd_path_suffix = path[i];
+    let element = document.getElementById("drpd:" + drpd_path_suffix);
+    if (element.value != '')
+      user_filters[drpd_path_suffix] = element.value;
+    if (element.hasAttribute("changed")) {
+      return user_filters; // high level change, no need to collect other
+    }
   }
+
+  const element_path_element = document.getElementById("element_path");
+  let children = element_path_element.children;
+  for (let i = 0; i < children.length; i++) {
+    let child = children[i];
+    if (child.type == 'select-one' && child.value && !child.value.startsWith('-- any '))
+      in_page_path.push(child.value);
+    if (child.hasAttribute("changed"))
+      break;
+  }
+  user_filters["element_path"] = in_page_path;
 
   //console.log(user_filters)
   return user_filters;
@@ -138,7 +142,9 @@ function ANALYTICS_PORTAL_SDK_make_dropdowns_work() {
     let element_id = elements_ids[i];
     let element = document.getElementById(element_id);
     element.addEventListener("change", function(e) {
+      element.setAttribute("changed", "true");
       ANALYTICS_PORTAL_SDK_refresh_elements_page_data_according_to_user_filters_setup();
+      element.removeAttribute("changed");
     });
   }
 }
@@ -150,6 +156,7 @@ function ANALYTICS_PORTAL_SDK_make_element_dropdown_work() {
     element.addEventListener("change", function(e) {
       element.setAttribute("changed", "true");
       ANALYTICS_PORTAL_SDK_refresh_elements_page_data_according_to_user_filters_setup();
+      element.removeAttribute("changed");
     });
   }
 }
