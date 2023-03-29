@@ -362,8 +362,10 @@ function ANALYTICS_PORTAL_SDK_draw_dropdown_options(element_id, options, selecte
       let type = types[i];
       if (type == 'anchor') type = 'link';
       if (type == 'select-one') type = 'dropdown';
-      if (type != 'has children')
+      if (type != 'has children' && type !== undefined)
         new_option = '(' + type + ') ' + option;
+      else if (type === undefined)
+        new_option = option;
       else
         new_option = ' ' + option + ' ...';
     }

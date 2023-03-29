@@ -239,6 +239,6 @@ function DB_SELECT_DISTINCT_element_path_items_WHERE_user_filters_AND_path_AND_N
     }
   }
   let result = {'path_elements': found_path_elements, 'path_elements_types': found_types};
-  console.log(result)
+  //console.log(result)
   return result;
 }

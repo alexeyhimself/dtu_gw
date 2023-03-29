@@ -98,7 +98,7 @@ function TX_API_process_user_filters_request(user_filters) {
 
   // console.log('before', user_filters)
 
-console.log('after', user_filters)
+  //console.log('after', user_filters)
   // console.log('asking for pages')
   kwargs['current_domain'] = user_filters.url_domain_name;
   const url_paths_match_url_domain = DB_SELECT_DISTINCT_something_WHERE_user_filers_AND_NOT_mute(user_filters, 'url_path', ['url_path', 'element', 'element_path']);
