@@ -78,7 +78,7 @@ function TX_API_process_user_filters_request(user_filters) {
   if (user_filters.element == '-- any element --')
     delete user_filters.element;
 
-  console.log('asking for topics')
+  // console.log('asking for topics')
   let mute_list = {...user_filters}
   delete mute_list['ctag'];
   const topics_match_ctag = DB_SELECT_DISTINCT_something_WHERE_user_filers_AND_NOT_mute(user_filters, 'topic', Object.keys(mute_list));
@@ -88,7 +88,7 @@ function TX_API_process_user_filters_request(user_filters) {
 
   kwargs['topics_match_ctag'] = topics_match_ctag;
 
-  console.log('asking for domains')
+  // console.log('asking for domains')
   const url_domains_match_ctag_topic = DB_SELECT_DISTINCT_something_WHERE_user_filers_AND_NOT_mute(user_filters, 'url_domain_name', ['element_path']);
   kwargs['url_domains_match_ctag_topic'] = url_domains_match_ctag_topic;
 
@@ -98,41 +98,41 @@ function TX_API_process_user_filters_request(user_filters) {
   if (user_filters.url_domain_name === 'undefined')
     user_filters.url_domain_name = undefined;
 
-  //console.log('before', user_filters)
+  // console.log('before', user_filters)
 
-  //console.log('after', user_filters)
-  console.log('asking for pages')
+  // console.log('after', user_filters)
+  // console.log('asking for pages')
   kwargs['current_domain'] = user_filters.url_domain_name;
   const url_paths_match_url_domain = DB_SELECT_DISTINCT_something_WHERE_user_filers_AND_NOT_mute(user_filters, 'url_path', ['url_path', 'element', 'element_path']);
   kwargs['url_paths_match_url_domain'] = url_paths_match_url_domain;
 
-  console.log('asking for elements')
+  // console.log('asking for elements')
   kwargs['current_page'] = user_filters.url_path;
   const elements_match_page = DB_SELECT_DISTINCT_something_WHERE_user_filers_AND_NOT_mute(user_filters, 'element', ['element', 'element_path']);
   kwargs['elements_match_ctag_topic'] = elements_match_page;
 
   const element_path = user_filters.element_path;
-  console.log(element_path)
+  // console.log(element_path)
   let paths = [];
   for (let i = 0; i < element_path.length; i++) {
     paths.push(element_path.slice(0, i+1));
   }
-  console.log(paths);
+  // console.log(paths);
   //const paths = [['']];
   let elements_hierarchy = [];
   for (let i in paths) {
     user_filters['element_path'] = paths[i];
-    console.log('asking for elements 2')
+    // console.log('asking for elements 2')
     let elements_for_path = DB_SELECT_DISTINCT_element_path_items_WHERE_user_filers_AND_path_AND_NOT_mute(user_filters, paths[i], ['element', 'element_path']);
     if (elements_for_path.length == 1 && elements_for_path[0] == paths[i][paths.length - 1])
       break;
     elements_hierarchy.push({'path': paths[i], 'elements': elements_for_path});
-    //console.log(DB_SELECT_DISTINCT_something_WHERE_user_filers_AND_NOT_mute(user_filters, 'element', ['element']))
+    // console.log(DB_SELECT_DISTINCT_something_WHERE_user_filers_AND_NOT_mute(user_filters, 'element', ['element']))
   }
   kwargs['elements_hierarchy'] = elements_hierarchy;
   kwargs['element_path'] = element_path;
 
-  console.log('asking for content')
+  // console.log('asking for content')
   const reports_match_user_filters = DB_SELECT_all_WHERE_user_filters(user_filters);
   kwargs['reports_match_user_filters'] = reports_match_user_filters;
   kwargs['reports_match_user_filters_length'] = reports_match_user_filters.length;
