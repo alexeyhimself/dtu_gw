@@ -36,11 +36,11 @@
     <nav class="navbar navbar-expand-lg bg-light" data-dtu="navbar">
       <div class="container-fluid">
         <a class="navbar-brand" href="index.html">Do They Use</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation" data-dtu="navbar-toggler">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation" data-dtu="menu">
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
-          <ul class="navbar-nav margin-left-6" data-dtu="menu">
+          <ul class="navbar-nav margin-left-6">
             <li class="nav-item">
               <a class="nav-link active" href="app.html" data-dtu>Analytics app</a>
             </li>
@@ -58,8 +58,7 @@
         <div class="row">
           <div class="col-lg-2">
             <label for="topic" class="form-label no-margin-bottom custom-label">data source:</label>
-            <select class="form-control form-select" data-dtu="data source" id="drpd:topic">
-            </select>
+            <select class="form-control form-select" data-dtu="data source" id="drpd:topic"></select>
           </div>
         
 					<div class="col-lg">
@@ -73,7 +72,7 @@
   		          <input id="datetime_to" class="form-control" type="datetime-local" data-dtu="date-time to"/>
               </div>
   		      
-    		      <p class="custom-helper" data-dtu="quick-link">
+    		      <p class="custom-helper" data-dtu="time quick-link">
                 <label class="form-label no-margin-bottom custom-label">show data for the last:</label>
                 <br>
                 <a class="time-shortcut" timedelta_ms="300000" data-dtu>5&nbsp;min</a>

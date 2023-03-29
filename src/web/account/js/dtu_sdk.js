@@ -341,7 +341,7 @@ function ANALYTICS_PORTAL_SDK_reset_filters_on_elements_page() {
   ANALYTICS_PORTAL_SDK_refresh_elements_page_data_according_to_user_filters_setup();
 }
 
-function ANALYTICS_PORTAL_SDK_draw_dropdown_options(element_id, options, selected_option) {
+function ANALYTICS_PORTAL_SDK_draw_dropdown_options(element_id, options, selected_option, types) {
   //console.log(element_id)
   let html = '';
   if (element_id == 'drpd:topic')
@@ -353,13 +353,35 @@ function ANALYTICS_PORTAL_SDK_draw_dropdown_options(element_id, options, selecte
   else
     html += '<option>-- any element --</option>';
 
+  let em = {};
+  let new_options = [];
   for (let i in options) {
     let option = options[i];
-    html += '<option';
+    let new_option = option;
+    if (types) {
+      let type = types[i];
+      if (type == 'anchor') type = 'link';
+      if (type == 'select-one') type = 'dropdown';
+      if (type != 'has children')
+        new_option = '(' + type + ') ' + option;
+      else
+        new_option = ' ' + option + ' ...';
+    }
+    em[new_option] = option;
+    new_options.push(new_option);
+  }
+
+  for (let i in new_options.sort()) {
+    let new_option = new_options[i];
+    let option = em[new_option];
+    html += '<option value="' + option + '"';
     if (option == selected_option)
       html += ' selected';
-    html += '>' + option + '</option>';
+    html += '>';
+    html += new_option;
+    html += '</option>';
   }
+  
   const drpd_element = document.getElementById(element_id);
   drpd_element.innerHTML = html;
 
@@ -395,8 +417,9 @@ function ANALYTICS_PORTAL_SDK_draw_elements_hierarchy(kwargs) {
     let id = 'drpd:element' + String(i);
     let path = elements_hierarchy[i].path;
     let filter_elements = elements_hierarchy[i].elements;
+    let types = elements_hierarchy[i].types;
     if (filter_elements.length > 0) {
-      ANALYTICS_PORTAL_SDK_draw_dropdown_options(id, filter_elements, element_path[i+1]);
+      ANALYTICS_PORTAL_SDK_draw_dropdown_options(id, filter_elements, element_path[i+1], types);
     }
   }
 }

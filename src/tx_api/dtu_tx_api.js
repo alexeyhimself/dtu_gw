@@ -98,7 +98,7 @@ function TX_API_process_user_filters_request(user_filters) {
 
   // console.log('before', user_filters)
 
-  // console.log('after', user_filters)
+console.log('after', user_filters)
   // console.log('asking for pages')
   kwargs['current_domain'] = user_filters.url_domain_name;
   const url_paths_match_url_domain = DB_SELECT_DISTINCT_something_WHERE_user_filers_AND_NOT_mute(user_filters, 'url_path', ['url_path', 'element', 'element_path']);
@@ -121,11 +121,12 @@ function TX_API_process_user_filters_request(user_filters) {
   for (let i in paths) {
     user_filters['element_path'] = paths[i];
     // console.log('asking for elements 2')
-    let elements_for_path = DB_SELECT_DISTINCT_element_path_items_WHERE_user_filers_AND_path_AND_NOT_mute(user_filters, paths[i], ['element', 'element_path']);
-    if (elements_for_path.length == 1 && elements_for_path[0] == paths[i][paths.length - 1])
-      break;
-    elements_hierarchy.push({'path': paths[i], 'elements': elements_for_path});
-    // console.log(DB_SELECT_DISTINCT_something_WHERE_user_filers_AND_NOT_mute(user_filters, 'element', ['element']))
+    let e4p = DB_SELECT_DISTINCT_element_path_items_WHERE_user_filters_AND_path_AND_NOT_mute(user_filters, paths[i], ['element_path', 'element']);
+    elements_for_path = e4p.path_elements;
+    elements_types = e4p.path_elements_types;
+    //if (elements_for_path.length == 1 && elements_for_path[0] == paths[i][paths.length - 1])
+    //  break;
+    elements_hierarchy.push({'path': paths[i], 'elements': elements_for_path, 'types': elements_types});
   }
   kwargs['elements_hierarchy'] = elements_hierarchy;
   kwargs['element_path'] = element_path;

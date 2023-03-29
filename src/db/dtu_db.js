@@ -204,17 +204,17 @@ function DB_SELECT_DISTINCT_something_WHERE_user_filers_AND_NOT_mute(user_filter
   return DB_SELECT_DISTINCT_something_distinct_FROM_somewhere(something_distinct, filtered_something);
 }
 
-function DB_SELECT_DISTINCT_element_path_items_WHERE_user_filers_AND_path_AND_NOT_mute(user_filters, path) {
-  //console.log(path, user_filters)
-  const filtered_something = dtu_db.select(user_filters, ['element_path', 'element'])
+function DB_SELECT_DISTINCT_element_path_items_WHERE_user_filters_AND_path_AND_NOT_mute(user_filters, path, mute) {
+  const filtered_something = dtu_db.select(user_filters, mute)
   const element_path_index = path.length;
+  
   let found_path_elements = [];
+  let found_types = [];
   for (let i in filtered_something) {
     let report = filtered_something[i];
     let report_element_at_path_index = report.element_path[element_path_index];
+    let has_children = report.element_path[element_path_index + 1];
     const report_element = report.element;
-    //console.log(report.element, report.element_path);
-    //console.log(report_element_at_path_index, element_path_index, report.element_path.length)
     if (report_element_at_path_index === undefined) {
       if (element_path_index != report.element_path.length)
         continue;
@@ -230,9 +230,15 @@ function DB_SELECT_DISTINCT_element_path_items_WHERE_user_filers_AND_path_AND_NO
         break;
       }
     }
-    if (matched && report_element_at_path_index) { found_path_elements.push(report_element_at_path_index); }
+    if (matched && report_element_at_path_index) { 
+      found_path_elements.push(report_element_at_path_index); 
+      if (has_children)
+        found_types.push('has children');
+      else
+        found_types.push(report.element_type);
+    }
   }
-  //console.log(user_filters, path)
-  //console.log('found_path_elements', found_path_elements);
-  return found_path_elements;
+  let result = {'path_elements': found_path_elements, 'path_elements_types': found_types};
+  console.log(result)
+  return result;
 }
