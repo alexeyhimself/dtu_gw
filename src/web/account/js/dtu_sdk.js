@@ -338,7 +338,7 @@ function ANALYTICS_PORTAL_SDK_draw_dropdown_options(element_id, options, selecte
   //console.log(element_id)
   let html = '';
   if (element_id == 'drpd:topic')
-    html += '<option>-- any topic --</option>';
+    ;
   else if (element_id == 'drpd:url_domain_name')
     html += '<option>-- any domain --</option>';
   else if (element_id == 'drpd:url_path')

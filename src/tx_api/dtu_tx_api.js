@@ -69,8 +69,6 @@ function TX_API_get_stats_for_list(list) {
 function TX_API_process_user_filters_request(user_filters) {
   let kwargs = {};
 
-  if (user_filters.topic == '-- any topic --');
-    delete user_filters.topic;
   if (user_filters.url_domain_name == '-- any domain --')
     delete user_filters.url_domain_name;
   if (user_filters.url_path == '-- any page --' || user_filters.url_path == undefined)
