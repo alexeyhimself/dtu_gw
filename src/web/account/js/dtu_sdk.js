@@ -356,7 +356,7 @@ function ANALYTICS_PORTAL_SDK_draw_dropdown_options(element_id, options, selecte
   const drpd_element = document.getElementById(element_id);
   drpd_element.innerHTML = html;
 
-  if (options.length <= 1 && element_id != 'drpd:element' && element_id != 'drpd:element0' && element_id != 'drpd:element1' && element_id != 'drpd:element' && element_id != 'drpd:element3')
+  if (options.length <= 1 && element_id != 'drpd:element0' && element_id != 'drpd:element1' && element_id != 'drpd:element2' && element_id != 'drpd:element3')
     drpd_element.parentElement.style.display = 'none';
   else
     drpd_element.parentElement.style.display = 'unset';

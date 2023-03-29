@@ -213,13 +213,15 @@ function DB_SELECT_DISTINCT_element_path_items_WHERE_user_filers_AND_path_AND_NO
     let report = filtered_something[i];
     let report_element_at_path_index = report.element_path[element_path_index];
     const report_element = report.element;
-    //console.log(report.element, report.element_path);
-    //console.log(report_element_at_path_index, element_path_index, report.element_path.length)
+    console.log(report.element, report.element_path);
+    console.log(report_element_at_path_index, element_path_index, report.element_path.length)
     if (report_element_at_path_index === undefined) {
       if (element_path_index != report.element_path.length)
         continue;
-      else if (element_path_index == report.element_path.length)
-        report_element_at_path_index = report_element;
+      else if (element_path_index == report.element_path.length) {
+        console.log(report.element_path, user_filters)
+        //report_element_at_path_index = report_element;
+      }
     }
     if (found_path_elements.includes(report_element_at_path_index))
       continue;
@@ -232,7 +234,7 @@ function DB_SELECT_DISTINCT_element_path_items_WHERE_user_filers_AND_path_AND_NO
         break;
       }
     }
-    if (matched) { found_path_elements.push(report_element_at_path_index); }
+    if (matched && report_element_at_path_index) { found_path_elements.push(report_element_at_path_index); }
   }
   console.log(user_filters, path)
   console.log('found_path_elements', found_path_elements);
