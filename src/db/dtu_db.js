@@ -1,6 +1,6 @@
 const emty_db_schema = {'table_reports': []};
-const db_name = 'dtu_db3';
-const ex_db_names_to_cleanup = ['dtu_db', 'dtu_db2']; // previously used, schema changed - so, need to create new and cleanup old
+const db_name = 'dtu_db4';
+const ex_db_names_to_cleanup = ['dtu_db', 'dtu_db2', 'dtu_db3']; // previously used, schema changed - so, need to create new and cleanup old
 
 
 class DB {

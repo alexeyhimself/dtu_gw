@@ -31,22 +31,22 @@
 		</style>
 	</head>
 	<body>
-		<nav class="navbar navbar-expand-lg bg-light">
+		<nav class="navbar navbar-expand-lg bg-light" data-dtu="navbar">
       <div class="container-fluid">
-        <a class="navbar-brand" href="index.html">Do They Use</a>
+        <a class="navbar-brand" href="index.html" data-dtu>Do They Use</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation" data-dtu="menu">
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
           <ul class="navbar-nav margin-left-6">
             <li class="nav-item">
-              <a class="nav-link" href="app.html" data-dtu="menu item: app">Analytics app</a>
+              <a class="nav-link" href="app.html" data-dtu>Analytics app</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link active" href="how-this-works.html" data-dtu="menu item: how this works">How this demo works</a>
+              <a class="nav-link active" href="how-this-works.html" data-dtu>How this demo works</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="how-to-use.html" data-dtu="menu item: how to use">How to setup for your app</a>
+              <a class="nav-link" href="how-to-use.html" data-dtu>How to setup for your app</a>
             </li>
           </ul>
         </div>
@@ -55,13 +55,13 @@
 	  <div class="row justify-content-center clip">
     	<div class="col-lg-6 col-11  margin-bottom-7">
     		<h2 class=" font2">How this demo works</h2>
-    		<p >Every interaction element (button, link, menu, drop-down, date-time picker, etc.) on a whole <a href="#" data-dtu="link: dotheyuse.com from how-to">https://dotheyuse.com</a> website (including this web page as well) has its own unique and meaningful "data-dtu" attribute:</p>
+    		<p >Every interaction element (button, link, menu, drop-down, date-time picker, etc.) on a whole <a href="#" data-dtu>https://dotheyuse.com</a> website (including this web page as well) has its own unique and meaningful "data-dtu" attribute:</p>
     		<img src="https://www.dropbox.com/s/b0lm8262px9vchn/data-dtu-for-try-now-button.png?raw=1" style="max-width: 327px; border: 1px solid gray;" class="image">
     		
-    		<p >Every page also imports and inits <a href="https://github.com/alexeyhimself/dtu_sdk_js" target="_blank" data-dtu="link: open source SDK from how-to">Do They Use service JavaScript SDK</a> with custom "topic": "real usage":</p>
+    		<p >Every page also imports and inits <a href="https://github.com/alexeyhimself/dtu_sdk_js" target="_blank" data-dtu>Do They Use service JavaScript SDK</a> with custom "topic": "real usage":</p>
     		<img src="https://www.dropbox.com/s/dplazho9rzphxsn/import-and-init-for-page.png?raw=1" style="max-width: 367px; border: 1px solid gray;" class="image">
 
-    		<p >This setup allows to track all your interactions with any tagged (we want to be monitored) element on this website. And all these interactions appear under "topic": "real usage" in <a href="app.html" data-dtu="link: demo account">demo account</a>:</p>
+    		<p >This setup allows to track all your interactions with any tagged (we want to be monitored) element on this website. And all these interactions appear under "topic": "real usage" in <a href="app.html" data-dtu>demo account</a>:</p>
     		<img src="https://www.dropbox.com/s/j84dksv5h8drzp9/inside-dtu-account.png?raw=1" style="min-width: 541px; max-width: 100%; border: 1px solid gray;" class="image">
     		
     		<p >By default chart displays "all available" information: stats for all the elements from the whole web site (including demo account itself) at any time. But you can filter for any particular element at any time period. If an element has never had interactions or it has no "data-dtu" attribute assigned, then it will not be available for filtering.</p>

@@ -31,22 +31,22 @@
 		</style>
 	</head>
 	<body>
-		<nav class="navbar navbar-expand-lg bg-light">
+		<nav class="navbar navbar-expand-lg bg-light" data-dtu="navbar">
       <div class="container-fluid">
-        <a class="navbar-brand" href="index.html">Do They Use</a>
+        <a class="navbar-brand" href="index.html" data-dtu>Do They Use</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation" data-dtu="menu">
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
           <ul class="navbar-nav margin-left-6">
             <li class="nav-item">
-              <a class="nav-link" href="app.html" data-dtu="menu item: app">Analytics app</a>
+              <a class="nav-link" href="app.html" data-dtu>Analytics app</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="how-this-works.html" data-dtu="menu item: how this works">How this demo works</a>
+              <a class="nav-link" href="how-this-works.html" data-dtu>How this demo works</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link active" href="how-to-use.html" data-dtu="menu item: how to use">How to setup for your app</a>
+              <a class="nav-link active" href="how-to-use.html" data-dtu>How to setup for your app</a>
             </li>
           </ul>
         </div>
@@ -59,7 +59,7 @@
     		<h3 id="cloud-based">Cloud-based (we host)</h3>
 
     		<p >You can't send metrics from your apps into cloud MVP right now. Current version of cloud MVP uses and shows only its own self-monitored metrics. It is made to provide you with instructions, explanations, how-to's and demonstration of the service current abilities without any setup efforts from your side.</p>
-    		<p >Go to <a href="app.html" data-dtu="link: dotheyuse.com from how-to">Analytics app</a> to try it. It has both fake auto-generated (lite and heavy data) and live your real usage data:</p>
+    		<p >Go to <a href="app.html" data-dtu>Analytics app</a> to try it. It has both fake auto-generated (lite and heavy data) and live your real usage data:</p>
     		<img src="https://www.dropbox.com/s/j84dksv5h8drzp9/inside-dtu-account.png?raw=1" style="min-width: 712px; max-width: 100%; border: 1px solid gray;" class="image">
     		
 
@@ -70,8 +70,8 @@
 
     		<h4 id="zero-coding">Zero coding demo</h4>
     		<ol >
-    			<li>Download <a href="src/customer/demos/your_app.html" data-dtu="link: your_app.html" target="_blank">your_app.html</a> (on saving choose "Webpage, HTML only" option, not "Webpage, Complete" &mdash; because the file is self-sufficient);</li>
-    			<li>Download <a href="src/customer/demos/dtu_app.html" data-dtu="link: dtu_app.html" target="_blank">dtu_app.html</a> (the same: on saving choose "Webpage, HTML only");</li>
+    			<li>Download <a href="src/customer/demos/your_app.html" data-dtu target="_blank">your_app.html</a> (on saving choose "Webpage, HTML only" option, not "Webpage, Complete" &mdash; because the file is self-sufficient);</li>
+    			<li>Download <a href="src/customer/demos/dtu_app.html" data-dtu target="_blank">dtu_app.html</a> (the same: on saving choose "Webpage, HTML only");</li>
     			<li>Open both files in the same web browser;</li>
     			<li>Interact with the elements of "your_app.html" (click links, buttons, change values);</li>
     			<li>Refresh "dtu_app.html" (or click on "Refresh filter" button on the) page to see the stats from "your_app.html".</li>
@@ -94,7 +94,7 @@
     		<h4 id="setup-instructions">Enable analytics for your web app</h4>
     		<p >Here is a detailed instruction on how to do the same analytics but for "your_app.html" but for your real web app.</p>
     		<ol >
-    			<li>If you haven't, save <a href="src/customer/demos/dtu_app.html" data-dtu="link: dtu_app.html from how-to use" target="_blank">dtu_app.html</a> single-page HTML file of the DTU analytics app to any place. When saving choose "Webpage, HTML only" option, not "Webpage, Complete" because this HTML file has absolute paths for all the imports it needs. You can place "dtu_app.html" file anywhere and it will work from any place if that place is in the same origin with your app (file:// or http://domain or https://domain) in the same browser (because it uses window.localStorage of web browser to retrieve stats from your app to the Analytics app).</li>
+    			<li>If you haven't, save <a href="src/customer/demos/dtu_app.html" data-dtu target="_blank">dtu_app.html</a> single-page HTML file of the DTU analytics app to any place. When saving choose "Webpage, HTML only" option, not "Webpage, Complete" because this HTML file has absolute paths for all the imports it needs. You can place "dtu_app.html" file anywhere and it will work from any place if that place is in the same origin with your app (file:// or http://domain or https://domain) in the same browser (because it uses window.localStorage of web browser to retrieve stats from your app to the Analytics app).</li>
 
     			<li>Import and init JavaScript SDK in your web app. Put the following code right before &lt;/body> tag in your web app:<br>
     				<div class="code">
