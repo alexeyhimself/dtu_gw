@@ -337,7 +337,9 @@ function ANALYTICS_PORTAL_SDK_reset_filters_on_elements_page() {
 function ANALYTICS_PORTAL_SDK_draw_dropdown_options(element_id, options, selected_option) {
   //console.log(element_id)
   let html = '';
-  if (element_id == 'drpd:url_domain_name')
+  if (element_id == 'drpd:topic')
+    html += '<option>-- any topic --</option>';
+  else if (element_id == 'drpd:url_domain_name')
     html += '<option>-- any domain --</option>';
   else if (element_id == 'drpd:url_path')
     html += '<option>-- any page --</option>';

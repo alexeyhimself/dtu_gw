@@ -234,6 +234,7 @@ function DB_SELECT_DISTINCT_element_path_items_WHERE_user_filers_AND_path_AND_NO
     }
     if (matched) { found_path_elements.push(report_element_at_path_index); }
   }
+  console.log(user_filters, path)
   console.log('found_path_elements', found_path_elements);
   return found_path_elements;
 }

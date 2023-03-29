@@ -69,6 +69,15 @@ function TX_API_get_stats_for_list(list) {
 function TX_API_process_user_filters_request(user_filters) {
   let kwargs = {};
 
+  if (user_filters.topic == '-- any topic --');
+    delete user_filters.topic;
+  if (user_filters.url_domain_name == '-- any domain --')
+    delete user_filters.url_domain_name;
+  if (user_filters.url_path == '-- any page --' || user_filters.url_path == undefined)
+    delete user_filters.url_path;
+  if (user_filters.element == '-- any element --')
+    delete user_filters.element;
+
   console.log('asking for topics')
   let mute_list = {...user_filters}
   delete mute_list['ctag'];
@@ -90,12 +99,6 @@ function TX_API_process_user_filters_request(user_filters) {
     user_filters.url_domain_name = undefined;
 
   //console.log('before', user_filters)
-  if (user_filters.url_domain_name == '-- any domain --')
-    delete user_filters.url_domain_name;
-  if (user_filters.url_path == '-- any page --' || user_filters.url_path == undefined)
-    delete user_filters.url_path;
-  if (user_filters.element == '-- all the monitored elements --')
-    delete user_filters.element;
 
   //console.log('after', user_filters)
   console.log('asking for pages')
