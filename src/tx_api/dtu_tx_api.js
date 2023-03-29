@@ -120,7 +120,7 @@ function TX_API_process_user_filters_request(user_filters) {
   for (let i in paths) {
     user_filters['element_path'] = paths[i];
     console.log('asking for elements 2')
-    let elements_for_path = DB_SELECT_DISTINCT_element_path_items_WHERE_user_filers_AND_path_AND_NOT_mute(user_filters, paths[i], ['element2', 'element_path2']);
+    let elements_for_path = DB_SELECT_DISTINCT_element_path_items_WHERE_user_filers_AND_path_AND_NOT_mute(user_filters, paths[i], ['element', 'element_path']);
     if (elements_for_path.length == 1 && elements_for_path[0] == paths[i][paths.length - 1])
       break;
     elements_hierarchy.push({'path': paths[i], 'elements': elements_for_path});

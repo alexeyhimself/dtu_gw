@@ -87,7 +87,7 @@ function ANALYTICS_PORTAL_SDK_collect_user_filters_on_the_page() {
   //let element_path = JSON.parse(element_path_element.getAttribute("path"));
   //user_filters["element_path"] = element_path;
 
-  const element_path_element = document.getElementById("element_path2");
+  const element_path_element = document.getElementById("element_path");
   let children = element_path_element.children;
   let in_page_path = [''];
   for (let i = 0; i < children.length; i++) {
@@ -100,7 +100,7 @@ function ANALYTICS_PORTAL_SDK_collect_user_filters_on_the_page() {
   }
   user_filters["element_path"] = in_page_path;
 
-  const path = ['url_domain_name', 'url_path', 'element'];
+  const path = ['url_domain_name', 'url_path'];
   for (let i in path) {
     let el = path[i];
     let e = document.getElementById("drpd:" + el).value;
@@ -133,7 +133,7 @@ function ANALYTICS_PORTAL_SDK_make_element_path(element) {
 }
 
 function ANALYTICS_PORTAL_SDK_make_dropdowns_work() {
-  const elements_ids = ['drpd:topic', 'drpd:url_domain_name', 'drpd:url_path', 'drpd:element'];
+  const elements_ids = ['drpd:topic', 'drpd:url_domain_name', 'drpd:url_path'];
   for (let i in elements_ids) {
     let element_id = elements_ids[i];
     let element = document.getElementById(element_id);
@@ -337,9 +337,7 @@ function ANALYTICS_PORTAL_SDK_reset_filters_on_elements_page() {
 function ANALYTICS_PORTAL_SDK_draw_dropdown_options(element_id, options, selected_option) {
   //console.log(element_id)
   let html = '';
-  if (element_id == 'drpd:element')
-    html += '<option>' + drpd_elements_all + '</option>';
-  else if (element_id == 'drpd:url_domain_name')
+  if (element_id == 'drpd:url_domain_name')
     html += '<option>-- any domain --</option>';
   else if (element_id == 'drpd:url_path')
     html += '<option>-- any page --</option>';
@@ -356,7 +354,7 @@ function ANALYTICS_PORTAL_SDK_draw_dropdown_options(element_id, options, selecte
   const drpd_element = document.getElementById(element_id);
   drpd_element.innerHTML = html;
 
-  if (options.length <= 1 && element_id != 'drpd:element' && element_id != 'drpd:element0' && element_id != 'drpd:element1' && element_id != 'drpd:element2' && element_id != 'drpd:element3')
+  if (options.length <= 1 && element_id != 'drpd:element' && element_id != 'drpd:element0' && element_id != 'drpd:element1' && element_id != 'drpd:element' && element_id != 'drpd:element3')
     drpd_element.parentElement.style.display = 'none';
   else
     drpd_element.parentElement.style.display = 'unset';
@@ -372,7 +370,7 @@ function ANALYTICS_PORTAL_SDK_refresh_topics(kwargs) {
 function ANALYTICS_PORTAL_SDK_draw_elements_hierarchy(kwargs) {
   const elements_hierarchy = kwargs['elements_hierarchy'];
   const element_path = kwargs['element_path'];
-  let parent = document.getElementById('element_path2');
+  let parent = document.getElementById('element_path');
   console.log(elements_hierarchy)
   let html = '<label for="drpd:element" class="form-label no-margin-bottom custom-label">page element(s):</label>';
   for (let i = 0; i < elements_hierarchy.length; i++) {
@@ -408,13 +406,6 @@ function ANALYTICS_PORTAL_SDK_refresh_url_paths(kwargs) {
   ANALYTICS_PORTAL_SDK_draw_dropdown_options('drpd:url_path', paths, currently_selected)
 }
 
-function ANALYTICS_PORTAL_SDK_refresh_elements_list(kwargs, user_filters) {
-  const elements = kwargs.elements_match_ctag_topic;
-  const currently_selected = user_filters.element;
-
-  ANALYTICS_PORTAL_SDK_draw_dropdown_options('drpd:element', elements, currently_selected);
-}
-
 function ANALYTICS_PORTAL_SDK_refresh_elements_page_data_according_to_user_filters_setup() {
   let user_filters = ANALYTICS_PORTAL_SDK_collect_user_filters_on_the_page();
   let kwargs = TX_API_process_user_filters_request(user_filters);
@@ -428,7 +419,6 @@ function ANALYTICS_PORTAL_SDK_refresh_elements_page_data_according_to_user_filte
   ANALYTICS_PORTAL_SDK_refresh_topics(kwargs);
   ANALYTICS_PORTAL_SDK_refresh_domain_urls(kwargs);
   ANALYTICS_PORTAL_SDK_refresh_url_paths(kwargs);
-  ANALYTICS_PORTAL_SDK_refresh_elements_list(kwargs, user_filters);
 
   ANALYTICS_PORTAL_SDK_refresh_calls_over_time_for_chart_id_('elements_calls_over_time_chart_id', user_filters, kwargs);
 }

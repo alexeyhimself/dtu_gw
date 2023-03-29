@@ -206,7 +206,7 @@ function DB_SELECT_DISTINCT_something_WHERE_user_filers_AND_NOT_mute(user_filter
 
 function DB_SELECT_DISTINCT_element_path_items_WHERE_user_filers_AND_path_AND_NOT_mute(user_filters, path) {
   //console.log(path, user_filters)
-  const filtered_something = dtu_db.select(user_filters, ['element_path2', 'element2'])
+  const filtered_something = dtu_db.select(user_filters, ['element_path', 'element'])
   const element_path_index = path.length;
   let found_path_elements = [];
   for (let i in filtered_something) {
