@@ -405,7 +405,10 @@ function ANALYTICS_PORTAL_SDK_draw_elements_hierarchy(kwargs) {
   const element_path = kwargs['element_path'];
   let parent = document.getElementById('element_path');
   //console.log(elements_hierarchy)
-  let html = '<label for="drpd:element" class="form-label no-margin-bottom custom-label">page element(s):</label>';
+  let html = '';
+  if (elements_hierarchy.keys().length > 0)
+    html += '<label for="drpd:element" class="form-label no-margin-bottom custom-label">page element(s):</label>';
+
   for (let i = 0; i < elements_hierarchy.length; i++) {
     let id = 'drpd:element' + String(i);
     let filter_elements = elements_hierarchy[i].elements;
