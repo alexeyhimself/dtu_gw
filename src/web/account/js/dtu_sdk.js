@@ -67,11 +67,11 @@ function ANALYTICS_PORTAL_SDK_remove_all_active_filter_class_from_time_shortcuts
 }
 
 function ANALYTICS_PORTAL_SDK_collect_user_filters_on_the_page() {
-  //let topic = window.localStorage.getItem('topic');
-  //if (!topic)
+  let topic = window.localStorage.getItem('topic');
+  if (!topic)
     topic = document.getElementById('drpd:topic').value;
-  //else
-    //document.getElementById('drpd:topic').value = topic;
+  else
+    document.getElementById('drpd:topic').value = topic;
 
   let user_filters = {"ctag": ctag, "topic": topic};
 
@@ -143,6 +143,8 @@ function ANALYTICS_PORTAL_SDK_make_dropdowns_work() {
     let element = document.getElementById(element_id);
     element.addEventListener("change", function(e) {
       element.setAttribute("changed", "true");
+      if (element_id == 'drpd:topic')
+        window.localStorage.setItem('topic', element.value);
       ANALYTICS_PORTAL_SDK_refresh_elements_page_data_according_to_user_filters_setup();
       element.removeAttribute("changed");
     });
