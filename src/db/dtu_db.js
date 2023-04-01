@@ -181,20 +181,24 @@ function DB_SELECT_all_WHERE_user_filters(user_filters) {
 }
 
 function DB_SELECT_DISTINCT_something_distinct_FROM_somewhere(something_distinct, somewhere) {
-  let found_items = [];
-  if (somewhere) {
-    for (let i in somewhere) {
-      let r = somewhere[i];
-      let item = r[something_distinct];
-      if (typeof(item) == 'object')
-        item = JSON.stringify(item); // to allow filtering for arrays as strings as well https://www.freecodecamp.org/news/how-to-compare-arrays-in-javascript/
-      if (!found_items.includes(item))
-        found_items.push(item);
-    }
+  let found_items = {};
+  if (!somewhere)
+    return found_items;
+
+  for (let i in somewhere) {
+    let r = somewhere[i];
+    let item = r[something_distinct];
+    if (typeof(item) == 'object')
+      item = JSON.stringify(item); // to allow filtering for arrays as strings as well https://www.freecodecamp.org/news/how-to-compare-arrays-in-javascript/
+
+    item_count_in_found_items = found_items[item]
+    if (item_count_in_found_items)
+      found_items[item] += 1;
+    else
+      found_items[item] = 1;
   }
   return found_items;
 }
-
 function DB_SELECT_DISTINCT_something_WHERE_user_filers_AND_NOT_mute(user_filters, something_distinct, mute) {
   // SELECT DISTINCT something_distinct FROM reports_table WHERE 1=1
   // AND ctag = user_filters.ctag
