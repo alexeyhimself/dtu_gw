@@ -123,13 +123,6 @@ function ANALYTICS_PORTAL_SDK_start() {
   // ANALYTICS_PORTAL_SDK_make_reset_filters_button_work();
 }
 
-function ANALYTICS_PORTAL_SDK_make_element_path(element) {
-  let p = [''];
-  if (element.value != drpd_elements_all)
-    p = ['', element.value];
-  //document.getElementById('element_path').setAttribute('path', JSON.stringify(p));
-}
-
 function ANALYTICS_PORTAL_SDK_make_dropdowns_work() {
   const elements_ids = ['drpd:topic', 'drpd:url_domain_name', 'drpd:url_path'];
   for (let i in elements_ids) {
@@ -325,7 +318,7 @@ function ANALYTICS_PORTAL_SDK_refresh_stats_for_chart_id_(chart_id, aggr, aggr_u
   const em = {'min': min, 'median': median, 'max': max, 'aggregation interval': aggr + ' ' + aggr_unit};
   for (let i in em) {
     let el = document.getElementById(i);
-    if (em[i] != undefined && em[i] != 'undefined undefined')
+    if (em[i] != undefined && em[i] != 'undefined')
       el.innerText = em[i];
     else
       el.innerText = '-';
@@ -378,6 +371,7 @@ function ANALYTICS_PORTAL_SDK_draw_dropdown_options(element_id, options, selecte
   const drpd_element = document.getElementById(element_id);
   drpd_element.innerHTML = html;
 
+  console.log("fix me");
   if (options.length <= 1 && element_id != 'drpd:element0' && element_id != 'drpd:element1' && element_id != 'drpd:element2' && element_id != 'drpd:element3')
     drpd_element.parentElement.style.display = 'none';
   else
