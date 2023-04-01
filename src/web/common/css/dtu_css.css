@@ -22,3 +22,7 @@ ul.navbar-nav {
   font-family: 'Bebas Neue';
   font-size: large;
 }
+
+.nav-link.active {
+  text-decoration: underline;
+}
