@@ -318,7 +318,7 @@ function ANALYTICS_PORTAL_SDK_refresh_stats_for_chart_id_(chart_id, aggr, aggr_u
   const em = {'min': min, 'median': median, 'max': max, 'aggregation interval': aggr + ' ' + aggr_unit};
   for (let i in em) {
     let el = document.getElementById(i);
-    if (em[i] != undefined && em[i] != 'undefined')
+    if (em[i] != undefined && em[i] != 'undefined undefined') // yes, 2 times undefined
       el.innerText = em[i];
     else
       el.innerText = '-';
