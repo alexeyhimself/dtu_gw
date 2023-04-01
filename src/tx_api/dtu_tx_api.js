@@ -98,7 +98,7 @@ function TX_API_process_user_filters_request(user_filters) {
 
   // console.log('before', user_filters)
 
-  //console.log('after', user_filters)
+  // console.log('after', user_filters)
   // console.log('asking for pages')
   kwargs['current_domain'] = user_filters.url_domain_name;
   const url_paths_match_url_domain = DB_SELECT_DISTINCT_something_WHERE_user_filers_AND_NOT_mute(user_filters, 'url_path', ['url_path', 'element', 'element_path']);
@@ -133,6 +133,7 @@ function TX_API_process_user_filters_request(user_filters) {
 
   // console.log('asking for content')
   const reports_match_user_filters = DB_SELECT_all_WHERE_user_filters(user_filters);
+  //console.log(reports_match_user_filters)
   kwargs['reports_match_user_filters'] = reports_match_user_filters;
   kwargs['reports_match_user_filters_length'] = reports_match_user_filters.length;
 
@@ -143,7 +144,13 @@ const TX_API_arrays_are_equal = (a, b) => // https://www.freecodecamp.org/news/h
   a.length === b.length && a.every((element, index) => element === b[index]);
 
 function TX_API_get_dates_from_to(user_filters, kwargs) {
+  const timedelta_ms = user_filters['timedelta_ms'];
   const reports_match_user_filters_length = kwargs['reports_match_user_filters_length'];
+  
+  const datetime_to = user_filters['datetime_to'];
+  let datetime_from = user_filters['datetime_from'];
+
+  /*
   let datetime_from = user_filters['datetime_from'];
   let datetime_to = user_filters['datetime_to'];
   if (!datetime_to)
@@ -156,13 +163,12 @@ function TX_API_get_dates_from_to(user_filters, kwargs) {
     let time_range = datetime_to - datetime_from;
     return {'datetime_from': datetime_from, 'datetime_to': datetime_to, 'time_range': time_range};
   }
-
+  */
   const reports_match_user_filters = kwargs['reports_match_user_filters'];
-  if (!datetime_from)
+  if (datetime_to == datetime_from)
     datetime_from = reports_match_user_filters[0].date_time; // if not set then from first date in all related reports
 
   let time_range = datetime_to - datetime_from;
-
   return {'datetime_from': datetime_from, 'datetime_to': datetime_to, 'time_range': time_range};
 }
 

@@ -133,7 +133,10 @@ let dtu_db = new DB();
 function DB_SELECT_EMULATION_check_if_report_date_matches_dates_in_user_filters(r, user_filters) {
   let datetime_from = user_filters['datetime_from'];
   let datetime_to = user_filters['datetime_to'];
-  
+
+  if (datetime_from == datetime_to) {
+    return true;
+  }
   if (!datetime_from && !datetime_to) {
     return true;
   }

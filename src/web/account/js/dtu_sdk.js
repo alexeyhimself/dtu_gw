@@ -16,31 +16,10 @@ function ANALYTICS_PORTAL_SDK_get_chart_size(chart_id) {
   return parseInt(chart_width_px);
 }
 
-function ANALYTICS_PORTAL_SDK_reset_datetime_filter() {
-  ANALYTICS_PORTAL_SDK_set_datetime_filter();
-}
-
 function ANALYTICS_PORTAL_SDK_format_date_time_for_filter(date_time) {
   date = new Date(date_time).toLocaleDateString('en-GB').split('/');
   time = new Date(date_time).toLocaleTimeString('en-GB');
   return date[2] + '-' + date[1] + '-' + date[0] + 'T' + time;
-}
-
-function ANALYTICS_PORTAL_SDK_set_datetime_filter(timedelta_ms) {
-  let datetime_to = "";
-  let datetime_from = "";
-  if (timedelta_ms != 0) { // if not reset
-    console.log(timedelta_ms)
-    const now = new Date();
-    const back = now - timedelta_ms;
-    datetime_from = ANALYTICS_PORTAL_SDK_format_date_time_for_filter(back);
-    datetime_to = ANALYTICS_PORTAL_SDK_format_date_time_for_filter(now);
-  }
-
-  const datetime_to_input = document.getElementById('datetime_to');
-  const datetime_from_input = document.getElementById('datetime_from');
-  datetime_to_input.value = datetime_to;
-  datetime_from_input.value = datetime_from;
 }
 
 function ANALYTICS_PORTAL_SDK_init_time_shortcut_listeners() {
@@ -51,7 +30,8 @@ function ANALYTICS_PORTAL_SDK_init_time_shortcut_listeners() {
       ANALYTICS_PORTAL_SDK_remove_all_active_filter_class_from_time_shortcuts();
       this.classList.add('active-filter');
       const timedelta_ms = this.getAttribute('timedelta_ms');
-      ANALYTICS_PORTAL_SDK_set_datetime_filter(timedelta_ms);
+      document.getElementById('timedelta_ms').setAttribute('timedelta_ms', timedelta_ms);
+      //ANALYTICS_PORTAL_SDK_set_datetime_filter(timedelta_ms);
       ANALYTICS_PORTAL_SDK_refresh_elements_page_data_according_to_user_filters_setup();
     }, false);
   }
@@ -68,13 +48,24 @@ function ANALYTICS_PORTAL_SDK_remove_all_active_filter_class_from_time_shortcuts
 
 function ANALYTICS_PORTAL_SDK_collect_user_filters_on_the_page() {
   let topic = window.localStorage.getItem('topic');
+  const topic_element = document.getElementById('drpd:topic');
   if (!topic)
-    topic = document.getElementById('drpd:topic').value;
+    topic = topic_element.value;
   else
-    document.getElementById('drpd:topic').value = topic;
+    topic_element.value = topic;
 
   let user_filters = {"ctag": ctag, "topic": topic};
 
+  const timedelta_element = document.getElementById('timedelta_ms');
+  const timedelta_ms = timedelta_element.getAttribute('timedelta_ms');
+  //user_filters['timedelta_ms'] = timedelta_ms;
+
+  const datetime_to = Date.parse(new Date());
+  const datetime_from = datetime_to - timedelta_ms;
+  user_filters["datetime_from"] = datetime_from;
+  user_filters["datetime_to"] = datetime_to;
+
+  /*
   const df = document.getElementById("datetime_from").value;
   if (df != '')
     user_filters["datetime_from"] = Date.parse(df);
@@ -82,13 +73,16 @@ function ANALYTICS_PORTAL_SDK_collect_user_filters_on_the_page() {
   const dt = document.getElementById("datetime_to").value;
   if (dt != '')
     user_filters["datetime_to"] = Date.parse(dt);
-
+  */
   //const element_path_element = document.getElementById("element_path");
   //let element_path = JSON.parse(element_path_element.getAttribute("path"));
   //user_filters["element_path"] = element_path;
 
   let in_page_path = [''];
   user_filters["element_path"] = in_page_path;
+
+  if (topic_element.hasAttribute('changed'))
+    return user_filters;
 
   const path = ['url_domain_name', 'url_path'];
   for (let i in path) {
@@ -145,6 +139,7 @@ function ANALYTICS_PORTAL_SDK_make_dropdowns_work() {
       element.setAttribute("changed", "true");
       if (element_id == 'drpd:topic')
         window.localStorage.setItem('topic', element.value);
+
       ANALYTICS_PORTAL_SDK_refresh_elements_page_data_according_to_user_filters_setup();
       element.removeAttribute("changed");
     });
@@ -305,7 +300,6 @@ function ANALYTICS_PORTAL_SDK_display_message_on_chart(chart, message) {
 }
 
 function ANALYTICS_PORTAL_SDK_refresh_calls_over_time_for_chart_id_(chart_id, user_filters, kwargs) { 
-
   const chart_width_px = ANALYTICS_PORTAL_SDK_get_chart_size(chart_id);
   const reports_match_user_filters_length = kwargs['reports_match_user_filters_length'];
   let config = {};
@@ -336,11 +330,6 @@ function ANALYTICS_PORTAL_SDK_refresh_stats_for_chart_id_(chart_id, aggr, aggr_u
     else
       el.innerText = '-';
   }
-}
-
-function ANALYTICS_PORTAL_SDK_reset_filters_on_elements_page() {
-  ANALYTICS_PORTAL_SDK_reset_datetime_filter();
-  ANALYTICS_PORTAL_SDK_refresh_elements_page_data_according_to_user_filters_setup();
 }
 
 function ANALYTICS_PORTAL_SDK_draw_dropdown_options(element_id, options, selected_option, types) {
