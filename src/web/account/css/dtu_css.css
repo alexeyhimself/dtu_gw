@@ -101,6 +101,7 @@ body {
 #loading {
   margin-top: 20%;
   text-align: center;
+  display: none;
 }
 
 /* https://loading.io/css/ */
