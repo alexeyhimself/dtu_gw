@@ -82,7 +82,10 @@ function generate_fake_data() {
   }
 }
 
-if (window.location.hostname != '') { generate_fake_data(); }
+if (window.location.hostname != '') {
+  generate_fake_data();
+  // ANALYTICS_PORTAL_SDK_refresh_elements_page_data_according_to_user_filters_setup(); 
+}
 
 // SDK APP FUNCTIONS
 //const excluded_events = "mousedown mouseup mousemove mouseover mouseout mousewheel";

@@ -390,7 +390,7 @@ function ANALYTICS_PORTAL_SDK_draw_elements_hierarchy(kwargs) {
   const element_path = kwargs['element_path'];
   let parent = document.getElementById('element_path');
   //console.log(elements_hierarchy)
-  let html = '<label for="drpd:element" class="form-label no-margin-bottom custom-label">page element(s):</label>';
+  let html = '<label for="drpd:element" class="form-label no-margin-bottom custom-label">Page element(s):</label>';
   //if (elements_hierarchy.keys().length > 0)
   //  html += '<label for="drpd:element" class="form-label no-margin-bottom custom-label">page element(s):</label>';
 
@@ -398,7 +398,7 @@ function ANALYTICS_PORTAL_SDK_draw_elements_hierarchy(kwargs) {
     let id = 'drpd:element' + String(i);
     let filter_elements = elements_hierarchy[i].elements;
     if (filter_elements.length > 0) {
-      html += '<select id="' + id + '" class="form-control form-select element_path margin-bottom-5" data-dtu="page element(s)"></select>';
+      html += '<select id="' + id + '" class="form-control form-select element_path margin-bottom-5" data-dtu="Page element(s)"></select>';
     }
   }
   parent.innerHTML = html;

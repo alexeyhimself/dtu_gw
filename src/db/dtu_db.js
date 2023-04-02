@@ -1,6 +1,6 @@
 const emty_db_schema = {'table_reports': []};
-const db_name = 'dtu_db4';
-const ex_db_names_to_cleanup = ['dtu_db', 'dtu_db2', 'dtu_db3']; // previously used, schema changed - so, need to create new and cleanup old
+const db_name = 'dtu_db5';
+const ex_db_names_to_cleanup = ['dtu_db', 'dtu_db2', 'dtu_db3', 'dtu_db4']; // previously used, schema changed - so, need to create new and cleanup old
 
 
 class DB {
@@ -193,9 +193,9 @@ function DB_SELECT_DISTINCT_something_distinct_FROM_somewhere(something_distinct
 
     item_count_in_found_items = found_items[item]
     if (item_count_in_found_items)
-      found_items[item] += 1;
+      found_items[item].count += 1;
     else
-      found_items[item] = 1;
+      found_items[item] = {'count': 1, 'type': r.element_type};
   }
   return found_items;
 }

@@ -33,10 +33,10 @@
     </style>
 	</head>
 	<body>
-    <nav class="navbar navbar-expand-lg bg-light" data-dtu="navbar">
+    <nav class="navbar navbar-expand-lg bg-light" data-dtu="Navbar">
       <div class="container-fluid">
         <a class="navbar-brand" href="index.html" data-dtu>Do They Use</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation" data-dtu="menu">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation" data-dtu="Menu">
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
@@ -57,14 +57,14 @@
 		<div class="container-fluid container-padding">
         <div class="row margin-bottom-5">
           <div class="col-lg-2">
-            <label for="topic" class="form-label no-margin-bottom custom-label">data source:</label>
-            <select class="form-control form-select" data-dtu="data source" id="drpd:topic"></select>
+            <label for="topic" class="form-label no-margin-bottom custom-label">Data source:</label>
+            <select class="form-control form-select" data-dtu="Data source" id="drpd:topic"></select>
           </div>
         
 					<div class="col-lg">
             <div class="row">
-              <p class="custom-helper" data-dtu="time quick-link" id="timedelta_ms">
-                <label class="form-label no-margin-bottom custom-label">show data for the last:</label>
+              <p class="custom-helper" data-dtu="Time quick-link" id="timedelta_ms">
+                <label class="form-label no-margin-bottom custom-label">Show data for the last:</label>
                 <br>
                 <a class="time-shortcut" timedelta_ms="300000" data-dtu>5&nbsp;min</a>
     		      	<a class="time-shortcut" timedelta_ms="900000" data-dtu>15&nbsp;min</a>
@@ -81,7 +81,7 @@
     		      	<a class="time-shortcut" timedelta_ms="15552000000" data-dtu>6&nbsp;months</a>
                 <a class="time-shortcut" timedelta_ms="31536000000" data-dtu>1&nbsp;year</a>
                 <a class="time-shortcut" timedelta_ms="63072000000" data-dtu>2&nbsp;years</a>
-                <a class="time-shortcut active-filter" timedelta_ms="0" data-dtu>all available time</a>
+                <a class="time-shortcut active-filter" timedelta_ms="0" data-dtu>All available time</a>
     		    	</p>
             </div>
           </div>
@@ -91,12 +91,12 @@
           <div class="col-lg">
             <div class="row">
               <div class="col-sm col-lg-2 hidden">
-                <label for="drpd:url_domain_name" class="form-label no-margin-bottom custom-label">domain:</label>
-                <select id="drpd:url_domain_name" class="form-control form-select" data-dtu="domain"></select>
+                <label for="drpd:url_domain_name" class="form-label no-margin-bottom custom-label">Domain:</label>
+                <select id="drpd:url_domain_name" class="form-control form-select" data-dtu="Domain"></select>
               </div>
               <div class="col-sm col-lg-3 margin-bottom-5 hidden">
-                <label for="drpd:url_path" class="form-label no-margin-bottom custom-label">web page(s):</label>
-                <select id="drpd:url_path" class="form-control form-select" data-dtu="web page(s)"></select>
+                <label for="drpd:url_path" class="form-label no-margin-bottom custom-label">Web page(s):</label>
+                <select id="drpd:url_path" class="form-control form-select" data-dtu="Web page(s)"></select>
               </div>
               <div class="col margin-bottom-5" id="element_path" path='[""]'></div>
             </div>
@@ -129,7 +129,6 @@
 
     <script src="src/db/dtu_db.js?v=1"></script>
     <script src="src/rx_api/dtu_rx_api.js?v=1"></script>
-    <script src="src/customer/dtu_client_emulator.js?v=1"></script>
 
 		<script src="src/tx_api/dtu_tx_api.js?v=1"></script>
 		<script src="src/web/account/js/dtu_sdk.js?v=1"></script>
@@ -141,5 +140,6 @@
         'topic': 'your real usage now',
       });
     </script>
+    <script src="src/customer/dtu_client_emulator.js?v=1"></script>
 	</body>
 </html>

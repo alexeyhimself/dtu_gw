@@ -113,18 +113,99 @@ function TX_API_process_user_filters_request(user_filters) {
   elements_match_page = Object.keys(elements_match_page);
   kwargs['elements_match_ctag_topic'] = elements_match_page;
 
+  let ev = {...user_filters}
+  delete ev['element_path'];
+  delete ev['ctag']
+  delete ev['topic']
+  delete ev['url_domain_name']
+  delete ev['url_path']
+  let el_paths = DB_SELECT_DISTINCT_something_WHERE_user_filers_AND_NOT_mute(user_filters, 'element_path', Object.keys(ev))
+  el_paths2 = Object.keys(el_paths);
+
+  let list_of_dicts = [];
+  for (let i = 0; i < el_paths2.length; i++) {
+    let el_path = JSON.parse(el_paths2[i]);
+
+    let new_dict = current = {}; // https://www.w3resource.com/python-exercises/dictionary/python-data-type-dictionary-exercise-27.php
+    for (let i in el_path) {
+      let name = el_path[i];
+      current[name] = {};
+      current = current[name];
+    }
+    list_of_dicts.push(new_dict);
+  }
+
+  // deep merge
+  function isObject(item) { // https://stackoverflow.com/questions/27936772/how-to-deep-merge-instead-of-shallow-merge
+    return (item && typeof item === 'object' && !Array.isArray(item));
+  }
+  function mergeDeep(target, source) { // https://stackoverflow.com/questions/27936772/how-to-deep-merge-instead-of-shallow-merge
+    let output = Object.assign({}, target);
+    if (isObject(target) && isObject(source)) {
+      Object.keys(source).forEach(key => {
+        if (isObject(source[key])) {
+          if (!(key in target))
+            Object.assign(output, { [key]: source[key] });
+          else
+            output[key] = mergeDeep(target[key], source[key]);
+        } else {
+          Object.assign(output, { [key]: source[key] });
+        }
+      });
+    }
+    return output;
+  }
+
+  let res = list_of_dicts[0];
+  for (let i = 1; i < list_of_dicts.length; i++) {
+    let dict = list_of_dicts[i];
+    res = mergeDeep(res, dict);
+  }
+
+  function count_calls(searched_subpath) {
+    let counter = 0;
+    for (let path in el_paths) {
+      if (path.startsWith(searched_subpath.slice(0, -1)))
+        counter += el_paths[path].count;
+    }
+    return counter;
+  }
+
+  let level = 0;
+  function recursive(res, level, path) {
+    let keys = Object.keys(res).sort();
+    for (let i = 0; i < keys.length; i++) {
+      let key = keys[i];
+      let value = res[key];
+      path.push(key);
+      let offset = "";
+      for (let j = 0; j < level; j++)
+        offset += '   ';
+      let path_string = JSON.stringify(path);
+      let calls = count_calls(path_string);
+      if (el_paths[path_string])
+        console.log(offset, key, '(' + el_paths[path_string].type + ')', calls);
+      else
+        console.log(offset, key, '(group)', calls);
+      if (value) {
+        level += 1;
+        recursive(value, level, path);
+      }
+      level -= 1;
+      path.pop();
+    }
+  }
+
+  if (res)
+    recursive(res, level, []);
+
   const element_path = user_filters.element_path;
   // console.log(element_path)
   let paths = [];
   for (let i = 0; i < element_path.length; i++) {
     paths.push(element_path.slice(0, i+1));
   }
-  let ev = {...user_filters}
-  delete ev['element_path'];
-  delete ev['ctag']
-  delete ev['topic']
-  //let omg = DB_SELECT_DISTINCT_something_WHERE_user_filers_AND_NOT_mute(user_filters, 'element_path', Object.keys(ev))
-  //console.log(omg);
+
   //const paths = [['']];
   let elements_hierarchy = [];
   for (let i in paths) {
