@@ -90,7 +90,7 @@ function TX_API_add_topics(kwargs, user_filters) {
   kwargs['topics_match_ctag'] = topics_match_ctag_list;
 
   let topic = user_filters.topic;
-  if (!topic)
+  if (!topic || !topics_match_ctag_list.includes(topic))
     topic = topics_match_ctag_list[0]; // select first available then to show data for this topic
   kwargs['current_topic'] = topic;
 
