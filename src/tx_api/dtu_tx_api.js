@@ -4,17 +4,16 @@ function TX_API_sum_values_of_dict(obj) { // https://stackoverflow.com/questions
 }
 */
 
-function TX_API_get_sum(list_sorted_by_value_desc) {
+function TX_API_get_sum_of_list_values(list_sorted_by_value_desc) {
   let sum = 0;
   for (let i in list_sorted_by_value_desc)
     sum += list_sorted_by_value_desc[i];
-
   return sum;
 }
 
 function TX_API_get_avg(list_sorted_by_value_desc) {
   let items_number = list_sorted_by_value_desc.length;
-  const sum = TX_API_get_sum(list_sorted_by_value_desc);
+  const sum = TX_API_get_sum_of_list_values(list_sorted_by_value_desc);
   return sum / items_number;
 }
 
@@ -38,12 +37,6 @@ function TX_API_get_mode(list_sorted_by_value_desc) {
   ).pop();
 }
 
-function TX_API_get_range(list_sorted_by_value_desc) {
-  const max = TX_API_get_max(list_sorted_by_value_desc);
-  const min = TX_API_get_min(list_sorted_by_value_desc);
-  return max - min;
-}
-
 function TX_API_get_min(list_sorted_by_value_desc) {
   return list_sorted_by_value_desc[list_sorted_by_value_desc.length - 1];
 }
@@ -52,9 +45,14 @@ function TX_API_get_max(list_sorted_by_value_desc) {
   return list_sorted_by_value_desc[0];
 }
 
+function TX_API_get_range(list_sorted_by_value_desc) {
+  const max = TX_API_get_max(list_sorted_by_value_desc);
+  const min = TX_API_get_min(list_sorted_by_value_desc);
+  return max - min;
+}
+
 function TX_API_get_stats_for_list(list) {
-  const list_sorted_by_value_desc = list.sort(function(a, b){return b - a})
-  //console.log(list_sorted_by_value_desc)
+  const list_sorted_by_value_desc = list.sort(function(a, b){return b - a});
 
   const min = TX_API_get_min(list_sorted_by_value_desc);
   const max = TX_API_get_max(list_sorted_by_value_desc);
@@ -66,80 +64,89 @@ function TX_API_get_stats_for_list(list) {
   return {'avg': avg, 'median': median, 'mode': mode, 'range': range, 'min': min, 'max': max};
 }
 
-function TX_API_process_user_filters_request(user_filters) {
-  let kwargs = {};
+function TX_API_remove_anys(user_filters) { // if 'any' then this has no meaning in filtering - so get rid of them
+  // console.log(user_filters);
 
-  if (user_filters.url_domain_name == '-- any domain --')
-    delete user_filters.url_domain_name;
-  if (user_filters.url_path == '-- any page --' || user_filters.url_path == undefined)
-    delete user_filters.url_path;
-  if (user_filters.element == '-- any element --')
-    delete user_filters.element;
+  if (user_filters['url_domain_name'] == '-- any domain --')
+    delete user_filters['url_domain_name'];
+  if (user_filters['url_path'] == '-- any page --')
+    delete user_filters['url_path'];
+  if (user_filters['url_path'] == undefined) {
+    //console.warn('user_filters['url_path'] is undefined')
+    delete user_filters['url_path'];
+  }
+  if (user_filters['element'] == '-- any element --')
+    delete user_filters['element'];
 
-  // console.log('asking for topics')
+  return user_filters;
+}
+
+function TX_API_add_topics(kwargs, user_filters) {
   let mute_list = {...user_filters}
-  delete mute_list['ctag'];
-  let topics_match_ctag = DB_SELECT_DISTINCT_something_WHERE_user_filers_AND_NOT_mute(user_filters, 'topic', Object.keys(mute_list));
-  topics_match_ctag = Object.keys(topics_match_ctag);
-  if (!user_filters.topic)
-    user_filters.topic = topics_match_ctag[0]; // select first available then to show data for this topic
-  kwargs['current_topic'] = user_filters.topic;
+  delete mute_list['ctag']; // to mute everything but ctag
 
-  kwargs['topics_match_ctag'] = topics_match_ctag;
+  let topics_match_ctag_dict = DB_SELECT_DISTINCT_something_WHERE_user_filers_AND_NOT_mute(user_filters, 'topic', Object.keys(mute_list));
+  topics_match_ctag_list = Object.keys(topics_match_ctag_dict);
+  kwargs['topics_match_ctag'] = topics_match_ctag_list;
 
-  // console.log('asking for domains')
-  let url_domains_match_ctag_topic = DB_SELECT_DISTINCT_something_WHERE_user_filers_AND_NOT_mute(user_filters, 'url_domain_name', ['element_path']);
-  url_domains_match_ctag_topic = Object.keys(url_domains_match_ctag_topic);
-  kwargs['url_domains_match_ctag_topic'] = url_domains_match_ctag_topic;
+  let topic = user_filters.topic;
+  if (!topic)
+    topic = topics_match_ctag_list[0]; // select first available then to show data for this topic
+  kwargs['current_topic'] = topic;
 
-  if (url_domains_match_ctag_topic.length == 1)
-    user_filters.url_domain_name = url_domains_match_ctag_topic[0]; // if only one then assume as selected because selector is hiddden on UI in this case
+  return kwargs;
+}
 
-  if (user_filters.url_domain_name === 'undefined')
-    user_filters.url_domain_name = undefined;
+function TX_API_add_domains(kwargs, user_filters) {
+  let url_domains_match_ctag_topic_dict = DB_SELECT_DISTINCT_something_WHERE_user_filers_AND_NOT_mute(user_filters, 'url_domain_name', ['element_path']);
+  url_domains_match_ctag_topic_list = Object.keys(url_domains_match_ctag_topic_dict);
+  kwargs['url_domains_match_ctag_topic'] = url_domains_match_ctag_topic_list;
 
-  // console.log('before', user_filters)
+  let url_domain_name = user_filters.url_domain_name;
+  if (url_domain_name == 'undefined') {
+    console.warn('user_filters.url_domain_name is "undefined"') // when and why is this?
+    url_domain_name = undefined;
+  }
 
-  // console.log('after', user_filters)
-  // console.log('asking for pages')
-  kwargs['current_domain'] = user_filters.url_domain_name;
-  let url_paths_match_url_domain = DB_SELECT_DISTINCT_something_WHERE_user_filers_AND_NOT_mute(user_filters, 'url_path', ['url_path', 'element', 'element_path']);
-  url_paths_match_url_domain = Object.keys(url_paths_match_url_domain)
-  kwargs['url_paths_match_url_domain'] = url_paths_match_url_domain;
+  if (url_domains_match_ctag_topic_list.length == 1)
+    url_domain_name = url_domains_match_ctag_topic_list[0]; // if only one then assume as selected because selector is hiddden on UI in this case
 
-  // console.log('asking for elements')
+  kwargs['current_domain'] = url_domain_name;
+  return kwargs;
+}
+
+function TX_API_add_pages(kwargs, user_filters) {
+  let url_paths_match_url_domain_dict = DB_SELECT_DISTINCT_something_WHERE_user_filers_AND_NOT_mute(user_filters, 'url_path', ['url_path', 'element', 'element_path']);
+  url_paths_match_url_domain_list = Object.keys(url_paths_match_url_domain_dict)
+  kwargs['url_paths_match_url_domain'] = url_paths_match_url_domain_list;
   kwargs['current_page'] = user_filters.url_path;
-  let elements_match_page = DB_SELECT_DISTINCT_something_WHERE_user_filers_AND_NOT_mute(user_filters, 'element', ['element', 'element_path']);
-  elements_match_page = Object.keys(elements_match_page);
-  kwargs['elements_match_ctag_topic'] = elements_match_page;
+  return kwargs;
+}
 
-  let ev = {...user_filters}
-  delete ev['element_path'];
-  delete ev['ctag']
-  delete ev['topic']
-  delete ev['url_domain_name']
-  delete ev['url_path']
-  let el_paths = DB_SELECT_DISTINCT_something_WHERE_user_filers_AND_NOT_mute(user_filters, 'element_path', Object.keys(ev))
-  el_paths2 = Object.keys(el_paths);
-
-  let list_of_dicts = [];
-  for (let i = 0; i < el_paths2.length; i++) {
-    let el_path = JSON.parse(el_paths2[i]);
-
-    let new_dict = current = {}; // https://www.w3resource.com/python-exercises/dictionary/python-data-type-dictionary-exercise-27.php
-    for (let i in el_path) {
-      let name = el_path[i];
-      current[name] = {};
-      current = current[name];
-    }
-    list_of_dicts.push(new_dict);
+function TX_API_make_nested_dict_of_list(list) {
+  let nested_dict = current = {}; // https://www.w3resource.com/python-exercises/dictionary/python-data-type-dictionary-exercise-27.php
+  for (let i in list) {
+    let name = list[i];
+    current[name] = {};
+    current = current[name];
   }
+  return nested_dict;
+}
 
-  // deep merge
-  function isObject(item) { // https://stackoverflow.com/questions/27936772/how-to-deep-merge-instead-of-shallow-merge
-    return (item && typeof item === 'object' && !Array.isArray(item));
+function TX_API_make_list_of_nested_dicts(distinct_elements_paths_list) {
+  let list_of_nested_dicts = [];
+  for (let i = 0; i < distinct_elements_paths_list.length; i++) {
+    let el_path = JSON.parse(distinct_elements_paths_list[i]);
+    let new_dict = TX_API_make_nested_dict_of_list(el_path);
+    list_of_nested_dicts.push(new_dict);
   }
-  function mergeDeep(target, source) { // https://stackoverflow.com/questions/27936772/how-to-deep-merge-instead-of-shallow-merge
+  return list_of_nested_dicts;
+}
+
+function TX_API_deep_merge_list_of_nested_dicts_into_single_dict(list_of_nested_dicts) {
+  // https://stackoverflow.com/questions/27936772/how-to-deep-merge-instead-of-shallow-merge
+  function isObject(item) { return (item && typeof item === 'object' && !Array.isArray(item)); }
+  function mergeDeep(target, source) {
     let output = Object.assign({}, target);
     if (isObject(target) && isObject(source)) {
       Object.keys(source).forEach(key => {
@@ -156,76 +163,124 @@ function TX_API_process_user_filters_request(user_filters) {
     return output;
   }
 
-  let res = list_of_dicts[0];
-  for (let i = 1; i < list_of_dicts.length; i++) {
-    let dict = list_of_dicts[i];
-    res = mergeDeep(res, dict);
+  let deep_merge_dict = {};
+  for (let i = 0; i < list_of_nested_dicts.length; i++) {
+    let dict = list_of_nested_dicts[i];
+    deep_merge_dict = mergeDeep(deep_merge_dict, dict);
   }
+  return deep_merge_dict;
+}
 
-  function count_calls(searched_subpath) {
-    let counter = 0;
-    for (let path in el_paths) {
-      if (path.startsWith(searched_subpath.slice(0, -1)))
-        counter += el_paths[path].count;
-    }
-    return counter;
+function TX_API_count_starts_with(distinct_elements_paths_dict, searched_subpath) {
+  let counter = 0;
+  for (let path in distinct_elements_paths_dict) {
+    if (path.startsWith(searched_subpath.slice(0, -1))) // slice(0,-1) due to cutting of trailing ']'
+      counter += distinct_elements_paths_dict[path].count;
   }
+  return counter;
+}
 
-  let level = 0;
-  function recursive(res, level, path) {
-    let keys = Object.keys(res).sort();
-    for (let i = 0; i < keys.length; i++) {
-      let key = keys[i];
-      let value = res[key];
-      path.push(key);
-      let offset = "";
-      for (let j = 0; j < level; j++)
-        offset += '   ';
-      let path_string = JSON.stringify(path);
-      let calls = count_calls(path_string);
-      if (el_paths[path_string])
-        console.log(offset, key, '(' + el_paths[path_string].type + ')', calls);
-      else
-        console.log(offset, key, '(group)', calls);
-      if (value) {
-        level += 1;
-        recursive(value, level, path);
+function TX_API_build_offset_tree(deep_merge_dict, distinct_elements_paths_dict, level, path) {
+  if (!level) level = 0;
+  if (!path) path = [];
+  let result = [];
+
+  let keys = Object.keys(deep_merge_dict).sort();
+  for (let i = 0; i < keys.length; i++) {
+    let key = keys[i];
+    let value = deep_merge_dict[key];
+    path.push(key);
+    let offset = "";
+    for (let j = 0; j < level; j++) {
+      if (j == level - 1) {
+        if (i == keys.length - 1)
+          offset += '  ';
+        else
+          offset += '  ';
       }
-      level -= 1;
-      path.pop();
+      else
+        offset += '  ';
     }
+    let path_string = JSON.stringify(path);
+    let calls = TX_API_count_starts_with(distinct_elements_paths_dict, path_string);
+    if (distinct_elements_paths_dict[path_string]) {
+      result.push([offset, key, '(' + distinct_elements_paths_dict[path_string].type + ')', calls, path_string]);
+      //console.log(offset, key, '(' + distinct_elements_paths_dict[path_string].type + ')', calls);
+    }
+    else {
+      result.push([offset, key, '(group)', calls, path_string])
+      //console.log(offset, key, '(group)', calls);
+    }
+    if (value) {
+      level += 1;
+      let more_result = TX_API_build_offset_tree(value, distinct_elements_paths_dict, level, path);
+      if (more_result.length > 0) result.push(more_result);
+    }
+    level -= 1;
+    path.pop();
   }
+  return result
+}
 
-  if (res)
-    recursive(res, level, []);
+function TX_API_calc_elements_tree_with_weights(kwargs, user_filters) {
+  let distinct_elements_paths_dict = DB_SELECT_DISTINCT_something_WHERE_user_filers_AND_NOT_mute(user_filters, 'element_path')
+  distinct_elements_paths_list = Object.keys(distinct_elements_paths_dict);
 
+  let list_of_nested_dicts = TX_API_make_list_of_nested_dicts(distinct_elements_paths_list);
+  let deep_merge_dict = TX_API_deep_merge_list_of_nested_dicts_into_single_dict(list_of_nested_dicts);
+
+  if (deep_merge_dict) {
+    let result = TX_API_build_offset_tree(deep_merge_dict, distinct_elements_paths_dict);
+    //console.log(result)
+  }
+}
+
+function TX_API_add_data_for_charts(kwargs, user_filters) {
+  const reports_match_user_filters = DB_SELECT_all_WHERE_user_filters(user_filters);
+  kwargs['reports_match_user_filters'] = reports_match_user_filters;
+  kwargs['reports_match_user_filters_length'] = reports_match_user_filters.length;
+  return kwargs
+}
+
+function TX_API_add_hierarchy(kwargs, user_filters) {
   const element_path = user_filters.element_path;
-  // console.log(element_path)
   let paths = [];
   for (let i = 0; i < element_path.length; i++) {
     paths.push(element_path.slice(0, i+1));
   }
 
-  //const paths = [['']];
   let elements_hierarchy = [];
   for (let i in paths) {
     user_filters['element_path'] = paths[i];
-    // console.log('asking for elements 2')
     let e4p = DB_SELECT_DISTINCT_element_path_items_WHERE_user_filters_AND_path_AND_NOT_mute(user_filters, paths[i], ['element_path', 'element']);
     elements_for_path = e4p.path_elements;
     elements_types = e4p.path_elements_types;
-    //if (elements_for_path.length == 1 && elements_for_path[0] == paths[i][paths.length - 1])
-    //  break;
     elements_hierarchy.push({'path': paths[i], 'elements': elements_for_path, 'types': elements_types});
   }
   kwargs['elements_hierarchy'] = elements_hierarchy;
   kwargs['element_path'] = element_path;
 
-  // console.log('asking for content')
-  const reports_match_user_filters = DB_SELECT_all_WHERE_user_filters(user_filters);
-  //console.log(reports_match_user_filters)
-  kwargs['reports_match_user_filters'] = reports_match_user_filters;
-  kwargs['reports_match_user_filters_length'] = reports_match_user_filters.length;
+  return kwargs;
+}
+
+function TX_API_process_user_filters_request(user_filters) {
+  let kwargs = {};
+
+  user_filters = TX_API_remove_anys(user_filters);
+
+  kwargs = TX_API_add_topics(kwargs, user_filters);
+  if (kwargs['current_topic']) user_filters.topic = kwargs['current_topic'];
+
+  kwargs = TX_API_add_domains(kwargs, user_filters);
+  if (kwargs['current_domain']) user_filters.url_domain_name = kwargs['current_domain'];
+
+  kwargs = TX_API_add_pages(kwargs, user_filters);
+  if (kwargs['current_page']) user_filters.url_path = kwargs['current_page'];
+
+  TX_API_calc_elements_tree_with_weights(kwargs, user_filters);  
+
+  kwargs = TX_API_add_hierarchy(kwargs, user_filters); // to be removed
+  kwargs = TX_API_add_data_for_charts(kwargs, user_filters);
 
   return kwargs;
 }
@@ -240,20 +295,6 @@ function TX_API_get_dates_from_to(user_filters, kwargs) {
   const datetime_to = user_filters['datetime_to'];
   let datetime_from = user_filters['datetime_from'];
 
-  /*
-  let datetime_from = user_filters['datetime_from'];
-  let datetime_to = user_filters['datetime_to'];
-  if (!datetime_to)
-    datetime_to = Date.now(); // if not set then till now
-
-  if (reports_match_user_filters_length == 0) {
-    if (!datetime_from)
-      datetime_from = Date.now();
-
-    let time_range = datetime_to - datetime_from;
-    return {'datetime_from': datetime_from, 'datetime_to': datetime_to, 'time_range': time_range};
-  }
-  */
   const reports_match_user_filters = kwargs['reports_match_user_filters'];
   if (datetime_to == datetime_from)
     datetime_from = reports_match_user_filters[0].date_time; // if not set then from first date in all related reports
