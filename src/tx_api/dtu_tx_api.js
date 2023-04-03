@@ -191,30 +191,30 @@ function TX_API_build_offset_tree(deep_merge_dict, distinct_elements_paths_dict,
     let value = deep_merge_dict[key];
     path.push(key);
     let offset = "";
-    for (let j = 0; j < level; j++) {
+    for (let j = 1; j < level; j++) {
       if (j == level - 1) {
         if (i == keys.length - 1)
-          offset += '  ';
+          offset += '&nbsp;&nbsp;&nbsp; ';
         else
-          offset += '  ';
+          offset += '&nbsp;&nbsp;&nbsp; ';
       }
       else
-        offset += '  ';
+        offset += '&nbsp;&nbsp;&nbsp; ';
     }
     let path_string = JSON.stringify(path);
     let calls = TX_API_count_starts_with(distinct_elements_paths_dict, path_string);
     if (distinct_elements_paths_dict[path_string]) {
-      result.push([offset, key, '(' + distinct_elements_paths_dict[path_string].type + ')', calls, path_string]);
+      result.push([offset, key, distinct_elements_paths_dict[path_string].type, calls, path_string]);
       //console.log(offset, key, '(' + distinct_elements_paths_dict[path_string].type + ')', calls);
     }
     else {
-      result.push([offset, key, '(group)', calls, path_string])
+      result.push([offset, key, 'group', calls, path_string])
       //console.log(offset, key, '(group)', calls);
     }
     if (value) {
       level += 1;
       let more_result = TX_API_build_offset_tree(value, distinct_elements_paths_dict, level, path);
-      if (more_result.length > 0) result.push(more_result);
+      if (more_result.length > 0) result = result.concat(more_result);
     }
     level -= 1;
     path.pop();
@@ -223,16 +223,19 @@ function TX_API_build_offset_tree(deep_merge_dict, distinct_elements_paths_dict,
 }
 
 function TX_API_calc_elements_tree_with_weights(kwargs, user_filters) {
-  let distinct_elements_paths_dict = DB_SELECT_DISTINCT_something_WHERE_user_filers_AND_NOT_mute(user_filters, 'element_path')
+  let distinct_elements_paths_dict = DB_SELECT_DISTINCT_something_WHERE_user_filers_AND_NOT_mute(user_filters, 'element_path', ['element_path'])
   distinct_elements_paths_list = Object.keys(distinct_elements_paths_dict);
 
   let list_of_nested_dicts = TX_API_make_list_of_nested_dicts(distinct_elements_paths_list);
   let deep_merge_dict = TX_API_deep_merge_list_of_nested_dicts_into_single_dict(list_of_nested_dicts);
 
-  if (deep_merge_dict) {
-    let result = TX_API_build_offset_tree(deep_merge_dict, distinct_elements_paths_dict);
-    //console.log(result)
-  }
+  let result = [];
+  if (deep_merge_dict)
+    result = TX_API_build_offset_tree(deep_merge_dict, distinct_elements_paths_dict);
+
+  kwargs['elements_hierarchy2'] = result;
+  kwargs['element_path'] = user_filters.element_path;
+  return kwargs;
 }
 
 function TX_API_add_data_for_charts(kwargs, user_filters) {
@@ -242,30 +245,9 @@ function TX_API_add_data_for_charts(kwargs, user_filters) {
   return kwargs
 }
 
-function TX_API_add_hierarchy(kwargs, user_filters) {
-  const element_path = user_filters.element_path;
-  let paths = [];
-  for (let i = 0; i < element_path.length; i++) {
-    paths.push(element_path.slice(0, i+1));
-  }
-
-  let elements_hierarchy = [];
-  for (let i in paths) {
-    user_filters['element_path'] = paths[i];
-    let e4p = DB_SELECT_DISTINCT_element_path_items_WHERE_user_filters_AND_path_AND_NOT_mute(user_filters, paths[i], ['element_path', 'element']);
-    elements_for_path = e4p.path_elements;
-    elements_types = e4p.path_elements_types;
-    elements_hierarchy.push({'path': paths[i], 'elements': elements_for_path, 'types': elements_types});
-  }
-  kwargs['elements_hierarchy'] = elements_hierarchy;
-  kwargs['element_path'] = element_path;
-
-  return kwargs;
-}
-
 function TX_API_process_user_filters_request(user_filters) {
   let kwargs = {};
-
+  console.log(user_filters)
   user_filters = TX_API_remove_anys(user_filters);
 
   kwargs = TX_API_add_topics(kwargs, user_filters);
@@ -277,9 +259,8 @@ function TX_API_process_user_filters_request(user_filters) {
   kwargs = TX_API_add_pages(kwargs, user_filters);
   if (kwargs['current_page']) user_filters.url_path = kwargs['current_page'];
 
-  TX_API_calc_elements_tree_with_weights(kwargs, user_filters);  
+  kwargs = TX_API_calc_elements_tree_with_weights(kwargs, user_filters);  
 
-  kwargs = TX_API_add_hierarchy(kwargs, user_filters); // to be removed
   kwargs = TX_API_add_data_for_charts(kwargs, user_filters);
 
   return kwargs;

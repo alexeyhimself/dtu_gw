@@ -65,19 +65,6 @@ function ANALYTICS_PORTAL_SDK_collect_user_filters_on_the_page() {
   user_filters["datetime_from"] = datetime_from;
   user_filters["datetime_to"] = datetime_to;
 
-  /*
-  const df = document.getElementById("datetime_from").value;
-  if (df != '')
-    user_filters["datetime_from"] = Date.parse(df);
-
-  const dt = document.getElementById("datetime_to").value;
-  if (dt != '')
-    user_filters["datetime_to"] = Date.parse(dt);
-  */
-  //const element_path_element = document.getElementById("element_path");
-  //let element_path = JSON.parse(element_path_element.getAttribute("path"));
-  //user_filters["element_path"] = element_path;
-
   let in_page_path = [''];
   user_filters["element_path"] = in_page_path;
 
@@ -95,18 +82,14 @@ function ANALYTICS_PORTAL_SDK_collect_user_filters_on_the_page() {
     }
   }
 
-  const element_path_element = document.getElementById("element_path");
-  let children = element_path_element.children;
-  for (let i = 0; i < children.length; i++) {
-    let child = children[i];
-    if (child.type == 'select-one' && child.value && !child.value.startsWith('-- any '))
-      in_page_path.push(child.value);
-    if (child.hasAttribute("changed"))
-      break;
+  const element_path_element = document.getElementById("drpd:element");
+  if (element_path_element) {
+    console.log(element_path_element.value)
+    in_page_path = JSON.parse(element_path_element.value.replace(/'/g, '"'));
   }
   user_filters["element_path"] = in_page_path;
 
-  //console.log(user_filters)
+  console.log(user_filters)
   return user_filters;
 }
 
@@ -325,17 +308,17 @@ function ANALYTICS_PORTAL_SDK_refresh_stats_for_chart_id_(chart_id, aggr, aggr_u
   }
 }
 
-function ANALYTICS_PORTAL_SDK_draw_dropdown_options(element_id, options, selected_option, types) {
+function ANALYTICS_PORTAL_SDK_draw_dropdown_options(element_id, options, selected_option, types, labels) {
   //console.log(element_id)
   let html = '';
   if (element_id == 'drpd:topic')
     ;
   else if (element_id == 'drpd:url_domain_name')
-    html += '<option>-- any domain --</option>';
+    html += '<option value="">-- any domain --</option>';
   else if (element_id == 'drpd:url_path')
-    html += '<option>-- any page --</option>';
+    html += '<option value="">-- any page --</option>';
   else
-    html += '<option>-- any element --</option>';
+    html += '<option value="[\'\']">-- any element --</option>';
 
   let em = {};
   let new_options = [];
@@ -347,7 +330,7 @@ function ANALYTICS_PORTAL_SDK_draw_dropdown_options(element_id, options, selecte
       if (type == 'anchor') type = 'link';
       if (type == 'select-one') type = 'dropdown';
       if (type != 'has children' && type !== undefined)
-        new_option = '(' + type + ') ' + option;
+        new_option = option + ' (' + type + ')';
       else if (type === undefined)
         new_option = option;
       else
@@ -357,22 +340,24 @@ function ANALYTICS_PORTAL_SDK_draw_dropdown_options(element_id, options, selecte
     new_options.push(new_option);
   }
 
-  for (let i in new_options.sort()) {
+  for (let i in new_options) {
     let new_option = new_options[i];
     let option = em[new_option];
     html += '<option value="' + option + '"';
     if (option == selected_option)
       html += ' selected';
     html += '>';
-    html += new_option;
+    if (labels)
+      html += labels[i];
+    else
+      html += new_option;
     html += '</option>';
   }
   
   const drpd_element = document.getElementById(element_id);
   drpd_element.innerHTML = html;
 
-  console.log("fix me");
-  if (options.length <= 1 && element_id != 'drpd:element0' && element_id != 'drpd:element1' && element_id != 'drpd:element2' && element_id != 'drpd:element3')
+  if (options.length <= 1 && element_id != 'drpd:element')
     drpd_element.parentElement.style.display = 'none';
   else
     drpd_element.parentElement.style.display = 'unset';
@@ -386,32 +371,32 @@ function ANALYTICS_PORTAL_SDK_refresh_topics(kwargs) {
 }
 
 function ANALYTICS_PORTAL_SDK_draw_elements_hierarchy(kwargs) {
-  const elements_hierarchy = kwargs['elements_hierarchy'];
+  const elements_hierarchy = kwargs['elements_hierarchy2'];
   const element_path = kwargs['element_path'];
   let parent = document.getElementById('element_path');
-  //console.log(elements_hierarchy)
   let html = '<label for="drpd:element" class="form-label no-margin-bottom custom-label">Page element(s):</label>';
-  //if (elements_hierarchy.keys().length > 0)
-  //  html += '<label for="drpd:element" class="form-label no-margin-bottom custom-label">page element(s):</label>';
-
-  for (let i = 0; i < elements_hierarchy.length; i++) {
-    let id = 'drpd:element' + String(i);
-    let filter_elements = elements_hierarchy[i].elements;
-    if (filter_elements.length > 0) {
-      html += '<select id="' + id + '" class="form-control form-select element_path margin-bottom-5" data-dtu="Page element(s)"></select>';
-    }
-  }
+  let id = 'drpd:element';
+  html += '<select id="' + id + '" class="form-control form-select element_path margin-bottom-5" data-dtu="Page element(s)"></select>';
   parent.innerHTML = html;
-  //console.log(kwargs)
-  for (let i = 0; i < elements_hierarchy.length; i++) {
-    let id = 'drpd:element' + String(i);
-    let path = elements_hierarchy[i].path;
-    let filter_elements = elements_hierarchy[i].elements;
-    let types = elements_hierarchy[i].types;
-    if (filter_elements.length > 0) {
-      ANALYTICS_PORTAL_SDK_draw_dropdown_options(id, filter_elements, element_path[i+1], types);
-    }
+
+  let options = [];
+  let types = [];
+  let paths = [];
+  for (let i = 1; i < elements_hierarchy.length; i++) {
+    let element_path = elements_hierarchy[i];
+    let offset = element_path[0];
+    let option = element_path[1];
+    let type = element_path[2];
+    if (type == 'anchor') type = 'link';
+    if (type == 'select-one') type = 'dropdown';  
+    let counter = element_path[3];
+    let path = element_path[4];
+    options.push(offset + option + ' (' + type + ')');
+    types.push(type);
+    paths.push(path.replace(/"/g, "'"));
   }
+  let selected_option = JSON.stringify(element_path).replace(/"/g, "'");
+  ANALYTICS_PORTAL_SDK_draw_dropdown_options(id, paths, selected_option, types, options);
 }
 
 function ANALYTICS_PORTAL_SDK_refresh_domain_urls(kwargs) {

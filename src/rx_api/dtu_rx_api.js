@@ -22,3 +22,5 @@ function RX_API_save_to_db(r) {
 function DTU_RX_API_submint_report_endpoint(report) {
   RX_API_save_to_db(report);
 }
+
+console.log("make element path to lower case both for rx and tx apis")
