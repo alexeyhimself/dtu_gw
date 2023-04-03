@@ -247,7 +247,7 @@ function TX_API_add_data_for_charts(kwargs, user_filters) {
 
 function TX_API_process_user_filters_request(user_filters) {
   let kwargs = {};
-  console.log(user_filters)
+  //console.log(user_filters)
   user_filters = TX_API_remove_anys(user_filters);
 
   kwargs = TX_API_add_topics(kwargs, user_filters);

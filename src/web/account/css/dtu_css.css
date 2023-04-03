@@ -160,3 +160,10 @@ body {
     transform: translate(24px, 0);
   }
 }
+
+
+.sankey-link {
+  fill: none;
+  stroke: #000;
+  stroke-opacity: .2;
+}
