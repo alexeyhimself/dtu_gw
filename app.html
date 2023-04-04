@@ -100,29 +100,31 @@
               </div>
               <div class="col margin-bottom-5" id="element_path"></div>
             </div>
-            <p class="chart-name">On chart is displayed <span style="font-weight: bold;">median number</span> (with max and min bursts) of user(s) interactions with selected page element(s) in time</p>
-            <div class="canvas-wrapper">
-              <canvas id="elements_calls_over_time_chart_id"></canvas>
+            <div class="row">
+              <p class="chart-name">On chart is displayed <span style="font-weight: bold;">median number</span> (with max and min bursts) of user(s) interactions with selected page element(s) in time</p>
+              <div class="canvas-wrapper">
+                <canvas id="elements_calls_over_time_chart_id"></canvas>
+              </div>
+              <table>
+                <tr>
+                  <td>aggregation interval</td>
+                  <!--td>last</td-->
+                  <td>min</td>
+                  <td>median</td>
+                  <td>max</td>
+                </tr>
+                <tr>
+                  <td id="aggregation interval"></td>
+                  <!--td id="last"></td-->
+                  <td id="min"></td>
+                  <td id="median"></td>
+                  <td id="max"></td>
+                </tr>
+              </table>
             </div>
-            <table>
-              <tr>
-                <td>aggregation interval</td>
-                <!--td>last</td-->
-                <td>min</td>
-                <td>median</td>
-                <td>max</td>
-              </tr>
-              <tr>
-                <td id="aggregation interval"></td>
-                <!--td id="last"></td-->
-                <td id="min"></td>
-                <td id="median"></td>
-                <td id="max"></td>
-              </tr>
-            </table>
-          </div>
-          <div class="col-lg">
-            <div id="sankey_chart"></div>
+            <div class="row">
+              <div id="sankey_chart"></div>
+            </div>
           </div>
         </div>
     </div>

@@ -446,10 +446,15 @@ function ANALYTICS_PORTAL_SDK_get_elements_in_reports(kwargs) {
 }
 
 function draw_sankey_chart() { // https://d3-graph-gallery.com/graph/sankey_basic.html
+  const element_id_for_sankey = 'sankey_chart';
+  const element_with_sankey = document.getElementById(element_id_for_sankey);
+  const sankey_width = element_with_sankey.offsetWidth - 30;
+  const sankey_height = 300;
+
   // set the dimensions and margins of the graph
   var margin = {top: 10, right: 10, bottom: 10, left: 10},
-      width = 450 - margin.left - margin.right,
-      height = 480 - margin.top - margin.bottom;
+      width = sankey_width - margin.left - margin.right,
+      height = sankey_height - margin.top - margin.bottom;
 
   // append the svg object to the body of the page
   var svg = d3.select("#sankey_chart").append("svg")
@@ -465,7 +470,7 @@ function draw_sankey_chart() { // https://d3-graph-gallery.com/graph/sankey_basi
   // Set the sankey diagram properties
   var sankey = d3.sankey()
       .nodeWidth(10)
-      .nodePadding(10)
+      .nodePadding(210)
       .size([width, height]);
 
   // load the data
@@ -476,7 +481,6 @@ function draw_sankey_chart() { // https://d3-graph-gallery.com/graph/sankey_basi
       {"node":2,"name":"node2"},
       {"node":3,"name":"node3"},
       {"node":4,"name":"node4"},
-      {"node":5,"name":"node5"},
     ],
     "links":[
       {"source":0,"target":2,"value":2},
@@ -486,7 +490,6 @@ function draw_sankey_chart() { // https://d3-graph-gallery.com/graph/sankey_basi
       {"source":2,"target":3,"value":2},
       {"source":2,"target":4,"value":2},
       {"source":3,"target":4,"value":4},
-      {"source":4,"target":5,"value":8}
     ]};
 
   // Constructs a new Sankey generator with the default settings.
