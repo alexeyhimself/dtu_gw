@@ -233,7 +233,7 @@ function TX_API_calc_elements_tree_with_weights(kwargs, user_filters) {
   if (deep_merge_dict)
     result = TX_API_build_offset_tree(deep_merge_dict, distinct_elements_paths_dict);
 
-  kwargs['elements_hierarchy2'] = result;
+  kwargs['elements_hierarchy'] = result;
   kwargs['element_path'] = user_filters.element_path;
   return kwargs;
 }

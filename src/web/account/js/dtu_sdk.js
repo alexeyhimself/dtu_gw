@@ -374,7 +374,7 @@ function ANALYTICS_PORTAL_SDK_refresh_topics(kwargs) {
 }
 
 function ANALYTICS_PORTAL_SDK_draw_elements_hierarchy(kwargs) {
-  const elements_hierarchy = kwargs['elements_hierarchy2'];
+  const elements_hierarchy = kwargs['elements_hierarchy'];
   const element_path = kwargs['element_path'];
   let parent = document.getElementById('element_path');
   let html = '<label for="drpd:element" class="form-label no-margin-bottom custom-label">Page element(s):</label>';
@@ -431,50 +431,20 @@ function ANALYTICS_PORTAL_SDK_refresh_elements_page_data_according_to_user_filte
   ANALYTICS_PORTAL_SDK_refresh_url_paths(kwargs);
 
   ANALYTICS_PORTAL_SDK_refresh_calls_over_time_for_chart_id_('elements_calls_over_time_chart_id', user_filters, kwargs);
+
+  ANALYTICS_PORTAL_SDK_get_data_for_sankey_chart(kwargs);
+  //ANALYTICS_PORTAL_SDK_draw_sankey_chart(kwargs);
 }
 
-function ANALYTICS_PORTAL_SDK_get_elements_in_reports(kwargs) {
-  // TODO: not in reports, but overall.
-  let elements = [''];
-  const reports_match_user_filters = kwargs['reports_match_user_filters'];
-  for (let i in reports_match_user_filters) {
-    let r = reports_match_user_filters[i];
-    if (!elements.includes(r.element))
-      elements.push(r.element);
+function ANALYTICS_PORTAL_SDK_get_data_for_sankey_chart(kwargs) {
+  const elements_hierarchy = kwargs['elements_hierarchy'];
+  console.log(elements_hierarchy);
+  let nodes = [];
+  for (let i in elements_hierarchy) {
+    let element = elements_hierarchy[i];
+    nodes.push({"node": i, "name": element[1]})
   }
-  return elements;
-}
-
-function draw_sankey_chart() { // https://d3-graph-gallery.com/graph/sankey_basic.html
-  const element_id_for_sankey = 'sankey_chart';
-  const element_with_sankey = document.getElementById(element_id_for_sankey);
-  const sankey_width = element_with_sankey.offsetWidth - 30;
-  const sankey_height = 300;
-
-  // set the dimensions and margins of the graph
-  var margin = {top: 10, right: 10, bottom: 10, left: 10},
-      width = sankey_width - margin.left - margin.right,
-      height = sankey_height - margin.top - margin.bottom;
-
-  // append the svg object to the body of the page
-  var svg = d3.select("#sankey_chart").append("svg")
-      .attr("width", width + margin.left + margin.right)
-      .attr("height", height + margin.top + margin.bottom)
-      .append("g")
-      .attr("transform",
-            "translate(" + margin.left + "," + margin.top + ")");
-
-  // Color scale used
-  var color = d3.scaleOrdinal(d3.schemeCategory20);
-
-  // Set the sankey diagram properties
-  var sankey = d3.sankey()
-      .nodeWidth(10)
-      .nodePadding(210)
-      .size([width, height]);
-
-  // load the data
-  let graph = {
+  let data = {
     "nodes":[
       {"node":0,"name":"node0"},
       {"node":1,"name":"node1"},
@@ -491,6 +461,50 @@ function draw_sankey_chart() { // https://d3-graph-gallery.com/graph/sankey_basi
       {"source":2,"target":4,"value":2},
       {"source":3,"target":4,"value":4},
     ]};
+  kwargs['sankey_chart_data'] = data;
+}
+
+function ANALYTICS_PORTAL_SDK_get_elements_in_reports(kwargs) {
+  // TODO: not in reports, but overall.
+  let elements = [''];
+  const reports_match_user_filters = kwargs['reports_match_user_filters'];
+  for (let i in reports_match_user_filters) {
+    let r = reports_match_user_filters[i];
+    if (!elements.includes(r.element))
+      elements.push(r.element);
+  }
+  return elements;
+}
+
+function ANALYTICS_PORTAL_SDK_draw_sankey_chart(kwargs) { // https://d3-graph-gallery.com/graph/sankey_basic.html
+  const element_id_for_sankey = 'sankey_chart';
+  const element_with_sankey = document.getElementById(element_id_for_sankey);
+  const sankey_width = element_with_sankey.offsetWidth - 24; // don't know why -24, why scroll appears
+  const sankey_height = 300;
+
+  // set the dimensions and margins of the graph
+  var margin = {top: 10, right: 10, bottom: 10, left: 10},
+      width = sankey_width - margin.left - margin.right,
+      height = sankey_height - margin.top - margin.bottom;
+
+  // append the svg object to the body of the page
+  var svg = d3.select("#" + element_id_for_sankey).append("svg")
+      .attr("width", width + margin.left + margin.right)
+      .attr("height", height + margin.top + margin.bottom)
+      //.append("g")
+      //.attr("transform",
+      //      "translate(" + margin.left + "," + margin.top + ")");
+
+  // Color scale used
+  var color = d3.scaleOrdinal(d3.schemeCategory20);
+
+  let graph = kwargs['sankey_chart_data'];
+
+  // Set the sankey diagram properties
+  var sankey = d3.sankey()
+      .nodeWidth(10)
+      .nodePadding(110)
+      .size([width, height]);
 
   // Constructs a new Sankey generator with the default settings.
   sankey
@@ -548,4 +562,3 @@ function draw_sankey_chart() { // https://d3-graph-gallery.com/graph/sankey_basi
 }
 
 ANALYTICS_PORTAL_SDK_start();
-
