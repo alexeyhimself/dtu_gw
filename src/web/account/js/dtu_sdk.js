@@ -480,13 +480,13 @@ function ANALYTICS_PORTAL_SDK_draw_sankey_chart(kwargs) { // https://d3-graph-ga
   const element_id_for_sankey = 'sankey_chart';
   const element_with_sankey = document.getElementById(element_id_for_sankey);
   element_with_sankey.innerHTML = '';
-  const sankey_width = element_with_sankey.offsetWidth - 24; // don't know why -24, why scroll appears
+  const sankey_width = element_with_sankey.offsetWidth - 30; // don't know why -24, why scroll appears
   const sankey_height = 300;
 
 // set the dimensions and margins of the graph
-var margin = {top: 10, right: 10, bottom: 10, left: 10},
-    width = sankey_width - margin.left - margin.right,
-    height = sankey_height - margin.top - margin.bottom;  
+var margin = {top: 10, right: 0, bottom: 15, left: 5},
+    width = sankey_width// - margin.left - margin.right,
+    height = sankey_height// - margin.top - margin.bottom;  
 
 // format variables
 var formatNumber = d3.format(",.0f"), // zero decimal places
