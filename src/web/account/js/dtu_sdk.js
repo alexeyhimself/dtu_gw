@@ -433,34 +433,34 @@ function ANALYTICS_PORTAL_SDK_refresh_elements_page_data_according_to_user_filte
   ANALYTICS_PORTAL_SDK_refresh_calls_over_time_for_chart_id_('elements_calls_over_time_chart_id', user_filters, kwargs);
 
   ANALYTICS_PORTAL_SDK_get_data_for_sankey_chart(kwargs);
-  //ANALYTICS_PORTAL_SDK_draw_sankey_chart(kwargs);
+  ANALYTICS_PORTAL_SDK_draw_sankey_chart(kwargs);
 }
 
 function ANALYTICS_PORTAL_SDK_get_data_for_sankey_chart(kwargs) {
   const elements_hierarchy = kwargs['elements_hierarchy'];
-  console.log(elements_hierarchy);
+  //console.log(elements_hierarchy);
   let nodes = [];
+  let links = [];
   for (let i in elements_hierarchy) {
     let element = elements_hierarchy[i];
-    nodes.push({"node": i, "name": element[1]})
+    nodes.push({"node": parseInt(i), "name": element[1] + i});
+    links.push({"source": 0,"target": 2,"value": 2});
   }
+  links = [
+{"source": 0,"target": 1,"value": 2},
+{"source": 1,"target": 2,"value": 2},
+{"source": 0,"target": 3,"value": 3},
+{"source": 0,"target": 4,"value": 3},
+{"source": 4,"target": 5,"value": 1},
+{"source": 4,"target": 6,"value": 2},
+{"source": 0,"target": 7,"value": 1},
+{"source": 0,"target": 8,"value": 3},
+{"source": 7,"target": 8,"value": 1},
+]
   let data = {
-    "nodes":[
-      {"node":0,"name":"node0"},
-      {"node":1,"name":"node1"},
-      {"node":2,"name":"node2"},
-      {"node":3,"name":"node3"},
-      {"node":4,"name":"node4"},
-    ],
-    "links":[
-      {"source":0,"target":2,"value":2},
-      {"source":1,"target":2,"value":2},
-      {"source":1,"target":3,"value":2},
-      {"source":0,"target":4,"value":2},
-      {"source":2,"target":3,"value":2},
-      {"source":2,"target":4,"value":2},
-      {"source":3,"target":4,"value":4},
-    ]};
+    "nodes": nodes,
+    "links": links
+  };
   kwargs['sankey_chart_data'] = data;
 }
 
@@ -479,86 +479,121 @@ function ANALYTICS_PORTAL_SDK_get_elements_in_reports(kwargs) {
 function ANALYTICS_PORTAL_SDK_draw_sankey_chart(kwargs) { // https://d3-graph-gallery.com/graph/sankey_basic.html
   const element_id_for_sankey = 'sankey_chart';
   const element_with_sankey = document.getElementById(element_id_for_sankey);
+  element_with_sankey.innerHTML = '';
   const sankey_width = element_with_sankey.offsetWidth - 24; // don't know why -24, why scroll appears
   const sankey_height = 300;
 
-  // set the dimensions and margins of the graph
-  var margin = {top: 10, right: 10, bottom: 10, left: 10},
-      width = sankey_width - margin.left - margin.right,
-      height = sankey_height - margin.top - margin.bottom;
+// set the dimensions and margins of the graph
+var margin = {top: 10, right: 10, bottom: 10, left: 10},
+    width = sankey_width - margin.left - margin.right,
+    height = sankey_height - margin.top - margin.bottom;  
 
-  // append the svg object to the body of the page
-  var svg = d3.select("#" + element_id_for_sankey).append("svg")
-      .attr("width", width + margin.left + margin.right)
-      .attr("height", height + margin.top + margin.bottom)
-      //.append("g")
-      //.attr("transform",
-      //      "translate(" + margin.left + "," + margin.top + ")");
+// format variables
+var formatNumber = d3.format(",.0f"), // zero decimal places
+    format = function(d) { return formatNumber(d); },
+    color = d3.scaleOrdinal(d3.schemeCategory10);
+  
+// append the svg object to the body of the page
+var svg = d3.select("#" + element_id_for_sankey).append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+  .append("g")
+    .attr("transform", 
+          "translate(" + margin.left + "," + margin.top + ")");
 
-  // Color scale used
-  var color = d3.scaleOrdinal(d3.schemeCategory20);
+function left(node) {
+  return node.depth;
+}
 
-  let graph = kwargs['sankey_chart_data'];
+function right(node, n) {
+  return n - 1 - node.height;
+}
 
-  // Set the sankey diagram properties
-  var sankey = d3.sankey()
-      .nodeWidth(10)
-      .nodePadding(110)
-      .size([width, height]);
+function justify(node, n) {
+  return node.sourceLinks.length ? node.depth : n - 1;
+}
 
-  // Constructs a new Sankey generator with the default settings.
-  sankey
-      .nodes(graph.nodes)
-      .links(graph.links)
-      .layout(1);
+// Set the sankey diagram properties
+var sankey = d3.sankey()
+    .nodeWidth(3)
+    .nodePadding(20)
+    .size([width, height])
+    .nodeAlign(left);
 
-  // add in the links
-  var link = svg.append("g")
-    .selectAll(".sankey-link")
-    .data(graph.links)
-    .enter()
-    .append("path")
-      .attr("class", "sankey-link")
-      .attr("d", sankey.link() )
-      .style("stroke-width", function(d) { return Math.max(1, d.dy); })
-      .sort(function(a, b) { return b.dy - a.dy; });
+var path = sankey.links();
 
-  // add in the nodes
-  var node = svg.append("g")
-    .selectAll(".node")
-    .data(graph.nodes)
-    .enter().append("g")
-      .attr("class", "node")
-      .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; })
-      .call(d3.drag()
-        .subject(function(d) { return d; })
-        .on("start", function() { this.parentNode.appendChild(this); })
-        );
-        //.on("drag", dragmove));
 
-  // add the rectangles for the nodes
-  node
-    .append("rect")
-      .attr("height", function(d) { return d.dy; })
+graph = sankey({
+"nodes":[
+{node: 0, name: 'All'},
+{node: 1, name: 'Navbar'},
+{node: 2, name: 'Menu'},
+{node: 3, name: 'Page element(s)'},
+{node: 4, name: 'Time quick-link'},
+{node: 5, name: '15 min'},
+{node: 6, name: '5 min'},
+{node: 7, name: 'Try demo account now'},
+{node: 8, name: 'Web page(s)'}
+],
+"links": [
+{"source": 0,"target": 1,"value": 2},
+{"source": 1,"target": 2,"value": 2},
+{"source": 0,"target": 3,"value": 3},
+{"source": 0,"target": 4,"value": 3},
+{"source": 4,"target": 5,"value": 1},
+{"source": 4,"target": 6,"value": 2},
+{"source": 0,"target": 7,"value": 1},
+{"source": 0,"target": 8,"value": 3},
+]
+});
+
+// add in the links
+  var link = svg.append("g").selectAll(".link")
+      .data(graph.links)
+      .enter().append("path")
+      .attr("class", "link")
+      .attr("d", d3.sankeyLinkHorizontal())
+      .attr("stroke-width", function(d) { return d.width; });  
+
+// add the link titles
+  link.append("title")
+        .text(function(d) {
+            return d.source.name + " → " + 
+                d.target.name + "\n" + format(d.value); });
+
+// add in the nodes
+  var node = svg.append("g").selectAll(".node")
+      .data(graph.nodes)
+      .enter().append("g")
+      .style("font", "13px sans-serif")
+      .attr("class", "node");
+
+// add the rectangles for the nodes
+  node.append("rect")
+      .attr("x", function(d) { return d.x0; })
+      .attr("y", function(d) { return d.y0; })
+      .attr("height", function(d) { return d.y1 - d.y0; })
       .attr("width", sankey.nodeWidth())
-      .style("fill", function(d) { return d.color = color(d.name.replace(/ .*/, "")); })
-      .style("stroke", function(d) { return d3.rgb(d.color).darker(2); })
-    // Add hover text
-    .append("title")
-      .text(function(d) { return d.name + "\n" + "There is " + d.value + " stuff in this node"; });
+      .style("fill", '#0d6efdff')
+      //.style("stroke", function(d) { return d3.rgb(d.color).darker(2); })
+      .append("title")
+      .text(function(d) { 
+      return d.name + "\n" + format(d.value); });
 
-  // add in the title for the nodes
-  node
-    .append("text")
-      .attr("x", -6)
-      .attr("y", function(d) { return d.dy / 2; })
-      .attr("dy", ".35em")
+// add in the title for the nodes
+  node.append("text")
+      .attr("x", function(d) { return d.x0 - 6; })
+      .attr("y", function(d) { return (d.y1 + d.y0) / 2; })
+      .attr("dy", "0.35em")
       .attr("text-anchor", "end")
-      .attr("transform", null)
       .text(function(d) { return d.name; })
-    .filter(function(d) { return d.x < width / 2; })
-      .attr("x", 6 + sankey.nodeWidth())
-      .attr("text-anchor", "start");
+      .filter(function(d) { return d.x0 < width / 2; })
+      .attr("x", function(d) { return d.x1 + 6; })
+      .attr("text-anchor", "start")
+      //.attr("font-family", function(d,i) {return "sans-serif"; })
+      //.attr("font-family", "Saira")
+      //.text( function(d) {return d;});
+  
 }
 
 ANALYTICS_PORTAL_SDK_start();
