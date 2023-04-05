@@ -495,7 +495,7 @@ function ANALYTICS_PORTAL_SDK_draw_sankey_chart(kwargs) { // https://d3-graph-ga
   const element_id_for_sankey = 'sankey_chart';
   const element_with_sankey = document.getElementById(element_id_for_sankey);
   element_with_sankey.innerHTML = '';
-  const sankey_width = element_with_sankey.offsetWidth - 0; // don't know why -24, why scroll appears
+  const sankey_width = element_with_sankey.offsetWidth - 20; // don't know why -24, why scroll appears
   const sankey_height = 300;
 
 // set the dimensions and margins of the graph
@@ -528,17 +528,21 @@ function justify(node, n) {
   return node.sourceLinks.length ? node.depth : n - 1;
 }
 
+let node_padding = 20;
+let sankey_chart_data = kwargs['sankey_chart_data'];
+if (sankey_chart_data.nodes.length > 15)
+  node_padding = 5;
+
 // Set the sankey diagram properties
 var sankey = d3.sankey()
     .nodeWidth(3)
-    .nodePadding(20)
+    .nodePadding(node_padding)
     .size([width, height])
     .nodeAlign(left);
 
 var path = sankey.links();
 
-
-graph = sankey(kwargs['sankey_chart_data']);
+graph = sankey(sankey_chart_data);
 
 // add in the links
   var link = svg.append("g").selectAll(".link")

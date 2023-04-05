@@ -98,6 +98,7 @@ body {
 .navbar {
   background-color: snow!important;
 }
+
 #loading {
   margin-top: 20%;
   text-align: center;
@@ -161,7 +162,9 @@ body {
   }
 }
 
-
+#sankey_chart {
+  margin-bottom: 20px;
+}
 .node rect {
   fill-opacity: .9;
   shape-rendering: crispEdges;

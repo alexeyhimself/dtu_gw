@@ -66,7 +66,7 @@ document.addEventListener("DOMContentLoaded", () => {
     let loading_content = document.getElementById('loading');
     loading_content.style.display = 'block';
 
-    sleep(500).then(() => {
+    sleep(0).then(() => {
       generate_fake_data();
       
       app_content.style.display = 'block';
