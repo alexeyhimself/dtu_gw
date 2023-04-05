@@ -183,7 +183,7 @@ function TX_API_count_starts_with(distinct_elements_paths_dict, searched_subpath
 function TX_API_build_offset_tree(deep_merge_dict, distinct_elements_paths_dict, level, path) {
   if (!level) level = 0;
   if (!path) path = [];
-  let result = [];
+  let offset_tree = [];
 
   let keys = Object.keys(deep_merge_dict).sort();
   for (let i = 0; i < keys.length; i++) {
@@ -196,43 +196,45 @@ function TX_API_build_offset_tree(deep_merge_dict, distinct_elements_paths_dict,
 
     let path_string = JSON.stringify(path);
     let calls = TX_API_count_starts_with(distinct_elements_paths_dict, path_string);
-    let r = {
+    let tree_branch = {
         'offset': offset,
         'element': key,
         'number_of_calls': calls,
-        'element_path_string': path_string
+        'element_path_string': path_string,
+        'element_path': [...path]
       };
 
     if (distinct_elements_paths_dict[path_string])
-      r['type'] = distinct_elements_paths_dict[path_string].type;
+      tree_branch['type'] = distinct_elements_paths_dict[path_string].type;
     else
-      r['type'] = 'group';
-    result.push(r);
+      tree_branch['type'] = 'group';
+    offset_tree.push(tree_branch);
 
     if (value) {
       level += 1;
-      let more_result = TX_API_build_offset_tree(value, distinct_elements_paths_dict, level, path);
-      if (more_result.length > 0) result = result.concat(more_result);
+      let more_offset_tree = TX_API_build_offset_tree(value, distinct_elements_paths_dict, level, path);
+      if (more_offset_tree.length > 0) offset_tree = offset_tree.concat(more_offset_tree);
     }
     level -= 1;
     path.pop();
   }
-  console.log(result)
-  return result
+
+  return offset_tree
 }
 
 function TX_API_calc_elements_tree_with_weights(kwargs, user_filters) {
   let distinct_elements_paths_dict = DB_SELECT_DISTINCT_something_WHERE_user_filers_AND_NOT_mute(user_filters, 'element_path', ['element_path'])
   distinct_elements_paths_list = Object.keys(distinct_elements_paths_dict);
+  kwargs['distinct_elements_paths_list'] = distinct_elements_paths_list;
 
   let list_of_nested_dicts = TX_API_make_list_of_nested_dicts(distinct_elements_paths_list);
   let deep_merge_dict = TX_API_deep_merge_list_of_nested_dicts_into_single_dict(list_of_nested_dicts);
-  console.log(distinct_elements_paths_dict, distinct_elements_paths_list)
-  let result = [];
+  //console.log(distinct_elements_paths_dict, distinct_elements_paths_list)
+  let offset_tree = [];
   if (deep_merge_dict)
-    result = TX_API_build_offset_tree(deep_merge_dict, distinct_elements_paths_dict);
+    offset_tree = TX_API_build_offset_tree(deep_merge_dict, distinct_elements_paths_dict);
 
-  kwargs['elements_hierarchy'] = result;
+  kwargs['elements_hierarchy'] = offset_tree;
   kwargs['element_path'] = user_filters.element_path;
   return kwargs;
 }

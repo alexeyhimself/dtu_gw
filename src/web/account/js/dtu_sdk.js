@@ -438,27 +438,42 @@ function ANALYTICS_PORTAL_SDK_refresh_elements_page_data_according_to_user_filte
 
 function ANALYTICS_PORTAL_SDK_get_data_for_sankey_chart(kwargs) {
   const elements_hierarchy = kwargs['elements_hierarchy'];
-  console.log(elements_hierarchy);
-  let nodes = [];
-  let links = [];
+  //console.log(elements_hierarchy);
+  let nodes_list = [];
+  let nodes_dict = {}
+  let paths = [];
   for (let i in elements_hierarchy) {
+    let node_id = parseInt(i);
     let element = elements_hierarchy[i];
-    nodes.push({"node": parseInt(i), "name": element[1] + i});
-    links.push({"source": 0,"target": 2,"value": 2});
+    let name = element['element'];
+    if (name == '')
+      name = 'All';
+    nodes_list.push({"node": node_id, "name": name});
+    nodes_dict[name] = node_id;
+    paths.push({'path': element['element_path'], 'number_of_calls': element['number_of_calls']});
   }
-  links = [
-{"source": 0,"target": 1,"value": 2},
-{"source": 1,"target": 2,"value": 2},
-{"source": 0,"target": 3,"value": 3},
-{"source": 0,"target": 4,"value": 3},
-{"source": 4,"target": 5,"value": 1},
-{"source": 4,"target": 6,"value": 2},
-{"source": 0,"target": 7,"value": 1},
-{"source": 0,"target": 8,"value": 3},
-{"source": 7,"target": 8,"value": 1},
-]
+
+  let links = [];
+  for (let i in paths) {
+    let p = paths[i];
+    let path = p.path;
+    if (path.length <= 1)
+      continue;
+
+    let path_length = path.length;
+    let target = path[path_length - 1];
+    let source = path[path_length - 2];
+    if (source == '')
+      source = 'All';
+    let target_id = nodes_dict[target];
+    let source_id = nodes_dict[source];
+    let value = p.number_of_calls;
+    links.push({"source": source_id, "target": target_id, "value": value});
+  }
+
+  //console.log(nodes_dict, links, paths)
   let data = {
-    "nodes": nodes,
+    "nodes": nodes_list,
     "links": links
   };
   kwargs['sankey_chart_data'] = data;
@@ -480,11 +495,11 @@ function ANALYTICS_PORTAL_SDK_draw_sankey_chart(kwargs) { // https://d3-graph-ga
   const element_id_for_sankey = 'sankey_chart';
   const element_with_sankey = document.getElementById(element_id_for_sankey);
   element_with_sankey.innerHTML = '';
-  const sankey_width = element_with_sankey.offsetWidth - 42; // don't know why -24, why scroll appears
+  const sankey_width = element_with_sankey.offsetWidth - 0; // don't know why -24, why scroll appears
   const sankey_height = 300;
 
 // set the dimensions and margins of the graph
-var margin = {top: 10, right: 0, bottom: 15, left: 2},
+var margin = {top: 20, right: 0, bottom: 25, left: 0},
     width = sankey_width// - margin.left - margin.right,
     height = sankey_height// - margin.top - margin.bottom;  
 
@@ -523,29 +538,7 @@ var sankey = d3.sankey()
 var path = sankey.links();
 
 
-graph = sankey({
-"nodes":[
-{node: 0, name: 'All'},
-{node: 1, name: 'Navbar'},
-{node: 2, name: 'Menu'},
-{node: 3, name: 'Page element(s)'},
-{node: 4, name: 'Time quick-link'},
-{node: 5, name: '15 min'},
-{node: 6, name: '5 min'},
-{node: 7, name: 'Try demo account now'},
-{node: 8, name: 'Web page(s)'}
-],
-"links": [
-{"source": 0,"target": 1,"value": 2},
-{"source": 1,"target": 2,"value": 2},
-{"source": 0,"target": 3,"value": 3},
-{"source": 0,"target": 4,"value": 3},
-{"source": 4,"target": 5,"value": 1},
-{"source": 4,"target": 6,"value": 2},
-{"source": 0,"target": 7,"value": 1},
-{"source": 0,"target": 8,"value": 3},
-]
-});
+graph = sankey(kwargs['sankey_chart_data']);
 
 // add in the links
   var link = svg.append("g").selectAll(".link")
