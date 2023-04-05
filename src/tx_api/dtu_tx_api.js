@@ -191,26 +191,24 @@ function TX_API_build_offset_tree(deep_merge_dict, distinct_elements_paths_dict,
     let value = deep_merge_dict[key];
     path.push(key);
     let offset = "";
-    for (let j = 1; j < level; j++) {
-      if (j == level - 1) {
-        if (i == keys.length - 1)
-          offset += '&nbsp;&nbsp;&nbsp; ';
-        else
-          offset += '&nbsp;&nbsp;&nbsp; ';
-      }
-      else
-        offset += '&nbsp;&nbsp;&nbsp; ';
-    }
+    for (let j = 1; j < level; j++)
+      offset += '&nbsp;&nbsp;&nbsp; ';
+
     let path_string = JSON.stringify(path);
     let calls = TX_API_count_starts_with(distinct_elements_paths_dict, path_string);
-    if (distinct_elements_paths_dict[path_string]) {
-      result.push([offset, key, distinct_elements_paths_dict[path_string].type, calls, path_string]);
-      //console.log(offset, key, '(' + distinct_elements_paths_dict[path_string].type + ')', calls);
-    }
-    else {
-      result.push([offset, key, 'group', calls, path_string])
-      //console.log(offset, key, '(group)', calls);
-    }
+    let r = {
+        'offset': offset,
+        'element': key,
+        'number_of_calls': calls,
+        'element_path_string': path_string
+      };
+
+    if (distinct_elements_paths_dict[path_string])
+      r['type'] = distinct_elements_paths_dict[path_string].type;
+    else
+      r['type'] = 'group';
+    result.push(r);
+
     if (value) {
       level += 1;
       let more_result = TX_API_build_offset_tree(value, distinct_elements_paths_dict, level, path);
@@ -219,6 +217,7 @@ function TX_API_build_offset_tree(deep_merge_dict, distinct_elements_paths_dict,
     level -= 1;
     path.pop();
   }
+  console.log(result)
   return result
 }
 
@@ -228,7 +227,7 @@ function TX_API_calc_elements_tree_with_weights(kwargs, user_filters) {
 
   let list_of_nested_dicts = TX_API_make_list_of_nested_dicts(distinct_elements_paths_list);
   let deep_merge_dict = TX_API_deep_merge_list_of_nested_dicts_into_single_dict(list_of_nested_dicts);
-
+  console.log(distinct_elements_paths_dict, distinct_elements_paths_list)
   let result = [];
   if (deep_merge_dict)
     result = TX_API_build_offset_tree(deep_merge_dict, distinct_elements_paths_dict);

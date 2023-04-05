@@ -387,13 +387,13 @@ function ANALYTICS_PORTAL_SDK_draw_elements_hierarchy(kwargs) {
   let paths = [];
   for (let i = 1; i < elements_hierarchy.length; i++) {
     let element_path = elements_hierarchy[i];
-    let offset = element_path[0];
-    let option = element_path[1];
-    let type = element_path[2];
+    let offset = element_path.offset;
+    let option = element_path.element;
+    let type = element_path.type;
     if (type == 'anchor') type = 'link';
     if (type == 'select-one') type = 'dropdown';  
-    let counter = element_path[3];
-    let path = element_path[4];
+    let counter = element_path.number_of_calls;
+    let path = element_path.element_path_string;
     options.push(offset + option + ' (' + type + ')');
     types.push(type);
     paths.push(path.replace(/"/g, "'"));
@@ -438,7 +438,7 @@ function ANALYTICS_PORTAL_SDK_refresh_elements_page_data_according_to_user_filte
 
 function ANALYTICS_PORTAL_SDK_get_data_for_sankey_chart(kwargs) {
   const elements_hierarchy = kwargs['elements_hierarchy'];
-  //console.log(elements_hierarchy);
+  console.log(elements_hierarchy);
   let nodes = [];
   let links = [];
   for (let i in elements_hierarchy) {
