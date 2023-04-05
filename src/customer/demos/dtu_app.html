@@ -72,36 +72,44 @@
               </div>
               <div class="col margin-bottom-5" id="element_path"></div>
             </div>
-            <p class="chart-name">On chart is displayed <span style="font-weight: bold;">median number</span> (with max and min bursts) of user(s) interactions with selected page element(s) in time</p>
-            <div class="canvas-wrapper">
-              <canvas id="elements_calls_over_time_chart_id"></canvas>
+            <div class="row hidden2">
+              <div id="sankey_chart"></div>
             </div>
-            <table>
-              <tr>
-                <td>aggregation interval</td>
-                <!--td>last</td-->
-                <td>min</td>
-                <td>median</td>
-                <td>max</td>
-              </tr>
-              <tr>
-                <td id="aggregation interval"></td>
-                <!--td id="last"></td-->
-                <td id="min"></td>
-                <td id="median"></td>
-                <td id="max"></td>
-              </tr>
-            </table>
+            <div class="row">
+              <p class="chart-name">On chart below is displayed <span style="font-weight: bold;">median number</span> (with max and min bursts) of user(s) interactions with selected page element(s) in time</p>
+              <div class="canvas-wrapper">
+                <canvas id="elements_calls_over_time_chart_id"></canvas>
+              </div>
+              <table style="width: auto;">
+                <tr>
+                  <td>aggregation interval</td>
+                  <!--td>last</td-->
+                  <td>min</td>
+                  <td>median</td>
+                  <td>max</td>
+                </tr>
+                <tr>
+                  <td id="aggregation interval"></td>
+                  <!--td id="last"></td-->
+                  <td id="min"></td>
+                  <td id="median"></td>
+                  <td id="max"></td>
+                </tr>
+              </table>
+            </div>
           </div>
         </div>
     </div>
     <div id="loading">
       <div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
-      <p>Please wait a few seconds.<br>We are preparing your demo account...</p>
+      <p>Please wait a few seconds.<br>We are getting ready your demo account...</p>
     </div>
 
-		<script src="https://dotheyuse.com/src/web/common/chartjs/chart-4.2.1.js"></script>
-		<script src="https://dotheyuse.com/src/web/common/chartjs/chartjs-adapter-date-fns-3.0.0.bundle.min.js"></script>
+    <script src="https://dotheyuse.com/src/web/account/js/d3/d3.v7.min.js"></script>
+    <script src="https://dotheyuse.com/src/web/account/js/d3/d3-sankey.min.js"></script>
+
+		<script src="https://dotheyuse.com/src/web/account/js/chartjs/chart-4.2.1.js"></script>
+		<script src="https://dotheyuse.com/src/web/account/js/chartjs/chartjs-adapter-date-fns-3.0.0.bundle.min.js"></script>
 
     <script src="https://dotheyuse.com/src/db/dtu_db.js?v=3"></script>
     <script src="https://dotheyuse.com/src/rx_api/dtu_rx_api.js?v=3"></script>
