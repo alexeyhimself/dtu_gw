@@ -541,6 +541,8 @@ var sankey = d3.sankey()
     .nodeAlign(left);
 
 var path = sankey.links();
+if (sankey_chart_data.nodes.length < 1)
+  return;
 
 graph = sankey(sankey_chart_data);
 
