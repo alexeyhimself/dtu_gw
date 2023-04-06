@@ -72,6 +72,9 @@ document.addEventListener("DOMContentLoaded", () => {
       app_content.style.display = 'block';
       loading_content.style.display = 'none';
 
+      if (!window.localStorage.getItem('topic'))
+        document.getElementById('drpd:topic').value = 'auto-generated (lite)';
+
       ANALYTICS_PORTAL_SDK_refresh_elements_page_data_according_to_user_filters_setup(); 
     });
   }
