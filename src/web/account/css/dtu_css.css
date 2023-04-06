@@ -182,5 +182,6 @@ body {
 }
 
 .link:hover {
-  stroke-opacity: .25;
+  stroke: #ffd700;
+  stroke-opacity: 1;
 }

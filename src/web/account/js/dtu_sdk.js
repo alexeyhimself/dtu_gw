@@ -448,7 +448,7 @@ function ANALYTICS_PORTAL_SDK_get_data_for_sankey_chart(kwargs) {
     let name = element['element'];
     if (name == '')
       name = 'All';
-    nodes_list.push({"node": node_id, "name": name});
+    nodes_list.push({"node": node_id, "name": name, "smth": 1});
     nodes_dict[name] = node_id;
     paths.push({'path': element['element_path'], 'number_of_calls': element['number_of_calls']});
   }
@@ -495,8 +495,15 @@ function ANALYTICS_PORTAL_SDK_draw_sankey_chart(kwargs) { // https://d3-graph-ga
   const element_id_for_sankey = 'sankey_chart';
   const element_with_sankey = document.getElementById(element_id_for_sankey);
   element_with_sankey.innerHTML = '';
-  const sankey_width = element_with_sankey.offsetWidth - 20; // don't know why -24, why scroll appears
-  const sankey_height = 300;
+
+  let node_padding = 20;
+  let sankey_chart_data = kwargs['sankey_chart_data'];
+  if (sankey_chart_data.nodes.length > 15) {
+    node_padding = 5;
+  }
+
+  let sankey_width = element_with_sankey.offsetWidth - 20; // don't know why -24, why scroll appears
+  let sankey_height = sankey_chart_data.nodes.length * 15//300;
 
 // set the dimensions and margins of the graph
 var margin = {top: 20, right: 0, bottom: 25, left: 0},
@@ -528,11 +535,6 @@ function justify(node, n) {
   return node.sourceLinks.length ? node.depth : n - 1;
 }
 
-let node_padding = 20;
-let sankey_chart_data = kwargs['sankey_chart_data'];
-if (sankey_chart_data.nodes.length > 15)
-  node_padding = 5;
-
 // Set the sankey diagram properties
 var sankey = d3.sankey()
     .nodeWidth(3)
@@ -553,6 +555,10 @@ graph = sankey(sankey_chart_data);
       .attr("class", "link")
       .attr("d", d3.sankeyLinkHorizontal())
       .attr("stroke-width", function(d) { return d.width; });  
+
+link.on("click", function(d) {
+  console.log(d)
+})
 
 // add the link titles
   link.append("title")
