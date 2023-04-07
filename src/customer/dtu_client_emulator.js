@@ -2,6 +2,30 @@ function EMULATOR_get_random_int_between(min, max) { // https://developer.mozill
   return Math.floor(Math.random() * (max - min) + min);
 }
 
+function make_normal_distribution(list) {
+  let mean_i = Math.floor(list.length / 2); // works both for odd and even, floor because id's are from 0
+  let standard_deviation = 4//Math.floor(list.length / 3);
+
+  let new_i = [];
+  let debug = [];
+  for (let i in list) {
+    let new_number_of_i = (2000 * Math.exp(-0.5 * Math.pow((i - mean_i) / standard_deviation, 2))) / (standard_deviation * Math.pow(2 * Math.PI, 0.5));
+    debug.push(new_number_of_i);
+    new_i.push(Math.floor(new_number_of_i));
+  }
+  
+  console.log(debug, new_i)
+  let normal_list = [];
+  for (let i in list) {
+    let list_item = list[i];
+    let number_of_repeats = new_i[i];
+    for (let j = 0; j < number_of_repeats; j++) {
+      normal_list.push(list_item);
+    }
+  }
+  return normal_list;
+}
+
 function EMULATOR_get_random_item_from_list(list) { // https://stackoverflow.com/questions/5915096/get-a-random-item-from-a-javascript-array
   return list[EMULATOR_get_random_item_from_number(list.length)];
 }
@@ -25,8 +49,8 @@ const topics = [
   'auto-generated (heavy)'
 ];
 
-function EMULATOR_make_report(topic, random_time_unit) {
-  let el = EMULATOR_get_random_item_from_list(dtu.elements_to_listen_to);
+function EMULATOR_make_report(topic, random_time_unit, list) {
+  let el = EMULATOR_get_random_item_from_list(list);
   let event = SUPPORTED_INPUT_TYPES_AND_EVENTS[el.type][0];
   let r = dtu.form_report(el, event);
   dtu.make_report(r)
@@ -38,6 +62,9 @@ function EMULATOR_make_report(topic, random_time_unit) {
 }
 
 function generate_fake_data() {
+  const list = [...dtu.elements_to_listen_to].sort(() => Math.random() - 0.5);
+  const normal_list = make_normal_distribution(list);
+
   for (let i in topics) {
     const topic = topics[i];
     if (topic == 'auto-generated (heavy)')
@@ -48,7 +75,7 @@ function generate_fake_data() {
     emulated_time = max_time_ago;
     let t = max_time_ago;
     while (t < Date.now()) {
-      let c = EMULATOR_make_report(topic, random_time_unit);
+      let c = EMULATOR_make_report(topic, random_time_unit, normal_list);
       t = c.date_time;
       CLIENT_SDK_EMULATOR_send_to_telemetry_api(c);
     }
@@ -60,7 +87,7 @@ function sleep (time) {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  if (window.location.hostname != '') {
+  if (window.location.hostname != '1') {
     let app_content = document.getElementById('app_content'); 
     app_content.style.display = 'none';
     let loading_content = document.getElementById('loading');
