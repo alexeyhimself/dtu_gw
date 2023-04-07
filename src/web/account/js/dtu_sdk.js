@@ -448,7 +448,7 @@ function ANALYTICS_PORTAL_SDK_get_data_for_sankey_chart(kwargs) {
     let name = element['element'];
     if (name == '')
       name = 'All';
-    nodes_list.push({"node": node_id, "name": name, "smth": 1});
+    nodes_list.push({"node": node_id, "name": name, "path": element['element_path']});
     nodes_dict[name] = node_id;
     paths.push({'path': element['element_path'], 'number_of_calls': element['number_of_calls']});
   }
@@ -554,10 +554,17 @@ graph = sankey(sankey_chart_data);
       .enter().append("path")
       .attr("class", "link")
       .attr("d", d3.sankeyLinkHorizontal())
+      .style("cursor", "pointer")
       .attr("stroke-width", function(d) { return d.width; });  
 
 link.on("click", function(d) {
-  console.log(d)
+  let target_path = d.target.__data__.target.path;
+  const element = document.getElementById('drpd:element');
+  let current_element_value = element.value;
+  let new_value = JSON.stringify(target_path).replace(/"/g, "'");
+  element.value = new_value;
+  let change = new Event('change'); // https://www.youtube.com/watch?v=RS-t3TC2iUo
+  element.dispatchEvent(change);
 })
 
 // add the link titles

@@ -13,8 +13,7 @@ function make_normal_distribution(list) {
     debug.push(new_number_of_i);
     new_i.push(Math.floor(new_number_of_i));
   }
-  
-  console.log(debug, new_i)
+
   let normal_list = [];
   for (let i in list) {
     let list_item = list[i];
@@ -57,7 +56,6 @@ function EMULATOR_make_report(topic, random_time_unit, list) {
   dtu.report.topic = topic;
   const random_time_frame = 15;
   dtu.report.date_time = EMULATOR_get_random_date(random_time_frame, random_time_unit);
-  //dtu.report.element = el;
   return dtu.report;
 }
 
@@ -87,7 +85,7 @@ function sleep (time) {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  if (window.location.hostname != '1') {
+  if (window.location.hostname != '') {
     let app_content = document.getElementById('app_content'); 
     app_content.style.display = 'none';
     let loading_content = document.getElementById('loading');
