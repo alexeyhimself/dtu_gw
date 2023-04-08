@@ -205,3 +205,9 @@ body {
 #datatable tr td {
   padding-right: 15px;
 }
+#datatable tbody {
+  cursor: pointer;
+}
+#datatable tr:hover {
+  background-color: gold;
+}

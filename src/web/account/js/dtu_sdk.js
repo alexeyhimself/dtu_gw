@@ -449,12 +449,27 @@ function ANALYTICS_PORTAL_SDK_refresh_datatable(kwargs) {
       row.push('All');
     row.push(element.number_of_calls);
     row.push('All' + element.element_path.join(' → '));
+    row.push(element.element_path);
     new_rows.push(row);
   }
   let table = ANALYTICS_PORTAL_SDK_get_datatable();
   table.clear(); // https://stackoverflow.com/questions/27778389/how-to-manually-update-datatables-table-with-new-json-data
   table.rows.add(new_rows);
   table.draw();
+
+  $('#datatable tbody').on('click', 'tr', function () {
+    var data = table.row(this).data();
+    if (data)
+      ANALYTICS_PORTAL_SDK_update_page_elements_dropdown_value(data[4]);
+  });
+}
+
+function ANALYTICS_PORTAL_SDK_update_page_elements_dropdown_value(target_path) {
+  let new_value = JSON.stringify(target_path).replace(/"/g, "'");
+  const element = document.getElementById('drpd:element');
+  element.value = new_value;
+  let change = new Event('change'); // https://www.youtube.com/watch?v=RS-t3TC2iUo
+  element.dispatchEvent(change);
 }
 
 function ANALYTICS_PORTAL_SDK_refresh_domain_urls(kwargs) {
@@ -630,12 +645,7 @@ link.on("mouseover", function(d){
 
 link.on("click", function(d) {
   let target_path = d.target.__data__.target.path;
-  const element = document.getElementById('drpd:element');
-  let current_element_value = element.value;
-  let new_value = JSON.stringify(target_path).replace(/"/g, "'");
-  element.value = new_value;
-  let change = new Event('change'); // https://www.youtube.com/watch?v=RS-t3TC2iUo
-  element.dispatchEvent(change);
+  ANALYTICS_PORTAL_SDK_update_page_elements_dropdown_value(target_path);
 })
 
 // add the link titles
