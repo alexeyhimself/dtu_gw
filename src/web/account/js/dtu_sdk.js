@@ -93,34 +93,6 @@ function ANALYTICS_PORTAL_SDK_collect_user_filters_on_the_page() {
   return user_filters;
 }
 
-function ANALYTICS_PORTAL_SDK_get_datatable() { // https://datatables.net/manual/tech-notes/3#Object-instance-retrieval
-  console.log($.fn.dataTable.isDataTable('#datatable'))
-  if ($.fn.dataTable.isDataTable('#datatable'))
-    return $('#datatable').DataTable();
-  else
-    return ANALYTICS_PORTAL_SDK_init_datatable();
-}
-
-function ANALYTICS_PORTAL_SDK_init_datatable() {
-  return new DataTable('#datatable', {
-    "columnDefs": [
-      {
-        "targets": [0, 1],
-        "className": 'dt-body-left'
-      }
-    ],
-    "order": [[2, "desc"]],
-    "columns": [
-      { "width": "50%" },
-      { "width": "auto" },
-      null
-    ],
-    "searching": false, 
-    "paging": false, 
-    "info": false
-  });
-}
-
 function ANALYTICS_PORTAL_SDK_start() {
   // detect which tab now is opened and update accordingly
   ANALYTICS_PORTAL_SDK_init_calls_over_time_chart_for_('elements_calls_over_time_chart_id');
@@ -430,22 +402,59 @@ function ANALYTICS_PORTAL_SDK_draw_elements_hierarchy(kwargs) {
   ANALYTICS_PORTAL_SDK_draw_dropdown_options(id, paths, selected_option, types, options);
 }
 
+function ANALYTICS_PORTAL_SDK_get_datatable() { // https://datatables.net/manual/tech-notes/3#Object-instance-retrieval
+  console.log($.fn.dataTable.isDataTable('#datatable'))
+  if ($.fn.dataTable.isDataTable('#datatable'))
+    return $('#datatable').DataTable();
+  else
+    return ANALYTICS_PORTAL_SDK_init_datatable();
+}
+
+function ANALYTICS_PORTAL_SDK_init_datatable() {
+  return new DataTable('#datatable', {
+    "createdRow": function(row, data, dataIndex) {
+      let td_element = row.children[1];
+      td_element.setAttribute('title', data[3]);
+    },
+    "columnDefs": [
+      {
+        "targets": [0, 1],
+        "className": 'dt-body-left'
+      }
+    ],
+    "order": [[2, "desc"]],
+    "columns": [
+      { "width": "auto" },
+      { "width": "auto" },
+      null
+    ],
+    "searching": false, 
+    "paging": false, 
+    "info": false
+  });
+}
+
 function ANALYTICS_PORTAL_SDK_refresh_datatable(kwargs) {
   const elements_hierarchy = kwargs['elements_hierarchy'];
+  //console.log(elements_hierarchy)
   let new_rows = [];
   for (let i in elements_hierarchy) {
     let element = elements_hierarchy[i];
-    let row = ['All' + element.element_path.join(' → ')];
-    if (element.element)
+    let type = element.type;
+    if (type == 'anchor') type = 'link';
+    if (type == 'select-one') type = 'dropdown';
+    let row = [type];
+    if (element.element) 
       row.push(element.element);
     else
       row.push('All');
     row.push(element.number_of_calls);
+    row.push('All' + element.element_path.join(' → '));
     new_rows.push(row);
   }
   let table = ANALYTICS_PORTAL_SDK_get_datatable();
-  table.clear()
-  table.rows.add(new_rows)
+  table.clear(); // https://stackoverflow.com/questions/27778389/how-to-manually-update-datatables-table-with-new-json-data
+  table.rows.add(new_rows);
   table.draw();
 }
 
