@@ -208,6 +208,6 @@ body {
 #datatable tbody {
   cursor: pointer;
 }
-#datatable tr:hover {
+#datatable tbody tr:hover {
   background-color: gold;
 }
