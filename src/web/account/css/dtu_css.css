@@ -162,9 +162,6 @@ body {
   }
 }
 
-#sankey_chart {
-  margin-bottom: 20px;
-}
 .node rect {
   fill-opacity: .9;
   shape-rendering: crispEdges;
@@ -179,9 +176,28 @@ body {
   fill: none;
   stroke: #000;
   stroke-opacity: .2;
+  cursor: pointer!important;
 }
 
 .link:hover {
   stroke: #ffd700;
   stroke-opacity: 1;
+  cursor: pointer!important;
+}
+
+#datatable_wrapper {
+  font-size: 14px;
+  margin-bottom: 20px;
+  text-align: left;
+}
+#datatable_info {
+  padding-top: 0;
+}
+#datatable_wrapper th {
+  color: gray;
+  vertical-align: middle;
+}
+#datatable_wrapper td {
+  color: black;
+  text-align: left;
 }

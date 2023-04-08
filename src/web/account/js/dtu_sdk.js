@@ -93,13 +93,41 @@ function ANALYTICS_PORTAL_SDK_collect_user_filters_on_the_page() {
   return user_filters;
 }
 
+function ANALYTICS_PORTAL_SDK_get_datatable() { // https://datatables.net/manual/tech-notes/3#Object-instance-retrieval
+  console.log($.fn.dataTable.isDataTable('#datatable'))
+  if ($.fn.dataTable.isDataTable('#datatable'))
+    return $('#datatable').DataTable();
+  else
+    return ANALYTICS_PORTAL_SDK_init_datatable();
+}
+
+function ANALYTICS_PORTAL_SDK_init_datatable() {
+  return new DataTable('#datatable', {
+    "columnDefs": [
+      {
+        "targets": [0, 1],
+        "className": 'dt-body-left'
+      }
+    ],
+    "order": [[2, "desc"]],
+    "columns": [
+      { "width": "50%" },
+      { "width": "auto" },
+      null
+    ],
+    "searching": false, 
+    "paging": false, 
+    "info": false
+  });
+}
+
 function ANALYTICS_PORTAL_SDK_start() {
   // detect which tab now is opened and update accordingly
   ANALYTICS_PORTAL_SDK_init_calls_over_time_chart_for_('elements_calls_over_time_chart_id');
   ANALYTICS_PORTAL_SDK_init_time_shortcut_listeners();
 
   ANALYTICS_PORTAL_SDK_refresh_elements_page_data_according_to_user_filters_setup();
-
+  
   // add listeners
   ANALYTICS_PORTAL_SDK_make_dropdowns_work();
   // ANALYTICS_PORTAL_SDK_make_element_dropdown_work();
@@ -402,6 +430,25 @@ function ANALYTICS_PORTAL_SDK_draw_elements_hierarchy(kwargs) {
   ANALYTICS_PORTAL_SDK_draw_dropdown_options(id, paths, selected_option, types, options);
 }
 
+function ANALYTICS_PORTAL_SDK_refresh_datatable(kwargs) {
+  const elements_hierarchy = kwargs['elements_hierarchy'];
+  let new_rows = [];
+  for (let i in elements_hierarchy) {
+    let element = elements_hierarchy[i];
+    let row = ['All' + element.element_path.join(' → ')];
+    if (element.element)
+      row.push(element.element);
+    else
+      row.push('All');
+    row.push(element.number_of_calls);
+    new_rows.push(row);
+  }
+  let table = ANALYTICS_PORTAL_SDK_get_datatable();
+  table.clear()
+  table.rows.add(new_rows)
+  table.draw();
+}
+
 function ANALYTICS_PORTAL_SDK_refresh_domain_urls(kwargs) {
   const domains = kwargs.url_domains_match_ctag_topic;
   const currently_selected = kwargs.current_domain;
@@ -434,6 +481,8 @@ function ANALYTICS_PORTAL_SDK_refresh_elements_page_data_according_to_user_filte
 
   ANALYTICS_PORTAL_SDK_get_data_for_sankey_chart(kwargs);
   ANALYTICS_PORTAL_SDK_draw_sankey_chart(kwargs);
+
+  ANALYTICS_PORTAL_SDK_refresh_datatable(kwargs);  
 }
 
 function ANALYTICS_PORTAL_SDK_get_data_for_sankey_chart(kwargs) {
@@ -569,9 +618,10 @@ link.on("click", function(d) {
 
 // add the link titles
   link.append("title")
-        .text(function(d) {
+      .text(function(d) {
             return d.source.name + " → " + 
-                d.target.name + "\n" + format(d.value); });
+                   d.target.name + "\n" + format(d.value) + " items"; })
+      .style("cursor", "pointer");
 
 // add in the nodes
   var node = svg.append("g").selectAll(".node")
@@ -587,7 +637,6 @@ link.on("click", function(d) {
       .attr("height", function(d) { return d.y1 - d.y0; })
       .attr("width", sankey.nodeWidth())
       .style("fill", '#0d6efdff')
-      //.style("stroke", function(d) { return d3.rgb(d.color).darker(2); })
       .append("title")
       .text(function(d) { 
       return d.name + "\n" + format(d.value); });
@@ -602,10 +651,6 @@ link.on("click", function(d) {
       .filter(function(d) { return d.x0 < width / 2; })
       .attr("x", function(d) { return d.x1 + 6; })
       .attr("text-anchor", "start")
-      //.attr("font-family", function(d,i) {return "sans-serif"; })
-      //.attr("font-family", "Saira")
-      //.text( function(d) {return d;});
-  
 }
 
 ANALYTICS_PORTAL_SDK_start();
