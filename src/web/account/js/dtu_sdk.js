@@ -403,7 +403,6 @@ function ANALYTICS_PORTAL_SDK_draw_elements_hierarchy(kwargs) {
 }
 
 function ANALYTICS_PORTAL_SDK_get_datatable() { // https://datatables.net/manual/tech-notes/3#Object-instance-retrieval
-  console.log($.fn.dataTable.isDataTable('#datatable'))
   if ($.fn.dataTable.isDataTable('#datatable'))
     return $('#datatable').DataTable();
   else
@@ -615,6 +614,20 @@ graph = sankey(sankey_chart_data);
       .style("cursor", "pointer")
       .attr("stroke-width", function(d) { return d.width; });  
 
+/*
+link.on("mouseover", function(d){
+  let target_path = d.target.__data__.target.path;
+  let table = ANALYTICS_PORTAL_SDK_get_datatable();
+
+  for (let i = 0; i < table.rows().eq(0).length; i++) {
+    let element_path = table.row(i).data()[3];
+    if ('All' + target_path.join(' → ') == element_path) {
+      console.log(table.row(i).select());
+    }
+  }
+})
+*/
+
 link.on("click", function(d) {
   let target_path = d.target.__data__.target.path;
   const element = document.getElementById('drpd:element');
@@ -628,8 +641,8 @@ link.on("click", function(d) {
 // add the link titles
   link.append("title")
       .text(function(d) {
-            return d.source.name + " → " + 
-                   d.target.name + "\n" + format(d.value) + " items"; })
+        return d.source.name + " → " + 
+               d.target.name + "\n" + format(d.value) + " interactions"; })
       .style("cursor", "pointer");
 
 // add in the nodes
