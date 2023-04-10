@@ -14,9 +14,12 @@ a { /* contrast for a on ivory bg https://dequeuniversity.com/rules/axe/4.4/colo
   color: #0250C0;
 }
 h1 {
-	font-size: 10em;
+	font-size: 6em;
 	font-family: 'Bebas Neue';
 	line-height: 0.8em;
+}
+h1.name {
+	font-size: 10em;
 }
 h2 {
 	font-size: 1.8em;
@@ -51,13 +54,12 @@ h4 {
 .btn {
 	margin-top: 1em;
 }
-/*
+
 .bg-gold {
 	background-color: gold;
 	padding: 0 8px 0px 8px;
 	border-radius: 5px;
 }
-*/
 .margin-bottom-7 {
 	margin-bottom: 10%;
 }
@@ -94,6 +96,9 @@ img {
 }
 .margin-left-6 {
   margin-left: 6px;
+}
+.margin-top-10 {
+  margin-top: 70px;
 }
 .code {
 	margin: 5px;
