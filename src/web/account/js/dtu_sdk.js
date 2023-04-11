@@ -144,7 +144,7 @@ function ANALYTICS_PORTAL_SDK_refresh_calls_over_time_for_chart_id_(chart_id, us
   const margin = {top: 10, right: 10, bottom: 30, left: 40};
   
 
-  const chart_width_px = width; // ANALYTICS_PORTAL_SDK_get_chart_size(chart_id);
+  const chart_width_px = width - margin.left - margin.right; // ANALYTICS_PORTAL_SDK_get_chart_size(chart_id);
   const reports_match_user_filters_length = kwargs['reports_match_user_filters_length'];
   let config = {};
   if (reports_match_user_filters_length == 0)
