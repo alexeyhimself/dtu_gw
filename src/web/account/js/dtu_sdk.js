@@ -9,19 +9,6 @@ const drpd_elements_all = '-- all the monitored elements --';// + better_phrase 
 
 const ctag = "DEMO MVP"; // somehow via session ID mapping in DB, not in request
 
-function ANALYTICS_PORTAL_SDK_get_chart_size(chart_id) {
-  const chart = Chart.getChart(chart_id);
-  let chart_width_px = chart.canvas.style.width; // Math.floor(chart.chartArea.width); - not work due to constant recalcs, so, base on canvas.style.width
-  chart_width_px = chart_width_px.slice(0, chart_width_px.length - 2); // cut 'px'
-  return parseInt(chart_width_px);
-}
-
-function ANALYTICS_PORTAL_SDK_format_date_time_for_filter(date_time) {
-  date = new Date(date_time).toLocaleDateString('en-GB').split('/');
-  time = new Date(date_time).toLocaleTimeString('en-GB');
-  return date[2] + '-' + date[1] + '-' + date[0] + 'T' + time;
-}
-
 function ANALYTICS_PORTAL_SDK_init_time_shortcut_listeners() {
   const elements_to_track = document.querySelectorAll('.time-shortcut');
   for (let i = 0; i < elements_to_track.length; i++) {
@@ -95,7 +82,7 @@ function ANALYTICS_PORTAL_SDK_collect_user_filters_on_the_page() {
 
 function ANALYTICS_PORTAL_SDK_start() {
   // detect which tab now is opened and update accordingly
-  ANALYTICS_PORTAL_SDK_init_calls_over_time_chart_for_('elements_calls_over_time_chart_id');
+  //ANALYTICS_PORTAL_SDK_init_calls_over_time_chart_for_('elements_calls_over_time_chart_id');
   ANALYTICS_PORTAL_SDK_init_time_shortcut_listeners();
 
   ANALYTICS_PORTAL_SDK_refresh_elements_page_data_according_to_user_filters_setup();
@@ -134,136 +121,6 @@ function ANALYTICS_PORTAL_SDK_make_element_dropdown_work() {
   }
 }
 
-function ANALYTICS_PORTAL_SDK_init_calls_over_time_chart_for_(chart_id) {
-  const config = {
-    type: 'line',
-    data: {
-      datasets: [{
-          borderWidth: 1,
-          tension: 0.2,
-          backgroundColor: '#f6f6b788',
-          fill: false
-        },
-        {
-          borderWidth: 2,
-          tension: 0.2,
-          //borderColor: '#058dc7',
-          borderColor: '#0d6efdbb',
-          //borderColor: '#777777',
-          //backgroundColor: '#e7f4f988',
-          backgroundColor: '#f6f6b788',
-          fill: '-1',
-        },
-        {
-          borderWidth: 1,
-          tension: 0.2,
-          //backgroundColor: '#e7f4f999',
-          backgroundColor: '#f6f6b788',
-          fill: '-1'
-        }
-      ]
-    },
-    options: {
-      elements: {
-        line: {
-          fill: false
-        },
-        point: {
-          radius: 0,
-        },
-      },
-      scales: {
-        y: {
-          //display: false,
-          //min: 0,
-          //suggestedMin: 2,
-          beginAtZero: true, 
-          title: {
-            display: false,
-          },
-          ticks: {
-            precision: 0,
-            //stepSize: 1,
-          }
-        },
-        x: {
-          type: 'time',
-          time: {
-            //unit: 'minute',
-            displayFormats: {
-              second: 'HH:mm:ss',
-              minute: 'HH:mm',
-              hour: 'HH:mm',
-            }
-          },
-          title: {
-            display: false,
-            text: "time", 
-          },
-          ticks: {
-            display: true,
-            crossAlign: 'far'
-            //source: 'data',
-            //stepSize: 1,
-          }
-        },
-      },
-      responsive: true,
-      maintainAspectRatio: false,
-      aspectRatio: 1,
-      layout: {
-        //autoPadding: false,
-        //padding: 100
-      },
-      plugins: {
-        legend: {
-          display: false,
-          position: "right",
-          maxWidth: 1000,
-          labels: {
-            boxWidth: 12,
-            boxHeight: 12,
-            padding: 8,
-            usePointStyle: true,
-          }
-        },
-        title: {
-          display: false,
-        },
-        tooltip: {
-          callbacks: {
-            label: function(context) {
-              return context.dataset.label;
-            }
-          }
-        },
-      }
-    },
-    plugins: [{
-      afterDraw: function(chart) { // https://stackoverflow.com/questions/55564508/pie-chart-js-display-a-no-data-held-message
-        try {
-          if (chart.data.datasets[0].data.length == 0) {
-            ANALYTICS_PORTAL_SDK_display_message_on_chart(chart, 'No data to display for current filter condition(s)');
-          }
-        } 
-        catch (error) {
-          let message = 'An error occured while trying to draw the chart'
-          ANALYTICS_PORTAL_SDK_display_message_on_chart(chart, message);
-        }
-      },
-    }]
-  };
-  
-  if ('elements_calls_over_time_chart_id' == chart_id) {
-    config.options.scales.y.title.text = "# of calls for selected element(s) at the same time";
-    config.options.plugins.title.text = "Median calls (with max and min bursts) for the selected element in time";
-  }
-  //config.options.animations = false;
-
-  const chart_element = document.getElementById(chart_id);
-  new Chart(chart_element, config);   
-}
-
 function ANALYTICS_PORTAL_SDK_display_message_on_chart(chart, message) {
   let ctx = chart.ctx;
   chart.clear();
@@ -276,7 +133,18 @@ function ANALYTICS_PORTAL_SDK_display_message_on_chart(chart, message) {
 }
 
 function ANALYTICS_PORTAL_SDK_refresh_calls_over_time_for_chart_id_(chart_id, user_filters, kwargs) { 
-  const chart_width_px = ANALYTICS_PORTAL_SDK_get_chart_size(chart_id);
+  // https://gist.github.com/jeantimex/68e456aa4a536b245997b28330adace2
+  // Step 1. Define the dimensions.
+  const element_id_for_linear_chart = 'linear_chart';
+  const element_with_linear_chart = document.getElementById(element_id_for_linear_chart);
+  element_with_linear_chart.innerHTML = '';
+
+  const width = element_with_linear_chart.offsetWidth;
+  const height = element_with_linear_chart.offsetHeight || 300;
+  const margin = {top: 10, right: 10, bottom: 30, left: 40};
+  
+
+  const chart_width_px = width; // ANALYTICS_PORTAL_SDK_get_chart_size(chart_id);
   const reports_match_user_filters_length = kwargs['reports_match_user_filters_length'];
   let config = {};
   if (reports_match_user_filters_length == 0)
@@ -284,15 +152,85 @@ function ANALYTICS_PORTAL_SDK_refresh_calls_over_time_for_chart_id_(chart_id, us
   else
     config = TX_API_get_data_for_chart_(chart_width_px, user_filters, kwargs);          
 
-  let chart = Chart.getChart(chart_id);
-  chart.config.data.labels = config.labels;
 
-  chart.config.data.datasets[0].data = config.data.mins;
-  chart.config.data.datasets[1].data = config.data.medians;
-  chart.config.data.datasets[2].data = config.data.maxes;
-  chart.config.options.scales.x.time.unit = config.unit;
-  chart.config.options.scales.x.ticks.stepSize = config.step_size;
-  chart.update();
+  // Step 2. Prepare the data.
+  data = [];
+  for (let i in config.data.medians) {
+    let value = config.data.medians[i];
+    let date = config.labels[i];
+    data.push({"date": date, "value": value})
+  }
+
+  // Step 3. Create x and y axes.
+  const xScale = d3.scaleTime()
+    .domain(d3.extent(data, d => d.date))
+    .range([margin.left, width - margin.right]);
+
+  const yScale = d3.scaleLinear()
+    .domain([0, d3.max(data, (d) => d.value * 1.05)]).nice() // 5% more than max value
+    .range([height - margin.bottom, margin.top]);
+
+  const xAxis = (g) => g
+    .attr('transform', `translate(0,${height - margin.bottom})`)
+    .call(d3.axisBottom(xScale)
+            .ticks(width / 100) // tick per 100 pixels
+      );
+
+  const yAxis = (g) => g
+    .attr('transform', `translate(${margin.left},0)`)
+    .call(d3.axisLeft(yScale)
+            .ticks(height / 50) // tick per 50 pixels
+      );
+
+  // 4. Create the grid line functions.
+  const xGrid = (g) => g
+    .attr('class', 'grid-lines')
+    .selectAll('line')
+    .data(xScale.ticks())
+    .join('line')
+    .attr('x1', d => xScale(d))
+    .attr('x2', d => xScale(d))
+    .attr('y1', margin.top)
+    .attr('y2', height - margin.bottom);
+
+  const yGrid = (g) => g
+    .attr('class', 'grid-lines')
+    .selectAll('line')
+    .data(yScale.ticks())
+    .join('line')
+    .attr('x1', margin.left)
+    .attr('x2', width - margin.right)
+    .attr('y1', d => yScale(d))
+    .attr('y2', d => yScale(d));
+
+  // Step 4. Define the line function.
+  const line = d3.line()
+    .defined(d => !isNaN(d.value))
+    .x(d => xScale(d.date))
+    .y(d => yScale(d.value));
+
+  // Step 5. Draw the SVG.
+    // First let's create an empty SVG.
+  const svg = d3.select('#' + element_id_for_linear_chart)
+    .append('svg')
+    .attr('width', width)
+    .attr('height', height);
+
+    // Draw the x and y axes.
+  svg.append('g').call(xAxis)
+  svg.append('g').call(yAxis)
+
+  svg.append('g').call(xGrid);
+  svg.append('g').call(yGrid);
+
+    // Draw the line.
+  svg.append('path')
+    .datum(data)
+    .attr("fill", "none")
+    .attr("stroke", "#0d6efdbb")
+    .attr("stroke-width", 2)
+    .attr('d', line);
+
 
   ANALYTICS_PORTAL_SDK_refresh_stats_for_chart_id_(chart_id, config.aggr, config.aggr_unit, config.min, config.max, config.median);
 }

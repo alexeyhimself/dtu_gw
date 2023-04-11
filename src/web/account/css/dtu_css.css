@@ -211,3 +211,9 @@ body {
 #datatable tbody tr:hover {
   background-color: gold;
 }
+
+
+.grid-lines line {
+  stroke: gray;
+  stroke-opacity: 0.2;
+}
