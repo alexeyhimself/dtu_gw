@@ -504,6 +504,7 @@ function TX_API_get_optimal_time_step_for_agregations(chart_width_px, ms_in_1_px
   }
   console.log('chart_width_px:', chart_width_px, 'ms_in_1_px:', ms_in_1_px, 'step:', step, AGREGATION_TRESHOLDS);
   */
+  step = 1; // disabled agregations
   return step;
 }
 
