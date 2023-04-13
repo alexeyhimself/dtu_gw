@@ -19,7 +19,7 @@ function ANALYTICS_PORTAL_SDK_init_time_shortcut_listeners() {
       const timedelta_ms = this.getAttribute('timedelta_ms');
       document.getElementById('timedelta_ms').setAttribute('timedelta_ms', timedelta_ms);
       //ANALYTICS_PORTAL_SDK_set_datetime_filter(timedelta_ms);
-      ANALYTICS_PORTAL_SDK_refresh_elements_page_data_according_to_user_filters_setup();
+      ANALYTICS_PORTAL_SDK_refresh_elements_page_data_according_to_user_filters_setup_with_delay();
     }, false);
   }
 }
@@ -103,7 +103,7 @@ function ANALYTICS_PORTAL_SDK_make_dropdowns_work() {
       if (element_id == 'drpd:topic')
         window.localStorage.setItem('topic', element.value);
 
-      ANALYTICS_PORTAL_SDK_refresh_elements_page_data_according_to_user_filters_setup();
+      ANALYTICS_PORTAL_SDK_refresh_elements_page_data_according_to_user_filters_setup_with_delay();
       element.removeAttribute("changed");
     });
   }
@@ -115,7 +115,7 @@ function ANALYTICS_PORTAL_SDK_make_element_dropdown_work() {
     let element = elements[i];
     element.addEventListener("change", function(e) {
       element.setAttribute("changed", "true");
-      ANALYTICS_PORTAL_SDK_refresh_elements_page_data_according_to_user_filters_setup();
+      ANALYTICS_PORTAL_SDK_refresh_elements_page_data_according_to_user_filters_setup_with_delay();
       element.removeAttribute("changed");
     });
   }
@@ -375,6 +375,8 @@ function ANALYTICS_PORTAL_SDK_expand_datatable() {
   $('#datatable>tbody').css('display', 'table-row-group');
   localStorage.setItem('datatable_is_expanded', 'true');
   document.getElementById('toggle_datatable').innerHTML = 'collapse table';
+  //let table = ANALYTICS_PORTAL_SDK_get_datatable();
+  //table.columns.adjust().draw();
 }
 
 function ANALYTICS_PORTAL_SDK_collapse_datatable() {
@@ -393,7 +395,6 @@ function ANALYTICS_PORTAL_SDK_expand_collapse_datatable() {
 
 function ANALYTICS_PORTAL_SDK_toggle_datatable() {
   const datatable_is_expanded = localStorage.getItem('datatable_is_expanded');
-  console.log(datatable_is_expanded)
   if ([null, 'false'].includes(datatable_is_expanded)) {
     ANALYTICS_PORTAL_SDK_expand_datatable();
   }
@@ -457,28 +458,36 @@ function ANALYTICS_PORTAL_SDK_refresh_url_paths(kwargs) {
   ANALYTICS_PORTAL_SDK_draw_dropdown_options('drpd:url_path', paths, currently_selected)
 }
 
-function ANALYTICS_PORTAL_SDK_refresh_elements_page_data_according_to_user_filters_setup() {
+function sleep(time) {
+  return new Promise((resolve) => setTimeout(resolve, time));
+}
+
+function ANALYTICS_PORTAL_SDK_refresh_elements_page_data_according_to_user_filters_setup_with_delay() {
   sleep(100).then(() => { // wait till sdk send data into db
-    let user_filters = ANALYTICS_PORTAL_SDK_collect_user_filters_on_the_page();
-    let kwargs = TX_API_process_user_filters_request(user_filters);
-
-    //console.log(user_filters)
-    //console.log(kwargs.elements_hierarchy)
-
-    ANALYTICS_PORTAL_SDK_draw_elements_hierarchy(kwargs);
-    ANALYTICS_PORTAL_SDK_make_element_dropdown_work();
-
-    ANALYTICS_PORTAL_SDK_refresh_topics(kwargs);
-    ANALYTICS_PORTAL_SDK_refresh_domain_urls(kwargs);
-    ANALYTICS_PORTAL_SDK_refresh_url_paths(kwargs);
-
-    ANALYTICS_PORTAL_SDK_refresh_calls_over_time_for_chart_id_('elements_calls_over_time_chart_id', user_filters, kwargs);
-
-    ANALYTICS_PORTAL_SDK_get_data_for_sankey_chart(kwargs);
-    ANALYTICS_PORTAL_SDK_draw_sankey_chart(kwargs);
-
-    ANALYTICS_PORTAL_SDK_refresh_datatable(kwargs);
+    ANALYTICS_PORTAL_SDK_refresh_elements_page_data_according_to_user_filters_setup();
   });
+}
+
+function ANALYTICS_PORTAL_SDK_refresh_elements_page_data_according_to_user_filters_setup() {
+  let user_filters = ANALYTICS_PORTAL_SDK_collect_user_filters_on_the_page();
+  let kwargs = TX_API_process_user_filters_request(user_filters);
+
+  //console.log(user_filters)
+  //console.log(kwargs.elements_hierarchy)
+
+  ANALYTICS_PORTAL_SDK_draw_elements_hierarchy(kwargs);
+  ANALYTICS_PORTAL_SDK_make_element_dropdown_work();
+
+  ANALYTICS_PORTAL_SDK_refresh_topics(kwargs);
+  ANALYTICS_PORTAL_SDK_refresh_domain_urls(kwargs);
+  ANALYTICS_PORTAL_SDK_refresh_url_paths(kwargs);
+
+  ANALYTICS_PORTAL_SDK_refresh_calls_over_time_for_chart_id_('elements_calls_over_time_chart_id', user_filters, kwargs);
+
+  ANALYTICS_PORTAL_SDK_get_data_for_sankey_chart(kwargs);
+  ANALYTICS_PORTAL_SDK_draw_sankey_chart(kwargs);
+
+  ANALYTICS_PORTAL_SDK_refresh_datatable(kwargs);
 }
 
 function ANALYTICS_PORTAL_SDK_get_data_for_sankey_chart(kwargs) {

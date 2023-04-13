@@ -51,7 +51,7 @@ const topics = [
 function EMULATOR_make_report(topic, random_time_unit, list) {
   let el = EMULATOR_get_random_item_from_list(list);
   let event = SUPPORTED_INPUT_TYPES_AND_EVENTS[el.type][0];
-  let r = dtu.form_report(el, event);
+  let r = dtu.process_element_event(el, event);
   dtu.make_report(r)
   dtu.report.topic = topic;
   const random_time_frame = 15;

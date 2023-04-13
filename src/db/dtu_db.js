@@ -1,7 +1,13 @@
 const emty_db_schema = {'table_reports': []};
-const db_name = 'dtu_db5';
-const ex_db_names_to_cleanup = ['dtu_db', 'dtu_db2', 'dtu_db3', 'dtu_db4']; // previously used, schema changed - so, need to create new and cleanup old
+const current_db_version = 6;
+const db_name_prefix = 'dtu_db';
+const db_name = db_name_prefix + current_db_version;
 
+// previously used, schema changed - so, need to create new and cleanup old
+let ex_db_names_to_cleanup = ['dtu_db'];
+for (let i = 0; i < current_db_version; i++) {
+  ex_db_names_to_cleanup.push(db_name_prefix + i);
+}
 
 class DB {
   constructor() {
