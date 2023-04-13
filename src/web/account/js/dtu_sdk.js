@@ -371,6 +371,37 @@ function ANALYTICS_PORTAL_SDK_init_datatable() {
   });
 }
 
+function ANALYTICS_PORTAL_SDK_expand_datatable() {
+  $('#datatable>tbody').css('display', 'table-row-group');
+  localStorage.setItem('datatable_is_expanded', 'true');
+  document.getElementById('toggle_datatable').innerHTML = 'collapse table';
+}
+
+function ANALYTICS_PORTAL_SDK_collapse_datatable() {
+  $('#datatable>tbody').css('display', 'none');
+  localStorage.setItem('datatable_is_expanded', 'false');
+  document.getElementById('toggle_datatable').innerHTML = 'expand table';
+}
+
+function ANALYTICS_PORTAL_SDK_expand_collapse_datatable() {
+  const datatable_is_expanded = localStorage.getItem('datatable_is_expanded');
+  if ([null, 'false'].includes(datatable_is_expanded))
+    ANALYTICS_PORTAL_SDK_collapse_datatable();
+  else
+    ANALYTICS_PORTAL_SDK_expand_datatable();
+}
+
+function ANALYTICS_PORTAL_SDK_toggle_datatable() {
+  const datatable_is_expanded = localStorage.getItem('datatable_is_expanded');
+  console.log(datatable_is_expanded)
+  if ([null, 'false'].includes(datatable_is_expanded)) {
+    ANALYTICS_PORTAL_SDK_expand_datatable();
+  }
+  else {
+    ANALYTICS_PORTAL_SDK_collapse_datatable();
+  }
+}
+
 function ANALYTICS_PORTAL_SDK_refresh_datatable(kwargs) {
   const elements_hierarchy = kwargs['elements_hierarchy'];
   //console.log(elements_hierarchy)
@@ -394,6 +425,8 @@ function ANALYTICS_PORTAL_SDK_refresh_datatable(kwargs) {
   table.clear(); // https://stackoverflow.com/questions/27778389/how-to-manually-update-datatables-table-with-new-json-data
   table.rows.add(new_rows);
   table.draw();
+
+  ANALYTICS_PORTAL_SDK_expand_collapse_datatable();
 
   $('#datatable tbody').on('click', 'tr', function () {
     var data = table.row(this).data();
