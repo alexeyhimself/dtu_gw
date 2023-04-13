@@ -141,7 +141,7 @@ function ANALYTICS_PORTAL_SDK_refresh_calls_over_time_for_chart_id_(chart_id, us
 
   const width = element_with_linear_chart.offsetWidth;
   const height = element_with_linear_chart.offsetHeight || 300;
-  const margin = {top: 10, right: 10, bottom: 30, left: 40};
+  const margin = {top: 10, right: 10, bottom: 30, left: 30};
   
 
   const chart_width_px = width - margin.left - margin.right; // ANALYTICS_PORTAL_SDK_get_chart_size(chart_id);
@@ -458,25 +458,27 @@ function ANALYTICS_PORTAL_SDK_refresh_url_paths(kwargs) {
 }
 
 function ANALYTICS_PORTAL_SDK_refresh_elements_page_data_according_to_user_filters_setup() {
-  let user_filters = ANALYTICS_PORTAL_SDK_collect_user_filters_on_the_page();
-  let kwargs = TX_API_process_user_filters_request(user_filters);
+  sleep(100).then(() => { // wait till sdk send data into db
+    let user_filters = ANALYTICS_PORTAL_SDK_collect_user_filters_on_the_page();
+    let kwargs = TX_API_process_user_filters_request(user_filters);
 
-  //console.log(user_filters)
-  //console.log(kwargs.elements_hierarchy)
+    //console.log(user_filters)
+    //console.log(kwargs.elements_hierarchy)
 
-  ANALYTICS_PORTAL_SDK_draw_elements_hierarchy(kwargs);
-  ANALYTICS_PORTAL_SDK_make_element_dropdown_work();
+    ANALYTICS_PORTAL_SDK_draw_elements_hierarchy(kwargs);
+    ANALYTICS_PORTAL_SDK_make_element_dropdown_work();
 
-  ANALYTICS_PORTAL_SDK_refresh_topics(kwargs);
-  ANALYTICS_PORTAL_SDK_refresh_domain_urls(kwargs);
-  ANALYTICS_PORTAL_SDK_refresh_url_paths(kwargs);
+    ANALYTICS_PORTAL_SDK_refresh_topics(kwargs);
+    ANALYTICS_PORTAL_SDK_refresh_domain_urls(kwargs);
+    ANALYTICS_PORTAL_SDK_refresh_url_paths(kwargs);
 
-  ANALYTICS_PORTAL_SDK_refresh_calls_over_time_for_chart_id_('elements_calls_over_time_chart_id', user_filters, kwargs);
+    ANALYTICS_PORTAL_SDK_refresh_calls_over_time_for_chart_id_('elements_calls_over_time_chart_id', user_filters, kwargs);
 
-  ANALYTICS_PORTAL_SDK_get_data_for_sankey_chart(kwargs);
-  ANALYTICS_PORTAL_SDK_draw_sankey_chart(kwargs);
+    ANALYTICS_PORTAL_SDK_get_data_for_sankey_chart(kwargs);
+    ANALYTICS_PORTAL_SDK_draw_sankey_chart(kwargs);
 
-  ANALYTICS_PORTAL_SDK_refresh_datatable(kwargs);  
+    ANALYTICS_PORTAL_SDK_refresh_datatable(kwargs);
+  });
 }
 
 function ANALYTICS_PORTAL_SDK_get_data_for_sankey_chart(kwargs) {
