@@ -37,8 +37,9 @@
 					<div class="col-lg">
             <div class="row">
               <p class="custom-helper"  id="timedelta_ms">
-                <label class="form-label no-margin-bottom custom-label">Show data for the last:</label>
+                <label class="form-label no-margin-bottom custom-label">Show data for:</label>
                 <br>
+                <a class="time-shortcut active-filter" timedelta_ms="0" data-dtu>All available time</a>| Last:  
                 <a class="time-shortcut" timedelta_ms="300000" data-dtu>5&nbsp;min</a>
     		      	<a class="time-shortcut" timedelta_ms="900000" data-dtu>15&nbsp;min</a>
                 <a class="time-shortcut" timedelta_ms="1800000" data-dtu>30&nbsp;min</a>
@@ -54,7 +55,7 @@
     		      	<a class="time-shortcut" timedelta_ms="15552000000" data-dtu>6&nbsp;months</a>
                 <a class="time-shortcut" timedelta_ms="31536000000" data-dtu>1&nbsp;year</a>
                 <a class="time-shortcut" timedelta_ms="63072000000" data-dtu>2&nbsp;years</a>
-                <a class="time-shortcut active-filter" timedelta_ms="0" data-dtu>All available time</a>
+                
     		    	</p>
             </div>
           </div>
@@ -77,6 +78,7 @@
               <div class="col-lg-5">
                 <p class="chart-name">On a chart below is displayed <span style="font-weight: bold;">total number</span> of interactions for each element on selected web-page(s)</p>
                 <div id="sankey_chart"></div>
+                <a id="toggle_datatable" class="toggle-datatable" onclick="ANALYTICS_PORTAL_SDK_toggle_datatable();" >expand table</a>
                 <table id="datatable" class="table table-sm">
                   <thead>
                     <tr>
@@ -89,7 +91,8 @@
                 </table>
               </div>
               <div class="col-lg-7">
-                <p class="chart-name">On a chart below is displayed <span style="font-weight: bold;">median number</span> (blue line) with max and min bursts due to data aggregation (yellow area) of user(s) interactions with selected element(s) of selected web-page(s) on selected time range</p>
+                <!--p class="chart-name">On a chart below is displayed <span style="font-weight: bold;">median number</span> (blue line) with max and min bursts due to data aggregation (yellow area) of user(s) interactions with selected element(s) of selected web-page(s) on selected time range</p-->
+                <p class="chart-name">On a chart below is displayed number of user(s) interactions with selected web-page(s) element(s) on selected time range</p>
                 <div id="linear_chart"></div>
                 <table style="width: auto;">
                   <tr>
