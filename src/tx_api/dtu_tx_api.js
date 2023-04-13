@@ -391,15 +391,18 @@ function TX_API_get_display_unit_and_step(displayed_time_range, chart_width_px) 
 }
 
 function TX_API_prepare_time_windows_agregations(chart_width_px, user_filters, kwargs) {
-  let dates = TX_API_get_dates_from_to(user_filters, kwargs)
-  let ms_in_1_px = TX_API_get_ms_in_1_px(chart_width_px, dates.time_range);
+  const dates = TX_API_get_dates_from_to(user_filters, kwargs)
+  const ms_in_1_px = TX_API_get_ms_in_1_px(chart_width_px, dates.time_range);
+
+  const margin_pixels = 10;
+  const ms_in_1_px_with_margin_left = TX_API_get_ms_in_1_px(chart_width_px, dates.time_range + margin_pixels * ms_in_1_px);
 
   let agregation_result = [];
-  if (ms_in_1_px > 0) {
+  if (ms_in_1_px_with_margin_left > 0) {
     if (dates.datetime_from != dates.datetime_to) {
-      for (let t = dates.datetime_to - ms_in_1_px *0; // from "datetime_to -" to make most recent window always available
-               t >= dates.datetime_from + ms_in_1_px * 1; // till "datetime_from +" - to not to include oldest partial frame data
-               t -= ms_in_1_px) {
+      for (let t = dates.datetime_to - ms_in_1_px_with_margin_left * 0; // from "datetime_to -" to make most recent window always available
+               t >= dates.datetime_from - ms_in_1_px_with_margin_left * margin_pixels; // till "datetime_from +" - to not to include oldest partial frame data
+               t -= ms_in_1_px_with_margin_left) {
         agregation_result.push(t);
       }
     }

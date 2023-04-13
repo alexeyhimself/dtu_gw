@@ -512,7 +512,7 @@ function ANALYTICS_PORTAL_SDK_draw_sankey_chart(kwargs) { // https://d3-graph-ga
     node_padding = 5;
   }
 
-  let sankey_width = element_with_sankey.offsetWidth - 20; // don't know why -24, why scroll appears
+  let sankey_width = element_with_sankey.offsetWidth;
   let sankey_height = sankey_chart_data.nodes.length * 15//300;
 
 // set the dimensions and margins of the graph
