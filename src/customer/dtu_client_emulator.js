@@ -79,8 +79,8 @@ function generate_fake_data() {
   const normal_list_of_elements_ids = make_normal_distribution(list_of_elements.length);
 
   const base_uid = parseInt(dtu.get_uid());
-  const uids_step = -10;
-  const number_of_uids = 9;
+  const uids_step = -111;
+  const number_of_uids = 42;
   const list_of_uids = [];
   for (let i = 0; i < number_of_uids; i++)
     list_of_uids.push(base_uid + uids_step * i);
@@ -112,7 +112,7 @@ function sleep (time) {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  if (window.location.hostname != '') {
+  if (window.location.hostname != '1') {
     let app_content = document.getElementById('app_content'); 
     app_content.style.display = 'none';
     let loading_content = document.getElementById('loading');

@@ -64,7 +64,7 @@
         
 					<div class="col-lg">
             <div class="row">
-              <p class="custom-helper" data-dtu="Time quick-link" id="timedelta_ms">
+              <p class="custom-helper" data-dtu="Show data for" id="timedelta_ms">
                 <label class="form-label no-margin-bottom custom-label">Show data for:</label>
                 <br>
                 <a class="time-shortcut active-filter" timedelta_ms="0" data-dtu>All available time</a>| Last:  
@@ -105,22 +105,23 @@
               <div class="col-lg-5">
                 <p class="chart-name">On a sankey chart below is displayed <span style="font-weight: bold;">relations of total numbers</span> of user(s) interactions for each web element on selected web-page(s)</p>
                 <div id="sankey_chart"></div>
-                <a id="toggle_elements_interactions_table" class="toggle-datatable" onclick="ANALYTICS_PORTAL_SDK_toggle_elements_interactions_table('elements_interactions_table');" data-dtu="Toggle table view">expand table</a>
+                <a id="toggle_elements_interactions_table" class="toggle-datatable" onclick="ANALYTICS_PORTAL_SDK_toggle_table_display('elements_interactions_table');" data-dtu="Toggle table view">expand table</a>
                 <table id="elements_interactions_table" class="table table-sm">
                   <thead>
                     <tr>
-                      <th>type</th>
-                      <th>element</th>
-                      <th>interactions</th>
+                      <th>Type</th>
+                      <th>Element</th>
+                      <th>Interactions</th>
                     </tr>
                   </thead>
                   <tbody></tbody>
                 </table>
-                <table id="uids_interactions_table" class="table table-sm">
+                <a id="toggle_uids_interactions_table" class="toggle-datatable" onclick="ANALYTICS_PORTAL_SDK_toggle_table_display('uids_interactions_table');" data-dtu="Toggle table view">expand table</a>
+                <table id="uids_interactions_table" class="table table-sm" style="margin-bottom: 20px!important;">
                   <thead>
                     <tr>
                       <th>UID</th>
-                      <th>interactions</th>
+                      <th>Interactions</th>
                     </tr>
                   </thead>
                   <tbody></tbody>

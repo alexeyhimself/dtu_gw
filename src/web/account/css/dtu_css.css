@@ -187,7 +187,6 @@ body {
 
 .dataTables_wrapper {
   font-size: 14px;
-  margin-bottom: 20px;
   text-align: left;
 }
 .dataTables_wrapper th {
@@ -219,4 +218,9 @@ body {
   margin-right: 5px;
   font-size: 14px;
   cursor: pointer;
+}
+
+.percent {
+  background-image: linear-gradient(to right, lightskyblue 0%, lightskyblue 100%);
+  background-repeat: no-repeat;
 }

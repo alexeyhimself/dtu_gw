@@ -358,12 +358,11 @@ function ANALYTICS_PORTAL_SDK_init_datatable(table_id) {
 
 function ANALYTICS_PORTAL_SDK_init_uids_interactions_table(table_id) {
   return new DataTable('#' + table_id, {
-    /*
     "createdRow": function(row, data, dataIndex) {
-      let td_element = row.children[1];
-      td_element.setAttribute('title', data[3]);
+      let td_interactions = row.children[1];
+      td_interactions.setAttribute('style', 'background-size: ' + data[2] + '% 100%');
+      td_interactions.classList.add('percent');
     },
-    */
     "columnDefs": [
       {
         "targets": [0, 1],
@@ -386,6 +385,9 @@ function ANALYTICS_PORTAL_SDK_init_elements_interactions_table(table_id) {
     "createdRow": function(row, data, dataIndex) {
       let td_element = row.children[1];
       td_element.setAttribute('title', data[3]);
+      let td_interactions = row.children[2];
+      td_interactions.setAttribute('style', 'background-size: ' + data[5] + '% 100%');
+      td_interactions.classList.add('percent');
     },
     "columnDefs": [
       {
@@ -425,7 +427,7 @@ function ANALYTICS_PORTAL_SDK_expand_collapse_datatable(table_id) {
     ANALYTICS_PORTAL_SDK_expand_datatable(table_id);
 }
 
-function ANALYTICS_PORTAL_SDK_toggle_elements_interactions_table(table_id) {
+function ANALYTICS_PORTAL_SDK_toggle_table_display(table_id) {
   const datatable_is_expanded = localStorage.getItem(table_id + '_is_expanded');
   if ([null, 'false'].includes(datatable_is_expanded))
     ANALYTICS_PORTAL_SDK_expand_datatable(table_id);
@@ -436,19 +438,25 @@ function ANALYTICS_PORTAL_SDK_toggle_elements_interactions_table(table_id) {
 function ANALYTICS_PORTAL_SDK_refresh_uids_interactions_table(kwargs) {
   const uids = kwargs['uids'];
   let rows = [];
-  for (let uid in uids)
-    rows.push([uid, uids[uid]]);
+  const max_number_of_calls = Object.values(uids).sort(function(a, b){return b - a})[0];
+  for (let uid in uids) {
+    let number_of_calls = uids[uid];
+    rows.push([uid, number_of_calls, Math.floor(number_of_calls * 100 / max_number_of_calls)]);
+  }
 
   const table_id = 'uids_interactions_table';
   let table = ANALYTICS_PORTAL_SDK_get_datatable(table_id);
   table.clear(); // https://stackoverflow.com/questions/27778389/how-to-manually-update-datatables-table-with-new-json-data
   table.rows.add(rows);
   table.draw();
+
+  ANALYTICS_PORTAL_SDK_expand_collapse_datatable(table_id);
 }
 
 function ANALYTICS_PORTAL_SDK_refresh_elements_interactions_table(kwargs) {
   const elements_hierarchy = kwargs['elements_hierarchy'];
   let new_rows = [];
+  let max_number_of_calls = 0;
   for (let i in elements_hierarchy) {
     let element = elements_hierarchy[i];
     let type = element.type;
@@ -462,6 +470,9 @@ function ANALYTICS_PORTAL_SDK_refresh_elements_interactions_table(kwargs) {
     row.push(element.number_of_calls);
     row.push('All' + element.element_path.join(' → '));
     row.push(element.element_path);
+    if (element.number_of_calls > max_number_of_calls)
+      max_number_of_calls = element.number_of_calls;
+    row.push(Math.floor(element.number_of_calls * 100 / max_number_of_calls)); // don't know how it works: thanks to pointer to max_number_of_calls this value is automatically adjusted in new_rows - so no need to find max value first
     new_rows.push(row);
   }
   const table_id = 'elements_interactions_table';
