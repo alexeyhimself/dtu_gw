@@ -185,30 +185,27 @@ body {
   cursor: pointer!important;
 }
 
-#datatable_wrapper {
+.dataTables_wrapper {
   font-size: 14px;
   margin-bottom: 20px;
   text-align: left;
 }
-#datatable_info {
-  padding-top: 0;
-}
-#datatable_wrapper th {
+.dataTables_wrapper th {
   color: gray;
   vertical-align: middle;
 }
-#datatable_wrapper td {
+.dataTables_wrapper td {
   color: black;
   text-align: left;
 }
 
-#datatable tr td {
+.dataTable tr td {
   padding-right: 15px;
 }
-#datatable tbody {
+#elements_interactions_table tbody {
   cursor: pointer;
 }
-#datatable tbody tr:hover {
+#elements_interactions_table tbody tr:hover {
   background-color: gold;
 }
 

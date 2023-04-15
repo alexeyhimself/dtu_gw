@@ -340,15 +340,49 @@ function ANALYTICS_PORTAL_SDK_draw_elements_hierarchy(kwargs) {
   ANALYTICS_PORTAL_SDK_draw_dropdown_options(id, paths, selected_option, types, options);
 }
 
-function ANALYTICS_PORTAL_SDK_get_datatable() { // https://datatables.net/manual/tech-notes/3#Object-instance-retrieval
-  if ($.fn.dataTable.isDataTable('#datatable'))
-    return $('#datatable').DataTable();
+function ANALYTICS_PORTAL_SDK_get_datatable(table_id) { // https://datatables.net/manual/tech-notes/3#Object-instance-retrieval
+  if ($.fn.dataTable.isDataTable('#' + table_id))
+    return $('#' + table_id).DataTable();
   else
-    return ANALYTICS_PORTAL_SDK_init_datatable();
+    return ANALYTICS_PORTAL_SDK_init_datatable(table_id);
 }
 
-function ANALYTICS_PORTAL_SDK_init_datatable() {
-  return new DataTable('#datatable', {
+function ANALYTICS_PORTAL_SDK_init_datatable(table_id) {
+  if (table_id == 'elements_interactions_table')
+    return ANALYTICS_PORTAL_SDK_init_elements_interactions_table(table_id);
+  else if (table_id == 'uids_interactions_table')
+    return ANALYTICS_PORTAL_SDK_init_uids_interactions_table(table_id);
+  else
+    console.error('unknown datatable:', table_id)
+}
+
+function ANALYTICS_PORTAL_SDK_init_uids_interactions_table(table_id) {
+  return new DataTable('#' + table_id, {
+    /*
+    "createdRow": function(row, data, dataIndex) {
+      let td_element = row.children[1];
+      td_element.setAttribute('title', data[3]);
+    },
+    */
+    "columnDefs": [
+      {
+        "targets": [0, 1],
+        "className": 'dt-body-left'
+      }
+    ],
+    "order": [[1, "desc"]],
+    "columns": [
+      { "width": "auto" },
+      { "width": "auto" },
+    ],
+    "searching": false, 
+    "paging": false, 
+    "info": false
+  });
+}
+
+function ANALYTICS_PORTAL_SDK_init_elements_interactions_table(table_id) {
+  return new DataTable('#' + table_id, {
     "createdRow": function(row, data, dataIndex) {
       let td_element = row.children[1];
       td_element.setAttribute('title', data[3]);
@@ -371,41 +405,49 @@ function ANALYTICS_PORTAL_SDK_init_datatable() {
   });
 }
 
-function ANALYTICS_PORTAL_SDK_expand_datatable() {
-  $('#datatable>tbody').css('display', 'table-row-group');
-  localStorage.setItem('datatable_is_expanded', 'true');
-  document.getElementById('toggle_datatable').innerHTML = 'collapse table';
-  //let table = ANALYTICS_PORTAL_SDK_get_datatable();
-  //table.columns.adjust().draw();
+function ANALYTICS_PORTAL_SDK_expand_datatable(table_id) {
+  $('#' + table_id + '>tbody').css('display', 'table-row-group');
+  localStorage.setItem(table_id + '_is_expanded', 'true');
+  document.getElementById('toggle_' + table_id).innerHTML = 'collapse table';
 }
 
-function ANALYTICS_PORTAL_SDK_collapse_datatable() {
-  $('#datatable>tbody').css('display', 'none');
-  localStorage.setItem('datatable_is_expanded', 'false');
-  document.getElementById('toggle_datatable').innerHTML = 'expand table';
+function ANALYTICS_PORTAL_SDK_collapse_datatable(table_id) {
+  $('#' + table_id + '>tbody').css('display', 'none');
+  localStorage.setItem(table_id + '_is_expanded', 'false');
+  document.getElementById('toggle_' + table_id).innerHTML = 'expand table';
 }
 
-function ANALYTICS_PORTAL_SDK_expand_collapse_datatable() {
-  const datatable_is_expanded = localStorage.getItem('datatable_is_expanded');
+function ANALYTICS_PORTAL_SDK_expand_collapse_datatable(table_id) {
+  const datatable_is_expanded = localStorage.getItem(table_id + '_is_expanded');
   if ([null, 'false'].includes(datatable_is_expanded))
-    ANALYTICS_PORTAL_SDK_collapse_datatable();
+    ANALYTICS_PORTAL_SDK_collapse_datatable(table_id);
   else
-    ANALYTICS_PORTAL_SDK_expand_datatable();
+    ANALYTICS_PORTAL_SDK_expand_datatable(table_id);
 }
 
-function ANALYTICS_PORTAL_SDK_toggle_datatable() {
-  const datatable_is_expanded = localStorage.getItem('datatable_is_expanded');
-  if ([null, 'false'].includes(datatable_is_expanded)) {
-    ANALYTICS_PORTAL_SDK_expand_datatable();
-  }
-  else {
-    ANALYTICS_PORTAL_SDK_collapse_datatable();
-  }
+function ANALYTICS_PORTAL_SDK_toggle_elements_interactions_table(table_id) {
+  const datatable_is_expanded = localStorage.getItem(table_id + '_is_expanded');
+  if ([null, 'false'].includes(datatable_is_expanded))
+    ANALYTICS_PORTAL_SDK_expand_datatable(table_id);
+  else
+    ANALYTICS_PORTAL_SDK_collapse_datatable(table_id);
 }
 
-function ANALYTICS_PORTAL_SDK_refresh_datatable(kwargs) {
+function ANALYTICS_PORTAL_SDK_refresh_uids_interactions_table(kwargs) {
+  const uids = kwargs['uids'];
+  let rows = [];
+  for (let uid in uids)
+    rows.push([uid, uids[uid]]);
+
+  const table_id = 'uids_interactions_table';
+  let table = ANALYTICS_PORTAL_SDK_get_datatable(table_id);
+  table.clear(); // https://stackoverflow.com/questions/27778389/how-to-manually-update-datatables-table-with-new-json-data
+  table.rows.add(rows);
+  table.draw();
+}
+
+function ANALYTICS_PORTAL_SDK_refresh_elements_interactions_table(kwargs) {
   const elements_hierarchy = kwargs['elements_hierarchy'];
-  //console.log(elements_hierarchy)
   let new_rows = [];
   for (let i in elements_hierarchy) {
     let element = elements_hierarchy[i];
@@ -422,14 +464,15 @@ function ANALYTICS_PORTAL_SDK_refresh_datatable(kwargs) {
     row.push(element.element_path);
     new_rows.push(row);
   }
-  let table = ANALYTICS_PORTAL_SDK_get_datatable();
+  const table_id = 'elements_interactions_table';
+  let table = ANALYTICS_PORTAL_SDK_get_datatable(table_id);
   table.clear(); // https://stackoverflow.com/questions/27778389/how-to-manually-update-datatables-table-with-new-json-data
   table.rows.add(new_rows);
   table.draw();
 
-  ANALYTICS_PORTAL_SDK_expand_collapse_datatable();
+  ANALYTICS_PORTAL_SDK_expand_collapse_datatable(table_id);
 
-  $('#datatable tbody').on('click', 'tr', function () {
+  $('#' + table_id + ' tbody').on('click', 'tr', function () {
     var data = table.row(this).data();
     if (data)
       ANALYTICS_PORTAL_SDK_update_page_elements_dropdown_value(data[4]);
@@ -487,7 +530,8 @@ function ANALYTICS_PORTAL_SDK_refresh_elements_page_data_according_to_user_filte
   ANALYTICS_PORTAL_SDK_get_data_for_sankey_chart(kwargs);
   ANALYTICS_PORTAL_SDK_draw_sankey_chart(kwargs);
 
-  ANALYTICS_PORTAL_SDK_refresh_datatable(kwargs);
+  ANALYTICS_PORTAL_SDK_refresh_elements_interactions_table(kwargs);
+  ANALYTICS_PORTAL_SDK_refresh_uids_interactions_table(kwargs);
 }
 
 function ANALYTICS_PORTAL_SDK_get_data_for_sankey_chart(kwargs) {

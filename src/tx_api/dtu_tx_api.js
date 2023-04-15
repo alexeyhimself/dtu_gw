@@ -64,28 +64,36 @@ function TX_API_get_stats_for_list(list) {
   return {'avg': avg, 'median': median, 'mode': mode, 'range': range, 'min': min, 'max': max};
 }
 
-function TX_API_remove_anys(user_filters) { // if 'any' then this has no meaning in filtering - so get rid of them
-  // console.log(user_filters);
-
+function TX_API_remove_anys(user_filters) { // if 'any' then this has no meaning for filtering - so get rid of them
   if (user_filters['url_domain_name'] == '-- any domain --')
     delete user_filters['url_domain_name'];
   if (user_filters['url_path'] == '-- any page --')
     delete user_filters['url_path'];
-  if (user_filters['url_path'] == undefined) {
-    //console.warn('user_filters['url_path'] is undefined')
+  if (user_filters['url_path'] == undefined)
     delete user_filters['url_path'];
-  }
   if (user_filters['element'] == '-- any element --')
     delete user_filters['element'];
 
   return user_filters;
 }
 
-function TX_API_add_topics(kwargs, user_filters) {
+function TX_API_add_uids_to_kwargs(kwargs, user_filters) {
+  const uids_dict = DB_SELECT_DISTINCT_something_WHERE_user_filers_AND_NOT_mute(user_filters, 'uid', ['element', 'element_type']);
+
+  let new_uids_dict = {};
+  for (let uid in uids_dict)
+    new_uids_dict[uid] = uids_dict[uid].count;
+
+  kwargs['uids'] = new_uids_dict;
+  return kwargs;
+}
+
+
+function TX_API_add_topics_to_kwargs(kwargs, user_filters) {
   let mute_list = {...user_filters}
   delete mute_list['ctag']; // to mute everything but ctag
 
-  let topics_match_ctag_dict = DB_SELECT_DISTINCT_something_WHERE_user_filers_AND_NOT_mute(user_filters, 'topic', Object.keys(mute_list));
+  const topics_match_ctag_dict = DB_SELECT_DISTINCT_something_WHERE_user_filers_AND_NOT_mute(user_filters, 'topic', Object.keys(mute_list));
   topics_match_ctag_list = Object.keys(topics_match_ctag_dict);
   kwargs['topics_match_ctag'] = topics_match_ctag_list;
 
@@ -97,8 +105,8 @@ function TX_API_add_topics(kwargs, user_filters) {
   return kwargs;
 }
 
-function TX_API_add_domains(kwargs, user_filters) {
-  let url_domains_match_ctag_topic_dict = DB_SELECT_DISTINCT_something_WHERE_user_filers_AND_NOT_mute(user_filters, 'url_domain_name', ['element_path']);
+function TX_API_add_domains_to_kwargs(kwargs, user_filters) {
+  const url_domains_match_ctag_topic_dict = DB_SELECT_DISTINCT_something_WHERE_user_filers_AND_NOT_mute(user_filters, 'url_domain_name', ['element_path']);
   url_domains_match_ctag_topic_list = Object.keys(url_domains_match_ctag_topic_dict);
   kwargs['url_domains_match_ctag_topic'] = url_domains_match_ctag_topic_list;
 
@@ -115,8 +123,8 @@ function TX_API_add_domains(kwargs, user_filters) {
   return kwargs;
 }
 
-function TX_API_add_pages(kwargs, user_filters) {
-  let url_paths_match_url_domain_dict = DB_SELECT_DISTINCT_something_WHERE_user_filers_AND_NOT_mute(user_filters, 'url_path', ['url_path', 'element', 'element_path']);
+function TX_API_add_pages_to_kwargs(kwargs, user_filters) {
+  const url_paths_match_url_domain_dict = DB_SELECT_DISTINCT_something_WHERE_user_filers_AND_NOT_mute(user_filters, 'url_path', ['url_path', 'element', 'element_path']);
   url_paths_match_url_domain_list = Object.keys(url_paths_match_url_domain_dict)
   kwargs['url_paths_match_url_domain'] = url_paths_match_url_domain_list;
   kwargs['current_page'] = user_filters.url_path;
@@ -251,14 +259,16 @@ function TX_API_process_user_filters_request(user_filters) {
   //console.log(user_filters)
   user_filters = TX_API_remove_anys(user_filters);
 
-  kwargs = TX_API_add_topics(kwargs, user_filters);
+  kwargs = TX_API_add_topics_to_kwargs(kwargs, user_filters);
   if (kwargs['current_topic']) user_filters.topic = kwargs['current_topic'];
 
-  kwargs = TX_API_add_domains(kwargs, user_filters);
+  kwargs = TX_API_add_domains_to_kwargs(kwargs, user_filters);
   if (kwargs['current_domain']) user_filters.url_domain_name = kwargs['current_domain'];
 
-  kwargs = TX_API_add_pages(kwargs, user_filters);
+  kwargs = TX_API_add_pages_to_kwargs(kwargs, user_filters);
   if (kwargs['current_page']) user_filters.url_path = kwargs['current_page'];
+
+  kwargs = TX_API_add_uids_to_kwargs(kwargs, user_filters);
 
   kwargs = TX_API_calc_elements_tree_with_weights(kwargs, user_filters);  
 

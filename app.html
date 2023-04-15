@@ -83,7 +83,6 @@
     		      	<a class="time-shortcut" timedelta_ms="15552000000" data-dtu>6&nbsp;months</a>
                 <a class="time-shortcut" timedelta_ms="31536000000" data-dtu>1&nbsp;year</a>
                 <a class="time-shortcut" timedelta_ms="63072000000" data-dtu>2&nbsp;years</a>
-                
     		    	</p>
             </div>
           </div>
@@ -106,12 +105,21 @@
               <div class="col-lg-5">
                 <p class="chart-name">On a sankey chart below is displayed <span style="font-weight: bold;">relations of total numbers</span> of user(s) interactions for each web element on selected web-page(s)</p>
                 <div id="sankey_chart"></div>
-                <a id="toggle_datatable" class="toggle-datatable" onclick="ANALYTICS_PORTAL_SDK_toggle_datatable();" data-dtu="Toggle table view">expand table</a>
-                <table id="datatable" class="table table-sm">
+                <a id="toggle_elements_interactions_table" class="toggle-datatable" onclick="ANALYTICS_PORTAL_SDK_toggle_elements_interactions_table('elements_interactions_table');" data-dtu="Toggle table view">expand table</a>
+                <table id="elements_interactions_table" class="table table-sm">
                   <thead>
                     <tr>
                       <th>type</th>
                       <th>element</th>
+                      <th>interactions</th>
+                    </tr>
+                  </thead>
+                  <tbody></tbody>
+                </table>
+                <table id="uids_interactions_table" class="table table-sm">
+                  <thead>
+                    <tr>
+                      <th>UID</th>
                       <th>interactions</th>
                     </tr>
                   </thead>
