@@ -376,7 +376,8 @@ function ANALYTICS_PORTAL_SDK_init_uids_interactions_table(table_id) {
     ],
     "searching": false, 
     "paging": false, 
-    "info": false
+    "info": false,
+    "bStateSave": true, // remember sorting
   });
 }
 
@@ -403,28 +404,33 @@ function ANALYTICS_PORTAL_SDK_init_elements_interactions_table(table_id) {
     ],
     "searching": false, 
     "paging": false, 
-    "info": false
+    "info": false,
+    "bStateSave": true, // remember sorting
   });
 }
 
-function ANALYTICS_PORTAL_SDK_expand_datatable(table_id) {
+function ANALYTICS_PORTAL_SDK_expand_datatable(table_id, number_of_records) {
   $('#' + table_id + '>tbody').css('display', 'table-row-group');
   localStorage.setItem(table_id + '_is_expanded', 'true');
   document.getElementById('toggle_' + table_id).innerHTML = 'collapse table';
+  if (number_of_records != null)
+    document.getElementById('number_of_records_' + table_id).innerHTML = '(' + number_of_records + ' records)';
 }
 
-function ANALYTICS_PORTAL_SDK_collapse_datatable(table_id) {
+function ANALYTICS_PORTAL_SDK_collapse_datatable(table_id, number_of_records) {
   $('#' + table_id + '>tbody').css('display', 'none');
   localStorage.setItem(table_id + '_is_expanded', 'false');
   document.getElementById('toggle_' + table_id).innerHTML = 'expand table';
+  if (number_of_records != null)
+    document.getElementById('number_of_records_' + table_id).innerHTML = '(' + number_of_records + ' records)';
 }
 
-function ANALYTICS_PORTAL_SDK_expand_collapse_datatable(table_id) {
+function ANALYTICS_PORTAL_SDK_expand_collapse_datatable(table_id, number_of_records) {
   const datatable_is_expanded = localStorage.getItem(table_id + '_is_expanded');
   if ([null, 'false'].includes(datatable_is_expanded))
-    ANALYTICS_PORTAL_SDK_collapse_datatable(table_id);
+    ANALYTICS_PORTAL_SDK_collapse_datatable(table_id, number_of_records);
   else
-    ANALYTICS_PORTAL_SDK_expand_datatable(table_id);
+    ANALYTICS_PORTAL_SDK_expand_datatable(table_id, number_of_records);
 }
 
 function ANALYTICS_PORTAL_SDK_toggle_table_display(table_id) {
@@ -450,7 +456,7 @@ function ANALYTICS_PORTAL_SDK_refresh_uids_interactions_table(kwargs) {
   table.rows.add(rows);
   table.draw();
 
-  ANALYTICS_PORTAL_SDK_expand_collapse_datatable(table_id);
+  ANALYTICS_PORTAL_SDK_expand_collapse_datatable(table_id, rows.length);
 }
 
 function ANALYTICS_PORTAL_SDK_refresh_elements_interactions_table(kwargs) {
@@ -481,7 +487,7 @@ function ANALYTICS_PORTAL_SDK_refresh_elements_interactions_table(kwargs) {
   table.rows.add(new_rows);
   table.draw();
 
-  ANALYTICS_PORTAL_SDK_expand_collapse_datatable(table_id);
+  ANALYTICS_PORTAL_SDK_expand_collapse_datatable(table_id, new_rows.length);
 
   $('#' + table_id + ' tbody').on('click', 'tr', function () {
     var data = table.row(this).data();

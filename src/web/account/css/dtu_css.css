@@ -215,9 +215,11 @@ body {
 }
 
 .toggle-datatable {
-  margin-right: 5px;
   font-size: 14px;
   cursor: pointer;
+}
+.datatable-records {
+  font-size: 14px;
 }
 
 .percent {

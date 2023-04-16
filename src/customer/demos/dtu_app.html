@@ -55,13 +55,12 @@
     		      	<a class="time-shortcut" timedelta_ms="15552000000" data-dtu>6&nbsp;months</a>
                 <a class="time-shortcut" timedelta_ms="31536000000" data-dtu>1&nbsp;year</a>
                 <a class="time-shortcut" timedelta_ms="63072000000" data-dtu>2&nbsp;years</a>
-                
     		    	</p>
             </div>
           </div>
   			</div>
 
-  			<div class="row margin-bottom-50">
+  			<div class="row">
           <div class="col-lg">
             <div class="row">
               <div class="col-sm col-lg-2 hidden">
@@ -76,15 +75,25 @@
             </div>
             <div class="row">
               <div class="col-lg-5">
-                <p class="chart-name">On a chart below is displayed <span style="font-weight: bold;">total number</span> of interactions for each element on selected web-page(s)</p>
+                <p class="chart-name">On a sankey chart below is displayed <span style="font-weight: bold;">relations of total numbers</span> of user(s) interactions for each web element on selected web-page(s)</p>
                 <div id="sankey_chart"></div>
-                <a id="toggle_datatable" class="toggle-datatable" onclick="ANALYTICS_PORTAL_SDK_toggle_datatable();" >expand table</a>
-                <table id="datatable" class="table table-sm">
+                <a id="toggle_elements_interactions_table" class="toggle-datatable" onclick="ANALYTICS_PORTAL_SDK_toggle_table_display('elements_interactions_table');" >expand table</a> <span id="number_of_records_elements_interactions_table" class="datatable-records"></span>
+                <table id="elements_interactions_table" class="table table-sm">
                   <thead>
                     <tr>
-                      <th>type</th>
-                      <th>element</th>
-                      <th>interactions</th>
+                      <th>Type</th>
+                      <th>Element</th>
+                      <th>Interactions</th>
+                    </tr>
+                  </thead>
+                  <tbody></tbody>
+                </table>
+                <a id="toggle_uids_interactions_table" class="toggle-datatable" onclick="ANALYTICS_PORTAL_SDK_toggle_table_display('uids_interactions_table');" >expand table</a> <span id="number_of_records_uids_interactions_table" class="datatable-records"></span>
+                <table id="uids_interactions_table" class="table table-sm" style="margin-bottom: 20px!important;">
+                  <thead>
+                    <tr>
+                      <th>UID</th>
+                      <th>Interactions</th>
                     </tr>
                   </thead>
                   <tbody></tbody>
@@ -92,9 +101,9 @@
               </div>
               <div class="col-lg-7">
                 <!--p class="chart-name">On a chart below is displayed <span style="font-weight: bold;">median number</span> (blue line) with max and min bursts due to data aggregation (yellow area) of user(s) interactions with selected element(s) of selected web-page(s) on selected time range</p-->
-                <p class="chart-name">On a chart below is displayed number of user(s) interactions with selected web-page(s) element(s) on selected time range</p>
+                <p class="chart-name">On a chart below is displayed <b>actual number of user(s) interactions</b> with selected web-page(s) element(s) on selected time range</p>
                 <div id="linear_chart"></div>
-                <table style="width: auto;">
+                <table style="width: auto;" class=" margin-bottom-50">
                   <tr>
                     <!--td>aggregation interval</td-->
                     <td>time range in 1 pixel</td>
