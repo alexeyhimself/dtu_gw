@@ -482,6 +482,8 @@ function ANALYTICS_PORTAL_SDK_refresh_elements_interactions_table(kwargs) {
     new_rows.push(row);
   }
   const table_id = 'elements_interactions_table';
+  $('#' + table_id + ' tbody').off('click'); // remove previously set listeners
+
   let table = ANALYTICS_PORTAL_SDK_get_datatable(table_id);
   table.clear(); // https://stackoverflow.com/questions/27778389/how-to-manually-update-datatables-table-with-new-json-data
   table.rows.add(new_rows);
@@ -489,13 +491,11 @@ function ANALYTICS_PORTAL_SDK_refresh_elements_interactions_table(kwargs) {
 
   ANALYTICS_PORTAL_SDK_expand_collapse_datatable(table_id, new_rows.length);
 
-  /*
   $('#' + table_id + ' tbody').on('click', 'tr', function () {
     var data = table.row(this).data();
     if (data)
       ANALYTICS_PORTAL_SDK_update_page_elements_dropdown_value(data[4]);
   });
-  */
 }
 
 function ANALYTICS_PORTAL_SDK_update_page_elements_dropdown_value(target_path) {
