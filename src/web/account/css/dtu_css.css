@@ -202,10 +202,10 @@ body {
   padding-right: 15px;
 }
 #elements_interactions_table tbody {
-  cursor: pointer;
+  //cursor: pointer;
 }
 #elements_interactions_table tbody tr:hover {
-  background-color: gold;
+  //background-color: gold;
 }
 
 
