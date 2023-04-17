@@ -404,7 +404,7 @@ function TX_API_prepare_time_windows_agregations(chart_width_px, user_filters, k
   const dates = TX_API_get_dates_from_to(user_filters, kwargs)
   const ms_in_1_px = TX_API_get_ms_in_1_px(chart_width_px, dates.time_range);
 
-  const margin_pixels = 10;
+  const margin_pixels = 0;
   const ms_in_1_px_with_margin_left = TX_API_get_ms_in_1_px(chart_width_px, dates.time_range + margin_pixels * ms_in_1_px);
 
   let agregation_result = [];

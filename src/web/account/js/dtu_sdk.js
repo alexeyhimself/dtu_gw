@@ -315,9 +315,9 @@ function ANALYTICS_PORTAL_SDK_draw_elements_hierarchy(kwargs) {
   const elements_hierarchy = kwargs['elements_hierarchy'];
   const element_path = kwargs['element_path'];
   let parent = document.getElementById('element_path');
-  let html = '<label for="drpd:element" class="form-label no-margin-bottom custom-label">Page element(s):</label>';
+  let html = '<label for="drpd:element" class="form-label no-margin-bottom custom-label">Page element:</label>';
   let id = 'drpd:element';
-  html += '<select id="' + id + '" class="form-control form-select element_path margin-bottom-5" data-dtu="Page element(s)"></select>';
+  html += '<select id="' + id + '" class="form-control form-select element_path margin-bottom-5" data-dtu="Page element"></select>';
   parent.innerHTML = html;
 
   let options = [];
@@ -378,6 +378,7 @@ function ANALYTICS_PORTAL_SDK_init_uids_interactions_table(table_id) {
     "paging": false, 
     "info": false,
     "bStateSave": true, // remember sorting
+    responsive: true,
   });
 }
 
@@ -616,11 +617,11 @@ function ANALYTICS_PORTAL_SDK_draw_sankey_chart(kwargs) { // https://d3-graph-ga
   let node_padding = 20;
   let sankey_chart_data = kwargs['sankey_chart_data'];
   if (sankey_chart_data.nodes.length > 15) {
-    node_padding = 5;
+    node_padding = 10;
   }
 
   let sankey_width = element_with_sankey.offsetWidth;
-  let sankey_height = sankey_chart_data.nodes.length * 15//300;
+  let sankey_height = sankey_chart_data.nodes.length * 20;
 
 // set the dimensions and margins of the graph
 var margin = {top: 20, right: 0, bottom: 25, left: 0},
