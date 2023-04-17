@@ -59,7 +59,7 @@
     		<h3 id="cloud-based">Cloud-based (we host)</h3>
 
     		<p>You can't send metrics from your apps into cloud MVP right now. Current version of cloud MVP uses and shows only its own self-monitored metrics. It is made to provide you with instructions, explanations, how-to's and demonstration of the service current abilities without any setup efforts from your side.</p>
-    		<p>Go to <a href="app.html" data-dtu>Analytics app</a> to try it. It has both fake auto-generated (lite and heavy data) and live your real usage data:</p>
+    		<p>Go to <a href="app.html" data-dtu>Analytics app</a> to try it. It has both synthetic auto-generated (lite and heavy data) and your real current usage live data:</p>
     		<img src="https://www.dropbox.com/s/3o4453qk3f9jakd/inside-dtu-account.png?raw=1" style="min-width: 712px; max-width: 100%; border: 1px solid gray;" class="image">
     		
 
@@ -94,7 +94,7 @@
     		<h4 id="setup-instructions">Enable Do They Use analytics for your web app</h4>
     		<p>Below is a detailed instruction on how to do the same analytics not for "your_app.html" but for your real web app.</p>
     		<ol>
-    			<li>If you haven't saved yet, save <a href="src/customer/demos/dtu_app.html" data-dtu target="_blank">dtu_app.html</a> single-page HTML file of the DTU analytics app to any place. When saving choose "Webpage, HTML only" option, not "Webpage, Complete" because this HTML file has absolute paths for all the imports it needs. You can place "dtu_app.html" file anywhere and it will work from any place if that place is in the same origin with your app (file:// or http://domain or https://domain) in the same browser (because it uses window.localStorage of web browser to retrieve stats from your app to the Do They Use app).</li>
+    			<li>If you haven't saved yet, save <a href="src/customer/demos/dtu_app.html" data-dtu target="_blank">dtu_app.html</a> single-page HTML file of the DTU analytics app to any place. When saving choose "Webpage, HTML only" option, not "Webpage, Complete" because this HTML file has absolute paths for all the imports it needs. You can place "dtu_app.html" file anywhere and it will work from any place if that place is in the same origin with your app (file:// or http://domain or https://domain) in the same browser (because it uses window.localStorage of web browser to retrieve stats from your app to the Do They Use analytics app).</li>
 
     			<li>Import and init JavaScript SDK in your web app: put the following code right before &lt;/body> tag in your web app:<br>
     				<div class="code">
@@ -104,9 +104,9 @@
 
 &lt;script src="https://dotheyuse.com/src/customer/dtu_sdk_js/dtu_sdk.js">&lt;/script>
 &lt;script type="text/javascript">
-const dtu = dotheyuse({
-  'ctag': 'DEMO MVP',
-  'topic': 'real usage'
+  const dtu = dotheyuse({
+    'ctag': 'DEMO MVP',
+    'topic': 'real usage'
 });
 &lt;/script></pre>
     					</code>
@@ -114,10 +114,16 @@ const dtu = dotheyuse({
     			</li>
     			<li>Tag with "data-dtu" attribute any (of <a href="https://alexeyhimself.github.io/dtu_sdk_js/dtu_sdk_story_book.html" target="_blank">DTU JS SDK supported types</a>) elements of your web app. For example, tag a hyperlink:<br>
     				<div class="code">
-							<code style="font-size: 14px;">
-    						<pre>&lt;a href="..." data-dtu="some link">...&lt;/a></pre>
-    					</code>
-    				</div>
+              <code style="font-size: 14px;">
+                <pre>&lt;a href="..." data-dtu>...&lt;/a></pre>
+              </code>
+            </div>
+            or with custom "data-dtu" attribute value:
+            <div class="code">
+              <code style="font-size: 14px;">
+                <pre>&lt;a href="..." data-dtu="some link">...&lt;/a></pre>
+              </code>
+            </div>
     			</li>
     			<li>Interact with that element. For example for the "link" (anchor) element JS SDK monitors "click" interaction. For other elements it could be "change" event type. Refer to <a href="https://github.com/alexeyhimself/dtu_sdk_js/blob/main/dtu_sdk.js#L16" target="_blank">JS SDK source code</a> to find exact elements and event types.</li>
     			<li>Open "dtu_app.html" file that you downloaded in step 1 and see that your interaction is already displayed in the app. <b>Please note</b>, that "dtu_app.html" has to be in the same origin with your app (for example, if you run your app on http://localhost:8000 host-port then "dtu_app.html" must be opened somewhere in the same http://localhost:8000 host-port origin in the same web browser).</li>
