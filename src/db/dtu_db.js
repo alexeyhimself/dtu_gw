@@ -244,7 +244,7 @@ function DB_SELECT_DISTINCT_element_path_items_WHERE_user_filters_AND_path_AND_N
     if (matched && report_element_at_path_index) { 
       found_path_elements.push(report_element_at_path_index); 
       if (has_children)
-        found_types.push('has children');
+        found_types.push('group');
       else
         found_types.push(report.element_type);
     }
