@@ -1,5 +1,5 @@
 const emty_db_schema = {'table_reports': []};
-const current_db_version = 6;
+const current_db_version = 7;
 const db_name_prefix = 'dtu_db';
 const db_name = db_name_prefix + current_db_version;
 
@@ -227,7 +227,5 @@ function DB_SELECT_DISTINCT_something_WHERE_user_filers_AND_NOT_mute(user_filter
   const all = DB_SELECT_DISTINCT_something_distinct_FROM_somewhere(something_distinct, filtered_something);
   const in_filter = DB_SELECT_DISTINCT_something_distinct_FROM_somewhere(something_distinct, in_out.in);
   const out_of_filter = DB_SELECT_DISTINCT_something_distinct_FROM_somewhere(something_distinct, in_out.out);
-  //console.log(in_filter)
-  //console.log(out_of_filter)
-  return all;
+  return {'all': all, 'in': in_filter, 'out': out_of_filter};
 }

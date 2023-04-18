@@ -69,7 +69,7 @@ function TX_API_remove_anys(user_filters) { // if 'any' then this has no meaning
     delete user_filters['url_domain_name'];
   if (user_filters['url_path'] == '-- any page --')
     delete user_filters['url_path'];
-  if (user_filters['url_path'] == undefined)
+  if (user_filters['url_path'] == undefined) // why this? looks like no impact if disabled
     delete user_filters['url_path'];
   if (user_filters['element'] == '-- any element --')
     delete user_filters['element'];
@@ -79,12 +79,13 @@ function TX_API_remove_anys(user_filters) { // if 'any' then this has no meaning
 
 function TX_API_add_uids_to_kwargs(kwargs, user_filters) {
   const uids_dict = DB_SELECT_DISTINCT_something_WHERE_user_filers_AND_NOT_mute(user_filters, 'uid', ['element', 'element_type']);
+  const uids_in_dict = uids_dict.in;
 
-  let new_uids_dict = {};
-  for (let uid in uids_dict)
-    new_uids_dict[uid] = uids_dict[uid].count;
+  let new_uids_in_dict = {};
+  for (let uid in uids_in_dict)
+    new_uids_in_dict[uid] = uids_in_dict[uid].count;
 
-  kwargs['uids'] = new_uids_dict;
+  kwargs['uids_in'] = new_uids_in_dict;
   return kwargs;
 }
 
@@ -94,12 +95,14 @@ function TX_API_add_topics_to_kwargs(kwargs, user_filters) {
   delete mute_list['ctag']; // to mute everything but ctag
 
   const topics_match_ctag_dict = DB_SELECT_DISTINCT_something_WHERE_user_filers_AND_NOT_mute(user_filters, 'topic', Object.keys(mute_list));
-  topics_match_ctag_list = Object.keys(topics_match_ctag_dict);
-  kwargs['topics_match_ctag'] = topics_match_ctag_list;
+  const all_topics_match_ctag_dict = topics_match_ctag_dict.all;
+
+  const all_topics_match_ctag_list = Object.keys(all_topics_match_ctag_dict);
+  kwargs['topics_match_ctag'] = all_topics_match_ctag_list;
 
   let topic = user_filters.topic;
-  if (!topic || !topics_match_ctag_list.includes(topic))
-    topic = topics_match_ctag_list[0]; // select first available then to show data for this topic
+  if (!topic || !all_topics_match_ctag_list.includes(topic))
+    topic = all_topics_match_ctag_list[0]; // select first available then to show data for this topic
   kwargs['current_topic'] = topic;
 
   return kwargs;
@@ -107,8 +110,10 @@ function TX_API_add_topics_to_kwargs(kwargs, user_filters) {
 
 function TX_API_add_domains_to_kwargs(kwargs, user_filters) {
   const url_domains_match_ctag_topic_dict = DB_SELECT_DISTINCT_something_WHERE_user_filers_AND_NOT_mute(user_filters, 'url_domain_name', ['element_path']);
-  url_domains_match_ctag_topic_list = Object.keys(url_domains_match_ctag_topic_dict);
-  kwargs['url_domains_match_ctag_topic'] = url_domains_match_ctag_topic_list;
+  const all_url_domains_match_ctag_topic_dict = url_domains_match_ctag_topic_dict.all;
+
+  all_url_domains_match_ctag_topic_list = Object.keys(all_url_domains_match_ctag_topic_dict);
+  kwargs['url_domains_match_ctag_topic'] = all_url_domains_match_ctag_topic_list;
 
   let url_domain_name = user_filters.url_domain_name;
   if (url_domain_name == 'undefined') {
@@ -116,8 +121,8 @@ function TX_API_add_domains_to_kwargs(kwargs, user_filters) {
     url_domain_name = undefined;
   }
 
-  if (url_domains_match_ctag_topic_list.length == 1)
-    url_domain_name = url_domains_match_ctag_topic_list[0]; // if only one then assume as selected because selector is hiddden on UI in this case
+  if (all_url_domains_match_ctag_topic_list.length == 1)
+    url_domain_name = all_url_domains_match_ctag_topic_list[0]; // if only one then assume as selected because selector is hiddden on UI in this case
 
   kwargs['current_domain'] = url_domain_name;
   return kwargs;
@@ -125,8 +130,10 @@ function TX_API_add_domains_to_kwargs(kwargs, user_filters) {
 
 function TX_API_add_pages_to_kwargs(kwargs, user_filters) {
   const url_paths_match_url_domain_dict = DB_SELECT_DISTINCT_something_WHERE_user_filers_AND_NOT_mute(user_filters, 'url_path', ['url_path', 'element', 'element_path']);
-  url_paths_match_url_domain_list = Object.keys(url_paths_match_url_domain_dict)
-  kwargs['url_paths_match_url_domain'] = url_paths_match_url_domain_list;
+  const all_url_paths_match_url_domain_dict = url_paths_match_url_domain_dict.all;
+
+  all_url_paths_match_url_domain_list = Object.keys(all_url_paths_match_url_domain_dict)
+  kwargs['url_paths_match_url_domain'] = all_url_paths_match_url_domain_list;
   kwargs['current_page'] = user_filters.url_path;
   return kwargs;
 }
@@ -231,16 +238,18 @@ function TX_API_build_offset_tree(deep_merge_dict, distinct_elements_paths_dict,
 }
 
 function TX_API_calc_elements_tree_with_weights(kwargs, user_filters) {
-  let distinct_elements_paths_dict = DB_SELECT_DISTINCT_something_WHERE_user_filers_AND_NOT_mute(user_filters, 'element_path', ['element_path'])
-  distinct_elements_paths_list = Object.keys(distinct_elements_paths_dict);
-  kwargs['distinct_elements_paths_list'] = distinct_elements_paths_list;
+  const distinct_elements_paths_dict = DB_SELECT_DISTINCT_something_WHERE_user_filers_AND_NOT_mute(user_filters, 'element_path', ['element_path'])
+  const all_distinct_elements_paths_dict = distinct_elements_paths_dict.in; // trying .in instead of .all
 
-  let list_of_nested_dicts = TX_API_make_list_of_nested_dicts(distinct_elements_paths_list);
+  all_distinct_elements_paths_list = Object.keys(all_distinct_elements_paths_dict);
+  kwargs['distinct_elements_paths_list'] = all_distinct_elements_paths_list;
+
+  let list_of_nested_dicts = TX_API_make_list_of_nested_dicts(all_distinct_elements_paths_list);
   let deep_merge_dict = TX_API_deep_merge_list_of_nested_dicts_into_single_dict(list_of_nested_dicts);
-  //console.log(distinct_elements_paths_dict, distinct_elements_paths_list)
+  //console.log(all_distinct_elements_paths_dict, all_distinct_elements_paths_list)
   let offset_tree = [];
   if (deep_merge_dict)
-    offset_tree = TX_API_build_offset_tree(deep_merge_dict, distinct_elements_paths_dict);
+    offset_tree = TX_API_build_offset_tree(deep_merge_dict, all_distinct_elements_paths_dict);
 
   kwargs['elements_hierarchy'] = offset_tree;
   kwargs['element_path'] = user_filters.element_path;

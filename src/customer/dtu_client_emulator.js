@@ -75,7 +75,8 @@ function generate_fake_data() {
   // sort with random within a list because elements_to_listen_to go as in the page 
   // and if normal distribution then middle page elements will get the most usage all the time
   // but we want random elements got more and less
-  const list_of_elements = [...dtu.elements_to_listen_to].sort(() => Math.random() - 0.5);
+  let list_of_elements = [...dtu.elements_to_listen_to].sort(() => Math.random() - 0.5);
+  list_of_elements = list_of_elements.slice(0, Math.floor(list_of_elements.length * 0.7))
   const normal_list_of_elements_ids = make_normal_distribution(list_of_elements.length);
 
   const base_uid = parseInt(dtu.get_uid());

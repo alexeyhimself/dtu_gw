@@ -75,11 +75,11 @@
             </div>
             <div class="row">
               <div class="col-lg-4">
-                <p class="chart-name">On a chart below are displayed <span style="font-weight: bold;">relations of volumes</span> of user(s) interactions for each web element on selected web-page(s)</p>
+                <p class="chart-name">On a sankey chart below are displayed <span style="font-weight: bold;">visual relations of the volumes</span> of user(s) interactions for each web element on selected web-page(s) for selected time range</p>
                 <div id="sankey_chart"></div>
               </div>
               <div class="col-lg-4">
-                <p class="chart-name margin-bottom-10">In a table below are displayed <span style="font-weight: bold;">total numbers</span> of user(s) interactions for each web element on selected web-page(s)</p>
+                <p class="chart-name margin-bottom-10">In a table below are displayed <span style="font-weight: bold;">total numbers</span> of user(s) interactions for <b>each</b> web element on selected web-page(s) for selected time range</p>
                 <a id="toggle_elements_interactions_table" class="toggle-datatable hidden" onclick="ANALYTICS_PORTAL_SDK_toggle_table_display('elements_interactions_table');" >expand table</a> <span id="number_of_records_elements_interactions_table" class="datatable-records"></span>
                 <table id="elements_interactions_table" class="table table-sm">
                   <thead>
@@ -91,7 +91,7 @@
                   </thead>
                   <tbody></tbody>
                 </table>
-                <p class="chart-name margin-bottom-10 margin-top-10">In a table below are displayed <span style="font-weight: bold;">total numbers</span> of user(s) interactions for any of web element(s) on selected web-page(s)</p>
+                <p class="chart-name margin-bottom-10 margin-top-10">In a table below are displayed <span style="font-weight: bold;">total numbers</span> of user(s) interactions for <b>any</b> of web element(s) on selected web-page(s) for selected time range</p>
                 <a id="toggle_uids_interactions_table" class="toggle-datatable hidden" onclick="ANALYTICS_PORTAL_SDK_toggle_table_display('uids_interactions_table');" >expand table</a> <span id="number_of_records_uids_interactions_table" class="datatable-records"></span>
                 <table id="uids_interactions_table" class="table table-sm" style="margin-bottom: 20px!important;">
                   <thead>
@@ -105,7 +105,7 @@
               </div>
               <div class="col-lg-4">
                 <!--p class="chart-name">On a chart below is displayed <span style="font-weight: bold;">median number</span> (blue line) with max and min bursts due to data aggregation (yellow area) of user(s) interactions with selected element(s) of selected web-page(s) on selected time range</p-->
-                <p class="chart-name">On a chart below is displayed <b>number of user(s) interactions</b> with selected web-page(s) element(s) on selected time range</p>
+                <p class="chart-name">On a linear chart below is displayed <b>number of user(s) interactions</b> for selected web element(s) on selected web-page(s) for selected time range</p>
                 <div id="linear_chart"></div>
                 <table id="linear_chart_stats" style="width: auto; display: none;" class="margin-bottom-50">
                   <tr>
@@ -141,11 +141,11 @@
     <script src="../../../src/web/account/datatables/jquery.dataTables.min.js"></script>
     <script src="../../../src/web/account/datatables/dataTables.bootstrap5.min.js"></script>
 		
-    <script src="../../../src/db/dtu_db.js?v=7"></script>
-    <script src="../../../src/rx_api/dtu_rx_api.js?v=7"></script>
-		<script src="../../../src/tx_api/dtu_tx_api.js?v=7"></script>
+    <script src="../../../src/db/dtu_db.js?v=8"></script>
+    <script src="../../../src/rx_api/dtu_rx_api.js?v=8"></script>
+		<script src="../../../src/tx_api/dtu_tx_api.js?v=8"></script>
 
-		<script src="../../../src/web/account/js/dtu_sdk.js?v=7"></script>
+		<script src="../../../src/web/account/js/dtu_sdk.js?v=8"></script>
     
 	</body>
 </html>

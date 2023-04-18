@@ -353,6 +353,7 @@ function ANALYTICS_PORTAL_SDK_init_uids_interactions_table(table_id) {
   return new DataTable('#' + table_id, {
     "createdRow": function(row, data, dataIndex) {
       let td_interactions = row.children[1];
+      // background: linear-gradient(to right, gold 20%, gold 50%, skyblue 51%, skyblue 100%);
       td_interactions.setAttribute('style', 'background-size: ' + data[2] + '% 100%');
       td_interactions.classList.add('percent');
     },
@@ -446,7 +447,7 @@ function ANALYTICS_PORTAL_SDK_toggle_table_display(table_id) {
 }
 
 function ANALYTICS_PORTAL_SDK_refresh_uids_interactions_table(kwargs) {
-  const uids = kwargs['uids'];
+  const uids = kwargs['uids_in'];
   let rows = [];
   const max_number_of_calls = Object.values(uids).sort(function(a, b){return b - a})[0];
   for (let uid in uids) {
