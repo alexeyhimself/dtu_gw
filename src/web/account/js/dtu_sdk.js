@@ -81,16 +81,9 @@ function ANALYTICS_PORTAL_SDK_collect_user_filters_on_the_page() {
 }
 
 function ANALYTICS_PORTAL_SDK_start() {
-  // detect which tab now is opened and update accordingly
-  //ANALYTICS_PORTAL_SDK_init_calls_over_time_chart_for_('elements_calls_over_time_chart_id');
   ANALYTICS_PORTAL_SDK_init_time_shortcut_listeners();
-
   ANALYTICS_PORTAL_SDK_refresh_elements_page_data_according_to_user_filters_setup();
-  
-  // add listeners
   ANALYTICS_PORTAL_SDK_make_dropdowns_work();
-  // ANALYTICS_PORTAL_SDK_make_element_dropdown_work();
-  // ANALYTICS_PORTAL_SDK_make_reset_filters_button_work();
 }
 
 function ANALYTICS_PORTAL_SDK_make_dropdowns_work() {
@@ -138,20 +131,18 @@ function ANALYTICS_PORTAL_SDK_refresh_calls_over_time_for_chart_id_(chart_id, us
   const element_id_for_linear_chart = 'linear_chart';
   const element_with_linear_chart = document.getElementById(element_id_for_linear_chart);
   element_with_linear_chart.innerHTML = '';
+  
+  const reports_match_user_filters_length = kwargs['reports_match_user_filters_length'];
+  if (reports_match_user_filters_length == 0) {
+    element_with_linear_chart.innerHTML = '<span class="no-data">No data</span>';
+    return;
+  }
 
   const width = element_with_linear_chart.offsetWidth;
   const height = element_with_linear_chart.offsetHeight || 300;
   const margin = {top: 10, right: 10, bottom: 30, left: 30};
-  
-
   const chart_width_px = width - margin.left - margin.right; // ANALYTICS_PORTAL_SDK_get_chart_size(chart_id);
-  const reports_match_user_filters_length = kwargs['reports_match_user_filters_length'];
-  let config = {};
-  if (reports_match_user_filters_length == 0)
-    config = {'labels': [], 'data': [], 'unit': 'second', 'step_size': 1}; // no data case
-  else
-    config = TX_API_get_data_for_chart_(chart_width_px, user_filters, kwargs);          
-
+  config = TX_API_get_data_for_chart_(chart_width_px, user_filters, kwargs);          
 
   // Step 2. Prepare the data.
   data = [];
@@ -236,6 +227,8 @@ function ANALYTICS_PORTAL_SDK_refresh_calls_over_time_for_chart_id_(chart_id, us
 }
 
 function ANALYTICS_PORTAL_SDK_refresh_stats_for_chart_id_(chart_id, aggr, aggr_unit, min, max, median) {
+  document.getElementById('linear_chart_stats').style.display = 'table'; // make visible, invisible by default for no data case
+
   const em = {'min': min, 'median': median, 'max': max, 'aggregation interval': aggr + ' ' + aggr_unit};
   for (let i in em) {
     let el = document.getElementById(i);
@@ -374,6 +367,9 @@ function ANALYTICS_PORTAL_SDK_init_uids_interactions_table(table_id) {
       { "width": "auto" },
       { "width": "auto" },
     ],
+    "language": {
+      "zeroRecords": "No data",
+    },
     "searching": false, 
     "paging": false, 
     "info": false,
@@ -403,6 +399,9 @@ function ANALYTICS_PORTAL_SDK_init_elements_interactions_table(table_id) {
       { "width": "auto" },
       null
     ],
+    "language": {
+      "zeroRecords": "No data",
+    },
     "searching": false, 
     "paging": false, 
     "info": false,
@@ -413,7 +412,9 @@ function ANALYTICS_PORTAL_SDK_init_elements_interactions_table(table_id) {
 function ANALYTICS_PORTAL_SDK_expand_datatable(table_id, number_of_records) {
   $('#' + table_id + '>tbody').css('display', 'table-row-group');
   localStorage.setItem(table_id + '_is_expanded', 'true');
-  document.getElementById('toggle_' + table_id).innerHTML = 'Collapse table';
+  let table_toggler = document.getElementById('toggle_' + table_id);
+  table_toggler.innerHTML = 'Collapse table';
+  table_toggler.style.display = 'unset';
   if (number_of_records != null)
     document.getElementById('number_of_records_' + table_id).innerHTML = '(' + number_of_records + ' records)';
 }
@@ -421,7 +422,9 @@ function ANALYTICS_PORTAL_SDK_expand_datatable(table_id, number_of_records) {
 function ANALYTICS_PORTAL_SDK_collapse_datatable(table_id, number_of_records) {
   $('#' + table_id + '>tbody').css('display', 'none');
   localStorage.setItem(table_id + '_is_expanded', 'false');
-  document.getElementById('toggle_' + table_id).innerHTML = 'Expand table';
+  let table_toggler = document.getElementById('toggle_' + table_id);
+  table_toggler.innerHTML = 'Expand table';
+  table_toggler.style.display = 'unset';
   if (number_of_records != null)
     document.getElementById('number_of_records_' + table_id).innerHTML = '(' + number_of_records + ' records)';
 }
@@ -453,6 +456,10 @@ function ANALYTICS_PORTAL_SDK_refresh_uids_interactions_table(kwargs) {
 
   const table_id = 'uids_interactions_table';
   let table = ANALYTICS_PORTAL_SDK_get_datatable(table_id);
+
+  if (Object.keys(uids).length === 0)
+    return;
+
   table.clear(); // https://stackoverflow.com/questions/27778389/how-to-manually-update-datatables-table-with-new-json-data
   table.rows.add(rows);
   table.draw();
@@ -486,6 +493,9 @@ function ANALYTICS_PORTAL_SDK_refresh_elements_interactions_table(kwargs) {
   $('#' + table_id + ' tbody').off('click'); // remove previously set listeners
 
   let table = ANALYTICS_PORTAL_SDK_get_datatable(table_id);
+  if (Object.keys(new_rows).length === 0)
+    return;
+
   table.clear(); // https://stackoverflow.com/questions/27778389/how-to-manually-update-datatables-table-with-new-json-data
   table.rows.add(new_rows);
   table.draw();
@@ -526,7 +536,7 @@ function sleep(time) {
 }
 
 function ANALYTICS_PORTAL_SDK_refresh_elements_page_data_according_to_user_filters_setup_with_delay() {
-  sleep(100).then(() => { // wait till sdk send data into db
+  sleep(500).then(() => { // wait till sdk send data into db
     ANALYTICS_PORTAL_SDK_refresh_elements_page_data_according_to_user_filters_setup();
   });
 }
@@ -614,8 +624,13 @@ function ANALYTICS_PORTAL_SDK_draw_sankey_chart(kwargs) { // https://d3-graph-ga
   const element_with_sankey = document.getElementById(element_id_for_sankey);
   element_with_sankey.innerHTML = '';
 
-  let node_padding = 20;
   let sankey_chart_data = kwargs['sankey_chart_data'];
+  if (sankey_chart_data.nodes.length == 0) {
+    element_with_sankey.innerHTML = '<span class="no-data">No data</span>';
+    return;
+  }
+
+  let node_padding = 20;
   if (sankey_chart_data.nodes.length > 15) {
     node_padding = 10;
   }
@@ -624,17 +639,17 @@ function ANALYTICS_PORTAL_SDK_draw_sankey_chart(kwargs) { // https://d3-graph-ga
   let sankey_height = sankey_chart_data.nodes.length * 20;
 
 // set the dimensions and margins of the graph
-var margin = {top: 20, right: 0, bottom: 25, left: 0},
+let margin = {top: 20, right: 0, bottom: 25, left: 0},
     width = sankey_width// - margin.left - margin.right,
     height = sankey_height// - margin.top - margin.bottom;  
 
 // format variables
-var formatNumber = d3.format(",.0f"), // zero decimal places
+let formatNumber = d3.format(",.0f"), // zero decimal places
     format = function(d) { return formatNumber(d); },
     color = d3.scaleOrdinal(d3.schemeCategory10);
   
 // append the svg object to the body of the page
-var svg = d3.select("#" + element_id_for_sankey).append("svg")
+let svg = d3.select("#" + element_id_for_sankey).append("svg")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
   .append("g")
@@ -654,20 +669,20 @@ function justify(node, n) {
 }
 
 // Set the sankey diagram properties
-var sankey = d3.sankey()
+let sankey = d3.sankey()
     .nodeWidth(3)
     .nodePadding(node_padding)
     .size([width, height])
     .nodeAlign(left);
 
-var path = sankey.links();
+let path = sankey.links();
 if (sankey_chart_data.nodes.length < 1)
   return;
 
 graph = sankey(sankey_chart_data);
 
 // add in the links
-  var link = svg.append("g").selectAll(".link")
+  let link = svg.append("g").selectAll(".link")
       .data(graph.links)
       .enter().append("path")
       .attr("class", "link")

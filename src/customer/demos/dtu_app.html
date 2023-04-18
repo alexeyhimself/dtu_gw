@@ -67,17 +67,20 @@
                 <label for="drpd:url_domain_name" class="form-label no-margin-bottom custom-label">Domain:</label>
                 <select id="drpd:url_domain_name" class="form-control form-select" ></select>
               </div>
-              <div class="col-sm col-lg-3 margin-bottom-5 hidden">
-                <label for="drpd:url_path" class="form-label no-margin-bottom custom-label">Web page(s):</label>
-                <select id="drpd:url_path" class="form-control form-select" data-dtu="Web page(s)"></select>
+              <div class="col-sm col-lg-8 margin-bottom-5 hidden">
+                <label for="drpd:url_path" class="form-label no-margin-bottom custom-label">Web page:</label>
+                <select id="drpd:url_path" class="form-control form-select" ></select>
               </div>
               <div class="col margin-bottom-5" id="element_path"></div>
             </div>
             <div class="row">
-              <div class="col-lg-5">
-                <p class="chart-name">On a sankey chart below is displayed <span style="font-weight: bold;">relations of total numbers</span> of user(s) interactions for each web element on selected web-page(s)</p>
+              <div class="col-lg-4">
+                <p class="chart-name">On a chart below are displayed <span style="font-weight: bold;">relations of volumes</span> of user(s) interactions for each web element on selected web-page(s)</p>
                 <div id="sankey_chart"></div>
-                <a id="toggle_elements_interactions_table" class="toggle-datatable" onclick="ANALYTICS_PORTAL_SDK_toggle_table_display('elements_interactions_table');" >expand table</a> <span id="number_of_records_elements_interactions_table" class="datatable-records"></span>
+              </div>
+              <div class="col-lg-4">
+                <p class="chart-name margin-bottom-10">In a table below are displayed <span style="font-weight: bold;">total numbers</span> of user(s) interactions for each web element on selected web-page(s)</p>
+                <a id="toggle_elements_interactions_table" class="toggle-datatable hidden" onclick="ANALYTICS_PORTAL_SDK_toggle_table_display('elements_interactions_table');" >expand table</a> <span id="number_of_records_elements_interactions_table" class="datatable-records"></span>
                 <table id="elements_interactions_table" class="table table-sm">
                   <thead>
                     <tr>
@@ -88,7 +91,8 @@
                   </thead>
                   <tbody></tbody>
                 </table>
-                <a id="toggle_uids_interactions_table" class="toggle-datatable" onclick="ANALYTICS_PORTAL_SDK_toggle_table_display('uids_interactions_table');" >expand table</a> <span id="number_of_records_uids_interactions_table" class="datatable-records"></span>
+                <p class="chart-name margin-bottom-10 margin-top-10">In a table below are displayed <span style="font-weight: bold;">total numbers</span> of user(s) interactions for any of web element(s) on selected web-page(s)</p>
+                <a id="toggle_uids_interactions_table" class="toggle-datatable hidden" onclick="ANALYTICS_PORTAL_SDK_toggle_table_display('uids_interactions_table');" >expand table</a> <span id="number_of_records_uids_interactions_table" class="datatable-records"></span>
                 <table id="uids_interactions_table" class="table table-sm" style="margin-bottom: 20px!important;">
                   <thead>
                     <tr>
@@ -99,11 +103,11 @@
                   <tbody></tbody>
                 </table>
               </div>
-              <div class="col-lg-7">
+              <div class="col-lg-4">
                 <!--p class="chart-name">On a chart below is displayed <span style="font-weight: bold;">median number</span> (blue line) with max and min bursts due to data aggregation (yellow area) of user(s) interactions with selected element(s) of selected web-page(s) on selected time range</p-->
-                <p class="chart-name">On a chart below is displayed <b>actual number of user(s) interactions</b> with selected web-page(s) element(s) on selected time range</p>
+                <p class="chart-name">On a chart below is displayed <b>number of user(s) interactions</b> with selected web-page(s) element(s) on selected time range</p>
                 <div id="linear_chart"></div>
-                <table style="width: auto;" class=" margin-bottom-50">
+                <table id="linear_chart_stats" style="width: auto; display: none;" class="margin-bottom-50">
                   <tr>
                     <!--td>aggregation interval</td-->
                     <td>time range in 1 pixel</td>

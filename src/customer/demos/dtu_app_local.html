@@ -1,13 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 	<head>
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-J69ENZY4TQ"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-J69ENZY4TQ');
-    </script>
     
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
@@ -21,12 +14,12 @@
     
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet"> <!-- menu font -->
 
-    <script type="text/javascript" src="src/web/common/bootstrap/bootstrap.5.3.0-alpha.min.js"></script>
+    <script type="text/javascript" src="../../../src/web/common/bootstrap/bootstrap.5.3.0-alpha.min.js"></script>
 		
-    <link href="src/web/account/datatables/dataTables.bootstrap5.min.css" rel="stylesheet">
-    <link href="src/web/common/bootstrap/bootstrap.5.3.0-alpha.min.css" rel="stylesheet">
-    <link href="src/web/common/css/dtu_css.css" rel="stylesheet">
-		<link href="src/web/account/css/dtu_css.css" rel="stylesheet">
+    <link href="../../../src/web/account/datatables/dataTables.bootstrap5.min.css" rel="stylesheet">
+    <link href="../../../src/web/common/bootstrap/bootstrap.5.3.0-alpha.min.css" rel="stylesheet">
+    <link href="../../../src/web/common/css/dtu_css.css" rel="stylesheet">
+		<link href="../../../src/web/account/css/dtu_css.css" rel="stylesheet">
     <style type="text/css">
       .custom-helper {
         margin-bottom: 5px;
@@ -34,37 +27,16 @@
     </style>
 	</head>
 	<body>
-    <nav class="navbar navbar-expand-lg bg-light" data-dtu="Navbar">
-      <div class="container-fluid">
-        <a class="navbar-brand" href="index.html" data-dtu>Do They Use</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation" data-dtu="Menu">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
-          <ul class="navbar-nav margin-left-6">
-            <li class="nav-item">
-              <a class="nav-link active" href="app.html" data-dtu>Analytics app</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="how-this-works.html" data-dtu>How this demo works</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="how-to-use.html" data-dtu>How to setup for your app</a>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </nav>
 		<div class="container-fluid container-padding" id="app_content">
         <div class="row margin-bottom-5">
           <div class="col-lg-2">
             <label for="topic" class="form-label no-margin-bottom custom-label">Data source:</label>
-            <select class="form-control form-select" data-dtu="Data source" id="drpd:topic"></select>
+            <select class="form-control form-select"  id="drpd:topic"></select>
           </div>
         
 					<div class="col-lg">
             <div class="row">
-              <p class="custom-helper" data-dtu="Show data for" id="timedelta_ms">
+              <p class="custom-helper"  id="timedelta_ms">
                 <label class="form-label no-margin-bottom custom-label">Show data for:</label>
                 <br>
                 <a class="time-shortcut active-filter" timedelta_ms="0" data-dtu>All available time</a>| Last:  
@@ -93,11 +65,11 @@
             <div class="row">
               <div class="col-sm col-lg-2 hidden">
                 <label for="drpd:url_domain_name" class="form-label no-margin-bottom custom-label">Domain:</label>
-                <select id="drpd:url_domain_name" class="form-control form-select" data-dtu="Domain"></select>
+                <select id="drpd:url_domain_name" class="form-control form-select" ></select>
               </div>
               <div class="col-sm col-lg-8 margin-bottom-5 hidden">
                 <label for="drpd:url_path" class="form-label no-margin-bottom custom-label">Web page:</label>
-                <select id="drpd:url_path" class="form-control form-select" data-dtu="Web page"></select>
+                <select id="drpd:url_path" class="form-control form-select" ></select>
               </div>
               <div class="col margin-bottom-5" id="element_path"></div>
             </div>
@@ -108,7 +80,7 @@
               </div>
               <div class="col-lg-4">
                 <p class="chart-name margin-bottom-10">In a table below are displayed <span style="font-weight: bold;">total numbers</span> of user(s) interactions for each web element on selected web-page(s)</p>
-                <a id="toggle_elements_interactions_table" class="toggle-datatable hidden" onclick="ANALYTICS_PORTAL_SDK_toggle_table_display('elements_interactions_table');" data-dtu="Toggle Elements table view">expand table</a> <span id="number_of_records_elements_interactions_table" class="datatable-records"></span>
+                <a id="toggle_elements_interactions_table" class="toggle-datatable hidden" onclick="ANALYTICS_PORTAL_SDK_toggle_table_display('elements_interactions_table');" >expand table</a> <span id="number_of_records_elements_interactions_table" class="datatable-records"></span>
                 <table id="elements_interactions_table" class="table table-sm">
                   <thead>
                     <tr>
@@ -120,7 +92,7 @@
                   <tbody></tbody>
                 </table>
                 <p class="chart-name margin-bottom-10 margin-top-10">In a table below are displayed <span style="font-weight: bold;">total numbers</span> of user(s) interactions for any of web element(s) on selected web-page(s)</p>
-                <a id="toggle_uids_interactions_table" class="toggle-datatable hidden" onclick="ANALYTICS_PORTAL_SDK_toggle_table_display('uids_interactions_table');" data-dtu="Toggle UIDs table view">expand table</a> <span id="number_of_records_uids_interactions_table" class="datatable-records"></span>
+                <a id="toggle_uids_interactions_table" class="toggle-datatable hidden" onclick="ANALYTICS_PORTAL_SDK_toggle_table_display('uids_interactions_table');" >expand table</a> <span id="number_of_records_uids_interactions_table" class="datatable-records"></span>
                 <table id="uids_interactions_table" class="table table-sm" style="margin-bottom: 20px!important;">
                   <thead>
                     <tr>
@@ -163,25 +135,17 @@
       <p>Please wait a few seconds.<br>We are getting ready your demo account...</p>
     </div>
 
-    <script src="src/web/account/js/d3/d3.v7.min.js"></script>
-    <script src="src/web/account/js/d3/d3-sankey.min.js"></script>
-    <script src="src/web/account/jquery/jquery-3.6.4.min.js"></script>
-    <script src="src/web/account/datatables/jquery.dataTables.min.js"></script>
-    <script src="src/web/account/datatables/dataTables.bootstrap5.min.js"></script>
+    <script src="../../../src/web/account/js/d3/d3.v7.min.js"></script>
+    <script src="../../../src/web/account/js/d3/d3-sankey.min.js"></script>
+    <script src="../../../src/web/account/jquery/jquery-3.6.4.min.js"></script>
+    <script src="../../../src/web/account/datatables/jquery.dataTables.min.js"></script>
+    <script src="../../../src/web/account/datatables/dataTables.bootstrap5.min.js"></script>
 		
-    <script src="src/db/dtu_db.js?v=7"></script>
-    <script src="src/rx_api/dtu_rx_api.js?v=7"></script>
-		<script src="src/tx_api/dtu_tx_api.js?v=7"></script>
+    <script src="../../../src/db/dtu_db.js?v=7"></script>
+    <script src="../../../src/rx_api/dtu_rx_api.js?v=7"></script>
+		<script src="../../../src/tx_api/dtu_tx_api.js?v=7"></script>
 
-		<script src="src/web/account/js/dtu_sdk.js?v=7"></script>
+		<script src="../../../src/web/account/js/dtu_sdk.js?v=7"></script>
     
-    <script src="src/customer/dtu_sdk_js/dtu_sdk.js?v=7"></script>
-    <script type="text/javascript">
-      const dtu = dotheyuse({
-        'ctag': 'DEMO MVP',
-        'topic': 'your real usage now',
-      });
-    </script>
-    <script src="src/customer/dtu_client_emulator.js?v=7"></script>
 	</body>
 </html>

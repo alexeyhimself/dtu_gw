@@ -232,3 +232,15 @@ body {
   background-image: linear-gradient(to right, lightskyblue 0%, lightskyblue 100%);
   background-repeat: no-repeat;
 }
+#sankey_chart {
+  text-align: center;
+  font-size: 13px;
+  margin-top: 10px;
+  margin-bottom: 20px;
+}
+#linear_chart {
+  text-align: center;
+  font-size: 13px;
+  margin-top: 10px;
+  margin-bottom: 20px;
+}
