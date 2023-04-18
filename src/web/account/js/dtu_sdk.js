@@ -1,13 +1,4 @@
-//import("src/web/common/chartjs/chart-4.2.1.js");
-//import("src/web/common/chartjs/chartjs-adapter-date-fns-3.0.0.bundle.min.js");
-
-// to adjuste phrase "all the marked with "data-dtu" elements on <better_phrase> website"
-//let better_phrase = ''; //'this resource';
-//if (window.location.hostname == 'dotheyuse.com')
-//  better_phrase = ' on this web site';
-const drpd_elements_all = '-- all the monitored elements --';// + better_phrase + ' --';
-
-const ctag = "DEMO MVP"; // somehow via session ID mapping in DB, not in request
+const ctag = "DEMO MVP"; // to be given somehow via session ID mapping in DB, not in request
 
 function ANALYTICS_PORTAL_SDK_init_time_shortcut_listeners() {
   const elements_to_track = document.querySelectorAll('.time-shortcut');
@@ -354,6 +345,7 @@ function ANALYTICS_PORTAL_SDK_init_uids_interactions_table(table_id) {
     "createdRow": function(row, data, dataIndex) {
       let td_interactions = row.children[1];
       // background: linear-gradient(to right, gold 20%, gold 50%, skyblue 51%, skyblue 100%);
+      //console.log(data)
       td_interactions.setAttribute('style', 'background-size: ' + data[2] + '% 100%');
       td_interactions.classList.add('percent');
     },
@@ -385,7 +377,9 @@ function ANALYTICS_PORTAL_SDK_init_elements_interactions_table(table_id) {
       let td_element = row.children[1];
       td_element.setAttribute('title', data[3]);
       let td_interactions = row.children[2];
-      td_interactions.setAttribute('style', 'background-size: ' + data[5] + '% 100%');
+      // background: linear-gradient(to right, gold 20%, gold 50%, skyblue 51%, skyblue 100%);
+      td_interactions.setAttribute('style', 'background: linear-gradient(to right, gold 0%, gold ' + data[5] + '%, #64a2ff '+ data[5] + '%, #64a2ff ' + data[6] + '%, transparent ' + data[6] + '%, transparent 100%)');
+      //td_interactions.setAttribute('style', 'background-size: ' + data[5] + '% 100%');
       td_interactions.classList.add('percent');
     },
     "columnDefs": [
@@ -472,6 +466,17 @@ function ANALYTICS_PORTAL_SDK_refresh_elements_interactions_table(kwargs) {
   const elements_hierarchy = kwargs['elements_hierarchy'];
   let new_rows = [];
   let max_number_of_calls = 0;
+  let max_number_of_calls_no_groups = 0;
+  for (let i in elements_hierarchy) {
+    let element = elements_hierarchy[i];
+    if (element.number_of_calls > max_number_of_calls)
+      max_number_of_calls = element.number_of_calls;
+    if (element.type == 'group')
+      continue;
+    if (element.number_of_calls > max_number_of_calls_no_groups)
+      max_number_of_calls_no_groups = element.number_of_calls;
+  }
+
   for (let i in elements_hierarchy) {
     let element = elements_hierarchy[i];
     let type = element.type;
@@ -485,9 +490,12 @@ function ANALYTICS_PORTAL_SDK_refresh_elements_interactions_table(kwargs) {
     row.push(element.number_of_calls);
     row.push('All' + element.element_path.join(' → '));
     row.push(element.element_path);
-    if (element.number_of_calls > max_number_of_calls)
-      max_number_of_calls = element.number_of_calls;
-    row.push(Math.floor(element.number_of_calls * 100 / max_number_of_calls)); // don't know how it works: thanks to pointer to max_number_of_calls this value is automatically adjusted in new_rows - so no need to find max value first
+    row.push(Math.floor(element.number_of_calls * 100 / max_number_of_calls));
+    if (type == 'group')
+      row.push(Math.floor(element.number_of_calls * 100 / max_number_of_calls));
+    else
+      row.push(Math.floor(element.number_of_calls * 100 / max_number_of_calls_no_groups));
+    
     new_rows.push(row);
   }
   const table_id = 'elements_interactions_table';
