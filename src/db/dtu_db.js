@@ -52,13 +52,13 @@ class DB {
   }
 
   select(user_filters, mute) {
-    const default_mute_list = ['datetime_to', 'datetime_from'];
-    if (!mute) { mute = []; }
-    let mute_list = default_mute_list.concat(mute);
+    let mute_list = ['datetime_to', 'datetime_from'];
+    if (mute)
+      mute_list = mute_list.concat(mute);
+
     let asked = {...user_filters};
-    for (let i in mute_list) {
+    for (let i in mute_list)
       delete asked[mute_list[i]];
-    }
 
     const records = this.get_records_by_engine_type(asked.ctag, asked.topic)
     let found_reports = [];
@@ -67,7 +67,7 @@ class DB {
       if (r['ctag'] != asked['ctag']) {
         continue;
       }
-      if (!asked['topic']) {
+      if (!asked['topic']) { // select for topics doesn't contain topics
         found_reports.push(r);
         continue;
       }
@@ -100,10 +100,8 @@ class DB {
         }
       }
 
-      if (matched) {
-        //console.log(r)
+      if (matched)
         found_reports.push(r);
-      }
     }
     //console.log('asked', asked)
     //console.log('muted', mute_list)
@@ -165,23 +163,35 @@ function DB_SELECT_EMULATION_check_if_report_date_matches_dates_in_user_filters(
   return true;
 }
 
+function DB_SELECT_EMULATION_select_reports_WHERE_dates_IN_AND_OUT_user_filters(somewhere, user_filters) {
+  let found_reports_in = [];
+  let found_reports_out = [];
+  for (let i in somewhere) {
+    let report = somewhere[i];
+    if (DB_SELECT_EMULATION_check_if_report_date_matches_dates_in_user_filters(report, user_filters))
+      found_reports_in.push(report);
+    else
+      found_reports_out.push(report);
+  }
+  return {'in': found_reports_in, 'out': found_reports_out};
+}
+
 function DB_SELECT_all_WHERE_user_filters(user_filters) {
   // SELECT * FROM reports_table WHERE 1=1
   // AND ctag = user_filters.ctag
   // AND topic = user_filters.topic
   // AND date_time BETWEEN (user_filters.date_time_from, user_filters.date_time_to)
 
+  // SELECT * FROM reports_table WHERE 1=1
+  // AND ctag = user_filters.ctag
+  // AND topic = user_filters.topic
+  // AND date_time NOT BETWEEN (user_filters.date_time_from, user_filters.date_time_to)
+
   const ctag = user_filters['ctag'];
   const topic = user_filters['topic'];
   const table_reports = dtu_db.select(user_filters);
 
-  let found_reports = [];
-  for (let i in table_reports) {
-    let report = table_reports[i];
-    if (DB_SELECT_EMULATION_check_if_report_date_matches_dates_in_user_filters(report, user_filters))
-      found_reports.push(report);
-  }
-  return found_reports;
+  return DB_SELECT_EMULATION_select_reports_WHERE_dates_IN_AND_OUT_user_filters(table_reports, user_filters);
 }
 
 function DB_SELECT_DISTINCT_something_distinct_FROM_somewhere(something_distinct, somewhere) {
@@ -212,5 +222,12 @@ function DB_SELECT_DISTINCT_something_WHERE_user_filers_AND_NOT_mute(user_filter
   // AND something.keyN = something.valueN
 
   const filtered_something = dtu_db.select(user_filters, mute);
-  return DB_SELECT_DISTINCT_something_distinct_FROM_somewhere(something_distinct, filtered_something);
+  const in_out = DB_SELECT_EMULATION_select_reports_WHERE_dates_IN_AND_OUT_user_filters(filtered_something, user_filters);
+
+  const all = DB_SELECT_DISTINCT_something_distinct_FROM_somewhere(something_distinct, filtered_something);
+  const in_filter = DB_SELECT_DISTINCT_something_distinct_FROM_somewhere(something_distinct, in_out.in);
+  const out_of_filter = DB_SELECT_DISTINCT_something_distinct_FROM_somewhere(something_distinct, in_out.out);
+  //console.log(in_filter)
+  //console.log(out_of_filter)
+  return all;
 }

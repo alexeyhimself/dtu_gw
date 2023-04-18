@@ -248,9 +248,16 @@ function TX_API_calc_elements_tree_with_weights(kwargs, user_filters) {
 }
 
 function TX_API_add_data_for_charts(kwargs, user_filters) {
-  const reports_match_user_filters = DB_SELECT_all_WHERE_user_filters(user_filters);
+  const reports_for_user_filters = DB_SELECT_all_WHERE_user_filters(user_filters);
+
+  const reports_match_user_filters = reports_for_user_filters.in;
   kwargs['reports_match_user_filters'] = reports_match_user_filters;
   kwargs['reports_match_user_filters_length'] = reports_match_user_filters.length;
+
+  const reports_out_of_user_filters = reports_for_user_filters.out;
+  kwargs['reports_out_of_user_filters'] = reports_out_of_user_filters;
+  kwargs['reports_out_of_user_filters_length'] = reports_out_of_user_filters.length;
+
   return kwargs
 }
 
