@@ -178,10 +178,8 @@ function DB_SELECT_all_WHERE_user_filters(user_filters) {
   let found_reports = [];
   for (let i in table_reports) {
     let report = table_reports[i];
-    if (DB_SELECT_EMULATION_check_if_report_date_matches_dates_in_user_filters(report, user_filters)) {
-      //console.log(new Date(report.date_time))
+    if (DB_SELECT_EMULATION_check_if_report_date_matches_dates_in_user_filters(report, user_filters))
       found_reports.push(report);
-    }
   }
   return found_reports;
 }

@@ -47,7 +47,7 @@ function ANALYTICS_PORTAL_SDK_collect_user_filters_on_the_page() {
   const timedelta_ms = timedelta_element.getAttribute('timedelta_ms');
   //user_filters['timedelta_ms'] = timedelta_ms;
 
-  const datetime_to = Date.parse(new Date());
+  const datetime_to = Date.parse(new Date()) + 1000; // add 1s to let this event to reach db and to be included in this report
   const datetime_from = datetime_to - timedelta_ms;
   user_filters["datetime_from"] = datetime_from;
   user_filters["datetime_to"] = datetime_to;
@@ -536,7 +536,7 @@ function sleep(time) {
 }
 
 function ANALYTICS_PORTAL_SDK_refresh_elements_page_data_according_to_user_filters_setup_with_delay() {
-  sleep(500).then(() => { // wait till sdk send data into db
+  sleep(0).then(() => { // wait till sdk send data into db
     ANALYTICS_PORTAL_SDK_refresh_elements_page_data_according_to_user_filters_setup();
   });
 }
@@ -555,13 +555,13 @@ function ANALYTICS_PORTAL_SDK_refresh_elements_page_data_according_to_user_filte
   ANALYTICS_PORTAL_SDK_refresh_domain_urls(kwargs);
   ANALYTICS_PORTAL_SDK_refresh_url_paths(kwargs);
 
-  ANALYTICS_PORTAL_SDK_refresh_calls_over_time_for_chart_id_('elements_calls_over_time_chart_id', user_filters, kwargs);
-
   ANALYTICS_PORTAL_SDK_get_data_for_sankey_chart(kwargs);
   ANALYTICS_PORTAL_SDK_draw_sankey_chart(kwargs);
 
   ANALYTICS_PORTAL_SDK_refresh_elements_interactions_table(kwargs);
   ANALYTICS_PORTAL_SDK_refresh_uids_interactions_table(kwargs);
+
+  ANALYTICS_PORTAL_SDK_refresh_calls_over_time_for_chart_id_('elements_calls_over_time_chart_id', user_filters, kwargs);
 }
 
 function ANALYTICS_PORTAL_SDK_get_data_for_sankey_chart(kwargs) {
