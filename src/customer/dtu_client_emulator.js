@@ -14,7 +14,7 @@ function make_new_list(repeats_list) {
 
 function make_normal_distribution(list_length) {
   let mean_i = Math.floor(list_length / 2); // works both for odd and even, floor because id's are from 0
-  let standard_deviation = 4//Math.floor(list.length / 3);
+  let standard_deviation = 2.3//Math.floor(list.length / 3);
 
   let repeats_list = [];
   //let debug = [];
@@ -76,7 +76,7 @@ function generate_fake_data() {
   // and if normal distribution then middle page elements will get the most usage all the time
   // but we want random elements got more and less
   let list_of_elements = [...dtu.elements_to_listen_to].sort(() => Math.random() - 0.5);
-  list_of_elements = list_of_elements.slice(0, Math.floor(list_of_elements.length * 0.7))
+  list_of_elements = list_of_elements.slice(0, Math.floor(list_of_elements.length * 0.618)); // golden ratio
   const normal_list_of_elements_ids = make_normal_distribution(list_of_elements.length);
 
   const base_uid = parseInt(dtu.get_uid());
