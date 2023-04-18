@@ -346,7 +346,8 @@ function ANALYTICS_PORTAL_SDK_init_uids_interactions_table(table_id) {
       let td_interactions = row.children[1];
       // background: linear-gradient(to right, gold 20%, gold 50%, skyblue 51%, skyblue 100%);
       //console.log(data)
-      td_interactions.setAttribute('style', 'background-size: ' + data[2] + '% 100%');
+      //td_interactions.setAttribute('style', 'background-size: ' + data[2] + '% 100%');
+      td_interactions.setAttribute('style', 'background: linear-gradient(to right, gold 0%, gold ' + data[2] + '%, #64a2ff '+ data[2] + '%, #64a2ff ' + data[3] + '%, transparent ' + data[3] + '%, transparent 100%)');
       td_interactions.classList.add('percent');
     },
     "columnDefs": [
@@ -444,9 +445,16 @@ function ANALYTICS_PORTAL_SDK_refresh_uids_interactions_table(kwargs) {
   const uids = kwargs['uids_in'];
   let rows = [];
   const max_number_of_calls = Object.values(uids).sort(function(a, b){return b - a})[0];
+  const total_number_of_calls = kwargs['reports_match_user_filters_length'];
+
   for (let uid in uids) {
     let number_of_calls = uids[uid];
-    rows.push([uid, number_of_calls, Math.floor(number_of_calls * 100 / max_number_of_calls)]);
+    rows.push([
+      uid, 
+      number_of_calls, 
+      Math.floor(number_of_calls * 100 / total_number_of_calls),
+      Math.floor(number_of_calls * 100 / max_number_of_calls),
+    ]);
   }
 
   const table_id = 'uids_interactions_table';
