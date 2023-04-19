@@ -375,7 +375,7 @@ function ANALYTICS_PORTAL_SDK_init_uids_interactions_table(table_id) {
 function ANALYTICS_PORTAL_SDK_init_elements_interactions_table(table_id) {
   return new DataTable('#' + table_id, {
     "createdRow": function(row, data, dataIndex) {
-      console.error(data)
+      //console.error(data)
       let td_element = row.children[1];
       td_element.setAttribute('title', data[3]);
       let td_interactions = row.children[2];
@@ -516,7 +516,7 @@ function ANALYTICS_PORTAL_SDK_refresh_elements_interactions_table(kwargs) {
     new_rows.push(row);
   }
   const table_id = 'elements_interactions_table';
-  $('#' + table_id + ' tbody').off('click'); // remove previously set listeners
+  //$('#' + table_id + ' tbody').off('click'); // remove previously set listeners
 
   let table = ANALYTICS_PORTAL_SDK_get_datatable(table_id);
   if (Object.keys(new_rows).length === 0)
