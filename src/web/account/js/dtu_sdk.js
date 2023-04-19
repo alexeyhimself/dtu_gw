@@ -409,7 +409,7 @@ function ANALYTICS_PORTAL_SDK_init_elements_interactions_table(table_id) {
     "searching": false, 
     "paging": false, 
     "info": false,
-    //"bStateSave": true, // remember sorting
+    "bStateSave": true, // remember sorting
     "responsive": true,
   });
 }
