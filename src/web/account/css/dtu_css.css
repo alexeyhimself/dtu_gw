@@ -206,6 +206,7 @@ body {
 
 .dataTable tr td {
   padding-right: 15px;
+  vertical-align: middle;
 }
 #elements_interactions_table tbody {
   cursor: pointer;
