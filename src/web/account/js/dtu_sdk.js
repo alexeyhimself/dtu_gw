@@ -351,15 +351,14 @@ function ANALYTICS_PORTAL_SDK_init_uids_interactions_table(table_id) {
       td_interactions.classList.add('percent');
     },
     "columnDefs": [
-      {
-        "targets": [0, 1],
-        "className": 'dt-body-left'
-      }
+      {"visible": true, "targets": [0, 3]},
     ],
     "order": [[1, "desc"]],
     "columns": [
-      { "width": "auto" },
-      { "width": "auto" },
+        { responsivePriority: 1 },
+        { responsivePriority: 2 },
+        { responsivePriority: undefined, "className": "none" },
+        { responsivePriority: undefined, "className": "none" },
     ],
     "language": {
       "zeroRecords": "No data",
@@ -385,13 +384,8 @@ function ANALYTICS_PORTAL_SDK_init_elements_interactions_table(table_id) {
       td_interactions.classList.add('percent');
     },
     "columnDefs": [
-      {
-        "visible": true, "targets": [0, 6],
-        //"className": 'dt-body-left'
-      },
-      { 
-        "visible": false, "targets": [3, 4],
-      }
+      {"visible": true, "targets": [0, 6]},
+      {"visible": false, "targets": [3, 4]},
     ],
     "order": [[2, "desc"]],
     "columns": [
