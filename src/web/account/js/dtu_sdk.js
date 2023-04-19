@@ -368,13 +368,14 @@ function ANALYTICS_PORTAL_SDK_init_uids_interactions_table(table_id) {
     "paging": false, 
     "info": false,
     "bStateSave": true, // remember sorting
-    responsive: true,
+    "responsive": true,
   });
 }
 
 function ANALYTICS_PORTAL_SDK_init_elements_interactions_table(table_id) {
   return new DataTable('#' + table_id, {
     "createdRow": function(row, data, dataIndex) {
+      console.error(data)
       let td_element = row.children[1];
       td_element.setAttribute('title', data[3]);
       let td_interactions = row.children[2];
@@ -385,15 +386,22 @@ function ANALYTICS_PORTAL_SDK_init_elements_interactions_table(table_id) {
     },
     "columnDefs": [
       {
-        "targets": [0, 1],
-        "className": 'dt-body-left'
+        "visible": true, "targets": [0, 6],
+        //"className": 'dt-body-left'
+      },
+      { 
+        "visible": false, "targets": [3, 4],
       }
     ],
     "order": [[2, "desc"]],
     "columns": [
-      { "width": "auto" },
-      { "width": "auto" },
-      null
+        { responsivePriority: 1 },
+        { responsivePriority: 2 },
+        { responsivePriority: 3 },
+        null,
+        null,
+        { responsivePriority: undefined, "className": "none" },
+        { responsivePriority: undefined, "className": "none" },
     ],
     "language": {
       "zeroRecords": "No data",
@@ -401,7 +409,8 @@ function ANALYTICS_PORTAL_SDK_init_elements_interactions_table(table_id) {
     "searching": false, 
     "paging": false, 
     "info": false,
-    "bStateSave": true, // remember sorting
+    //"bStateSave": true, // remember sorting
+    "responsive": true,
   });
 }
 
@@ -518,12 +527,13 @@ function ANALYTICS_PORTAL_SDK_refresh_elements_interactions_table(kwargs) {
   table.draw();
 
   ANALYTICS_PORTAL_SDK_expand_collapse_datatable(table_id, new_rows.length);
-
+  /*
   $('#' + table_id + ' tbody').on('click', 'tr', function () {
     var data = table.row(this).data();
     if (data)
       ANALYTICS_PORTAL_SDK_update_page_elements_dropdown_value(data[4]);
   });
+  */
 }
 
 function ANALYTICS_PORTAL_SDK_update_page_elements_dropdown_value(target_path) {

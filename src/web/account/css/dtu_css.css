@@ -186,7 +186,7 @@ body {
 }
 
 .link:hover {
-  stroke: #ffd700;
+  stroke: gold;
   stroke-opacity: 1;
   cursor: pointer!important;
 }
@@ -211,7 +211,8 @@ body {
   cursor: pointer;
 }
 #elements_interactions_table tbody tr:hover {
-  background-color: gold;
+  background-color: lightgray;
+  //background-color: #f2f2f2;
 }
 
 

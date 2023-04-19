@@ -1,5 +1,5 @@
 const emty_db_schema = {'table_reports': []};
-const current_db_version = 7;
+const current_db_version = 8;
 const db_name_prefix = 'dtu_db';
 const db_name = db_name_prefix + current_db_version;
 
