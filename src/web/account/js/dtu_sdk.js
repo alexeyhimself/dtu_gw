@@ -137,8 +137,8 @@ function ANALYTICS_PORTAL_SDK_refresh_calls_over_time_for_chart_id_(chart_id, us
 
   // Step 2. Prepare the data.
   data = [];
-  for (let i in config.data.medians) {
-    let value = config.data.medians[i];
+  for (let i in config.data.maxes) {
+    let value = config.data.maxes[i];
     let date = config.labels[i];
     data.push({"date": date, "value": value})
   }
@@ -189,7 +189,8 @@ function ANALYTICS_PORTAL_SDK_refresh_calls_over_time_for_chart_id_(chart_id, us
   const line = d3.line()
     .defined(d => !isNaN(d.value))
     .x(d => xScale(d.date))
-    .y(d => yScale(d.value));
+    .y(d => yScale(d.value))
+    .curve(d3.curveStepBefore);
 
   // Step 5. Draw the SVG.
     // First let's create an empty SVG.
@@ -205,11 +206,23 @@ function ANALYTICS_PORTAL_SDK_refresh_calls_over_time_for_chart_id_(chart_id, us
   svg.append('g').call(xGrid);
   svg.append('g').call(yGrid);
 
+  
+  svg.append("path")
+    .datum(data)
+    .attr("fill", "#64a3ff")
+    .attr("stroke", "none")
+    .attr("d", d3.area()
+      .x(d => xScale(d.date))
+      .y0(height - margin.bottom)
+      .y1(d => yScale(d.value))
+      .curve(d3.curveStepBefore)
+    )
+
     // Draw the line.
   svg.append('path')
     .datum(data)
     .attr("fill", "none")
-    .attr("stroke", "#0d6efdbb")
+    .attr("stroke", "#64a3ff")
     .attr("stroke-width", 2)
     .attr('d', line);
 
@@ -220,7 +233,8 @@ function ANALYTICS_PORTAL_SDK_refresh_calls_over_time_for_chart_id_(chart_id, us
 function ANALYTICS_PORTAL_SDK_refresh_stats_for_chart_id_(chart_id, aggr, aggr_unit, min, max, median) {
   document.getElementById('linear_chart_stats').style.display = 'table'; // make visible, invisible by default for no data case
 
-  const em = {'min': min, 'median': median, 'max': max, 'aggregation interval': aggr + ' ' + aggr_unit};
+  //const em = {'min': min, 'median': median, 'max': max, 'aggregation interval': aggr + ' ' + aggr_unit};
+  const em = {'min': min, 'median': median, 'max': max};
   for (let i in em) {
     let el = document.getElementById(i);
     if (em[i] != undefined && em[i] != 'undefined undefined') // yes, 2 times undefined

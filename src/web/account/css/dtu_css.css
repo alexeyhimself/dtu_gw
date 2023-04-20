@@ -244,7 +244,7 @@ body {
   text-align: center;
   font-size: 13px;
   margin-top: 10px;
-  margin-bottom: 20px;
+  //margin-bottom: 20px;
 }
 
 table.dataTable>tbody>tr.child span.dtr-title {
