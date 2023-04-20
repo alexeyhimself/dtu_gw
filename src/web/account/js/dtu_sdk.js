@@ -347,7 +347,14 @@ function ANALYTICS_PORTAL_SDK_init_uids_interactions_table(table_id) {
       // background: linear-gradient(to right, gold 20%, gold 50%, skyblue 51%, skyblue 100%);
       //console.log(data)
       //td_interactions.setAttribute('style', 'background-size: ' + data[2] + '% 100%');
-      td_interactions.setAttribute('style', 'background: linear-gradient(to right, gold 0%, gold ' + data[2] + '%, #64a2ff '+ data[2] + '%, #64a2ff ' + data[3] + '%, transparent ' + data[3] + '%, transparent 100%)');
+      let data_2 = data[2];
+      data[2] += ' of total number of interactions'
+      let data_3 = data[3];
+      if (data_3 == 'Not applicable')
+        data_3 = '0%';
+      else
+        data[3] += ' of the UID with the largest number of interactions'
+      td_interactions.setAttribute('style', 'background: linear-gradient(to right, gold 0%, gold ' + data_2 + ', #64a2ff '+ data_2 + ', #64a2ff ' + data_3 + ', transparent ' + data_3 + ', transparent 100%)');
       td_interactions.classList.add('percent');
     },
     "columnDefs": [
@@ -379,7 +386,16 @@ function ANALYTICS_PORTAL_SDK_init_elements_interactions_table(table_id) {
       td_element.setAttribute('title', data[3]);
       let td_interactions = row.children[2];
       // background: linear-gradient(to right, gold 20%, gold 50%, skyblue 51%, skyblue 100%);
-      td_interactions.setAttribute('style', 'background: linear-gradient(to right, gold 0%, gold ' + data[5] + '%, #64a2ff '+ data[5] + '%, #64a2ff ' + data[6] + '%, transparent ' + data[6] + '%, transparent 100%)');
+      let data_5 = data[5];
+      data[5] += ' of total number of interactions'
+      let data_6 = data[6];
+      if (data_6 == 'Not applicable')
+        data_6 = '0%';
+      else
+        data[6] += ' of the element with the largest number of interactions'
+      
+      td_interactions.setAttribute('style', 'background: linear-gradient(to right, gold 0%, gold ' + data_5 + ', #64a2ff '+ data_5 + ', #64a2ff ' + data_6 + ', transparent ' + data_6 + ', transparent 100%)');
+
       //td_interactions.setAttribute('style', 'background-size: ' + data[5] + '% 100%');
       td_interactions.classList.add('percent');
     },
@@ -455,8 +471,8 @@ function ANALYTICS_PORTAL_SDK_refresh_uids_interactions_table(kwargs) {
     rows.push([
       uid, 
       number_of_calls, 
-      Math.floor(number_of_calls * 100 / total_number_of_calls),
-      Math.floor(number_of_calls * 100 / max_number_of_calls),
+      Math.floor(number_of_calls * 100 / total_number_of_calls) + '%',
+      Math.floor(number_of_calls * 100 / max_number_of_calls) + '%',
     ]);
   }
 
@@ -501,11 +517,11 @@ function ANALYTICS_PORTAL_SDK_refresh_elements_interactions_table(kwargs) {
     row.push(element.number_of_calls);
     row.push('All' + element.element_path.join(' → '));
     row.push(element.element_path);
-    row.push(Math.floor(element.number_of_calls * 100 / max_number_of_calls));
+    row.push(Math.floor(element.number_of_calls * 100 / max_number_of_calls) + '%');
     if (type == 'group')
-      row.push(Math.floor(element.number_of_calls * 100 / max_number_of_calls));
+      row.push('Not applicable');// row.push(Math.floor(element.number_of_calls * 100 / max_number_of_calls));
     else
-      row.push(Math.floor(element.number_of_calls * 100 / max_number_of_calls_no_groups));
+      row.push(Math.floor(element.number_of_calls * 100 / max_number_of_calls_no_groups) + '%');
     
     new_rows.push(row);
   }

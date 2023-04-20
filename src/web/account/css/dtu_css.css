@@ -246,3 +246,7 @@ body {
   margin-top: 10px;
   margin-bottom: 20px;
 }
+
+table.dataTable>tbody>tr.child span.dtr-title {
+  min-width: 0;
+}
