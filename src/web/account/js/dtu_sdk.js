@@ -348,12 +348,15 @@ function ANALYTICS_PORTAL_SDK_init_uids_interactions_table(table_id) {
       //console.log(data)
       //td_interactions.setAttribute('style', 'background-size: ' + data[2] + '% 100%');
       let data_2 = data[2];
+      data[2] = '🟨 ' + data[2];
       data[2] += ' of total number of interactions'
       let data_3 = data[3];
-      if (data_3 == '🟦 Relation to an element with the largest number of interactions is not applicable because "group" elements are synthetic web-elements')
+      if (data_3 == '🟦 Relation to an element with the largest number of interactions is not applicable because "group" web-elements are synthetic')
         data_3 = '0%';
-      else
+      else {
+        data[3] = '🟦 ' + data[3];
         data[3] += ' of the UID with the largest number of interactions'
+      }
       td_interactions.setAttribute('style', 'background: linear-gradient(to right, gold 0%, gold ' + data_2 + ', #64a2ff '+ data_2 + ', #64a2ff ' + data_3 + ', transparent ' + data_3 + ', transparent 100%)');
       td_interactions.classList.add('percent');
     },
@@ -390,11 +393,11 @@ function ANALYTICS_PORTAL_SDK_init_elements_interactions_table(table_id) {
       data[5] = '🟨 ' + data[5];
       data[5] += ' of total number of interactions'
       let data_6 = data[6];
-      if (data_6 == '🟦 Relation to an element with the largest number of interactions is not applicable because "group" elements are synthetic web-elements')
+      if (data_6 == '🟦 Relation to an element with the largest number of interactions is not applicable because "group" web-elements are synthetic')
         data_6 = '0%';
       else {
         data[6] = '🟦 ' + data[6];
-        data[6] += ' of the element with the largest number of interactions'
+        data[6] += ' of interactions with the element with the largest number of interactions'
       }
       
       td_interactions.setAttribute('style', 'background: linear-gradient(to right, gold 0%, gold ' + data_5 + ', #64a2ff '+ data_5 + ', #64a2ff ' + data_6 + ', transparent ' + data_6 + ', transparent 100%)');
@@ -522,7 +525,7 @@ function ANALYTICS_PORTAL_SDK_refresh_elements_interactions_table(kwargs) {
     row.push(element.element_path);
     row.push(Math.floor(element.number_of_calls * 100 / max_number_of_calls) + '%');
     if (type == 'group')
-      row.push('🟦 Relation to an element with the largest number of interactions is not applicable because "group" elements are synthetic web-elements');// row.push(Math.floor(element.number_of_calls * 100 / max_number_of_calls));
+      row.push('🟦 Relation to an element with the largest number of interactions is not applicable because "group" web-elements are synthetic');// row.push(Math.floor(element.number_of_calls * 100 / max_number_of_calls));
     else
       row.push(Math.floor(element.number_of_calls * 100 / max_number_of_calls_no_groups) + '%');
     
