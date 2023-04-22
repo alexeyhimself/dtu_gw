@@ -569,9 +569,9 @@ function TX_API_get_data_for_chart_(chart_width_px, user_filters, kwargs) {
       non_zeros++
   }
   //console.log('>> ', zeros, non_zeros, chart_width_px / non_zeros)
-  let step = 1;
-  if (chart_width_px / non_zeros < 32)
-    step = TX_API_get_optimal_time_step_for_agregations(chart_width_px, agregations.ms_in_1_px);
+  //let step = 1;
+  //if (chart_width_px / non_zeros < 32)
+  let step = TX_API_get_optimal_time_step_for_agregations(chart_width_px, agregations.ms_in_1_px);
 
   let aggr_dates = [];
   let mins = [];
