@@ -125,7 +125,7 @@ function ANALYTICS_PORTAL_SDK_refresh_calls_over_time_for_chart_id_(chart_id, us
   
   const reports_match_user_filters_length = kwargs['reports_match_user_filters_length'];
   if (reports_match_user_filters_length == 0) {
-    element_with_linear_chart.innerHTML = '<span class="no-data">No data</span>';
+    element_with_linear_chart.innerHTML = '<span class="no-data">' + ANALYTICS_PORTAL_SDK_generate_no_data_message() + '</span>';
     return;
   }
 
@@ -190,7 +190,7 @@ function ANALYTICS_PORTAL_SDK_refresh_calls_over_time_for_chart_id_(chart_id, us
     .defined(d => !isNaN(d.value))
     .x(d => xScale(d.date))
     .y(d => yScale(d.value))
-    .curve(d3.curveStepBefore);
+    .curve(d3.curveStepAfter);
 
   // Step 5. Draw the SVG.
     // First let's create an empty SVG.
@@ -215,7 +215,7 @@ function ANALYTICS_PORTAL_SDK_refresh_calls_over_time_for_chart_id_(chart_id, us
       .x(d => xScale(d.date))
       .y0(height - margin.bottom)
       .y1(d => yScale(d.value))
-      .curve(d3.curveStepBefore)
+      .curve(d3.curveStepAfter)
     )
 
     // Draw the line.
@@ -312,7 +312,7 @@ function ANALYTICS_PORTAL_SDK_refresh_topics(kwargs) {
 }
 
 function ANALYTICS_PORTAL_SDK_draw_elements_hierarchy(kwargs) {
-  const elements_hierarchy = kwargs['elements_hierarchy'];
+  const elements_hierarchy = kwargs['elements_hierarchy__in'];
   const element_path = kwargs['element_path'];
   let parent = document.getElementById('element_path');
   let html = '<label for="drpd:element" class="form-label no-margin-bottom custom-label">Page element:</label>';
@@ -348,9 +348,9 @@ function ANALYTICS_PORTAL_SDK_get_datatable(table_id) { // https://datatables.ne
 }
 
 function ANALYTICS_PORTAL_SDK_init_datatable(table_id) {
-  if (table_id == 'elements_interactions_table')
+  if (['elements_interactions_table__in', 'elements_interactions_table__out'].includes(table_id))
     return ANALYTICS_PORTAL_SDK_init_elements_interactions_table(table_id);
-  else if (table_id == 'uids_interactions_table')
+  else if (['uids_interactions_table__in', 'uids_interactions_table__out'].includes(table_id))
     return ANALYTICS_PORTAL_SDK_init_uids_interactions_table(table_id);
   else
     console.error('unknown datatable:', table_id)
@@ -479,8 +479,8 @@ function ANALYTICS_PORTAL_SDK_toggle_table_display(table_id) {
     ANALYTICS_PORTAL_SDK_collapse_datatable(table_id);
 }
 
-function ANALYTICS_PORTAL_SDK_refresh_uids_interactions_table(kwargs) {
-  const uids = kwargs['uids_in'];
+function ANALYTICS_PORTAL_SDK_refresh_uids_interactions_table(kwargs, data_type) {
+  const uids = kwargs['uids__' + data_type];
   let rows = [];
   const max_number_of_calls = Object.values(uids).sort(function(a, b){return b - a})[0];
   const total_number_of_calls = kwargs['reports_match_user_filters_length'];
@@ -495,11 +495,11 @@ function ANALYTICS_PORTAL_SDK_refresh_uids_interactions_table(kwargs) {
     ]);
   }
 
-  const table_id = 'uids_interactions_table';
+  const table_id = 'uids_interactions_table__' + data_type;
   let table = ANALYTICS_PORTAL_SDK_get_datatable(table_id);
 
-  if (Object.keys(uids).length === 0)
-    return;
+  //if (Object.keys(uids).length === 0)
+  //  return;
 
   table.clear(); // https://stackoverflow.com/questions/27778389/how-to-manually-update-datatables-table-with-new-json-data
   table.rows.add(rows);
@@ -508,8 +508,8 @@ function ANALYTICS_PORTAL_SDK_refresh_uids_interactions_table(kwargs) {
   ANALYTICS_PORTAL_SDK_expand_collapse_datatable(table_id, rows.length);
 }
 
-function ANALYTICS_PORTAL_SDK_refresh_elements_interactions_table(kwargs) {
-  const elements_hierarchy = kwargs['elements_hierarchy'];
+function ANALYTICS_PORTAL_SDK_refresh_elements_interactions_table(kwargs, data_type) {
+  const elements_hierarchy = kwargs['elements_hierarchy__' + data_type];
   let new_rows = [];
   let max_number_of_calls = 0;
   let max_number_of_calls_no_groups = 0;
@@ -544,12 +544,12 @@ function ANALYTICS_PORTAL_SDK_refresh_elements_interactions_table(kwargs) {
     
     new_rows.push(row);
   }
-  const table_id = 'elements_interactions_table';
+  const table_id = 'elements_interactions_table__' + data_type;
   //$('#' + table_id + ' tbody').off('click'); // remove previously set listeners
 
   let table = ANALYTICS_PORTAL_SDK_get_datatable(table_id);
-  if (Object.keys(new_rows).length === 0)
-    return;
+  //if (Object.keys(new_rows).length === 0)
+  //  return;
 
   table.clear(); // https://stackoverflow.com/questions/27778389/how-to-manually-update-datatables-table-with-new-json-data
   table.rows.add(new_rows);
@@ -611,17 +611,21 @@ function ANALYTICS_PORTAL_SDK_refresh_elements_page_data_according_to_user_filte
   ANALYTICS_PORTAL_SDK_refresh_domain_urls(kwargs);
   ANALYTICS_PORTAL_SDK_refresh_url_paths(kwargs);
 
-  ANALYTICS_PORTAL_SDK_get_data_for_sankey_chart(kwargs);
-  ANALYTICS_PORTAL_SDK_draw_sankey_chart(kwargs);
+  ANALYTICS_PORTAL_SDK_get_data_for_sankey_chart(kwargs, 'in');
+  ANALYTICS_PORTAL_SDK_draw_sankey_chart(kwargs, 'in');
+  ANALYTICS_PORTAL_SDK_get_data_for_sankey_chart(kwargs, 'out');
+  ANALYTICS_PORTAL_SDK_draw_sankey_chart(kwargs, 'out');
 
-  ANALYTICS_PORTAL_SDK_refresh_elements_interactions_table(kwargs);
-  ANALYTICS_PORTAL_SDK_refresh_uids_interactions_table(kwargs);
+  ANALYTICS_PORTAL_SDK_refresh_elements_interactions_table(kwargs, 'in');
+  ANALYTICS_PORTAL_SDK_refresh_uids_interactions_table(kwargs, 'in');
+  ANALYTICS_PORTAL_SDK_refresh_elements_interactions_table(kwargs, 'out');
+  ANALYTICS_PORTAL_SDK_refresh_uids_interactions_table(kwargs, 'out');
 
   ANALYTICS_PORTAL_SDK_refresh_calls_over_time_for_chart_id_('elements_calls_over_time_chart_id', user_filters, kwargs);
 }
 
-function ANALYTICS_PORTAL_SDK_get_data_for_sankey_chart(kwargs) {
-  const elements_hierarchy = kwargs['elements_hierarchy'];
+function ANALYTICS_PORTAL_SDK_get_data_for_sankey_chart(kwargs, data_type) {
+  const elements_hierarchy = kwargs['elements_hierarchy__' + data_type];
   //console.log(elements_hierarchy);
   let nodes_list = [];
   let nodes_dict = {}
@@ -660,7 +664,7 @@ function ANALYTICS_PORTAL_SDK_get_data_for_sankey_chart(kwargs) {
     "nodes": nodes_list,
     "links": links
   };
-  kwargs['sankey_chart_data'] = data;
+  kwargs['sankey_chart_data__' + data_type] = data;
 }
 
 function ANALYTICS_PORTAL_SDK_get_elements_in_reports(kwargs) {
@@ -675,14 +679,29 @@ function ANALYTICS_PORTAL_SDK_get_elements_in_reports(kwargs) {
   return elements;
 }
 
-function ANALYTICS_PORTAL_SDK_draw_sankey_chart(kwargs) { // https://d3-graph-gallery.com/graph/sankey_basic.html
-  const element_id_for_sankey = 'sankey_chart';
+function ANALYTICS_PORTAL_SDK_get_random_item_from_number(number) {
+  return Math.floor(Math.random()*number);
+}
+function ANALYTICS_PORTAL_SDK_get_random_item_from_list(list) { // https://stackoverflow.com/questions/5915096/get-a-random-item-from-a-javascript-array
+  return list[ANALYTICS_PORTAL_SDK_get_random_item_from_number(list.length)];
+}
+
+function ANALYTICS_PORTAL_SDK_generate_no_data_message() {
+  const idk_m = ['🤷‍♂️', '🤷🏻‍♂️', '🤷🏼‍♂️', '🤷🏽‍♂️', '🤷🏾‍♂️', '🤷🏿‍♂️'];
+  const idk_f = ['🤷‍♀️', '🤷🏻‍♀️', '🤷🏼‍♀️', '🤷🏽‍♀️', '🤷🏾‍♀️', '🤷🏿‍♀️'];
+  const idk = [].concat(idk_f).concat(idk_m);
+  const random_idk_icon = ANALYTICS_PORTAL_SDK_get_random_item_from_list(idk);
+  return '<span class="icon">' + random_idk_icon + '</span><br>' + 'No data';
+}
+
+function ANALYTICS_PORTAL_SDK_draw_sankey_chart(kwargs, data_type) { // https://d3-graph-gallery.com/graph/sankey_basic.html
+  const element_id_for_sankey = 'sankey_chart__' + data_type;
   const element_with_sankey = document.getElementById(element_id_for_sankey);
   element_with_sankey.innerHTML = '';
 
-  let sankey_chart_data = kwargs['sankey_chart_data'];
+  let sankey_chart_data = kwargs['sankey_chart_data__' + data_type];
   if (sankey_chart_data.nodes.length == 0) {
-    element_with_sankey.innerHTML = '<span class="no-data">No data</span>';
+    element_with_sankey.innerHTML = '<span class="no-data">' + ANALYTICS_PORTAL_SDK_generate_no_data_message() + '</span>';
     return;
   }
 
@@ -743,7 +762,6 @@ graph = sankey(sankey_chart_data);
       .enter().append("path")
       .attr("class", "link")
       .attr("d", d3.sankeyLinkHorizontal())
-      .style("cursor", "pointer")
       .attr("stroke-width", function(d) { return d.width; });  
 
 /*
@@ -760,17 +778,18 @@ link.on("mouseover", function(d){
 })
 */
 
-link.on("click", function(d) {
-  let target_path = d.target.__data__.target.path;
-  ANALYTICS_PORTAL_SDK_update_page_elements_dropdown_value(target_path);
-})
+if (data_type == 'in') {
+  link.on("click", function(d) {
+    let target_path = d.target.__data__.target.path;
+    ANALYTICS_PORTAL_SDK_update_page_elements_dropdown_value(target_path);
+  })
+}
 
 // add the link titles
   link.append("title")
       .text(function(d) {
         return d.source.name + " → " + 
-               d.target.name + "\n" + format(d.value) + " interactions"; })
-      .style("cursor", "pointer");
+               d.target.name + "\n" + format(d.value) + " interactions"; });
 
 // add in the nodes
   var node = svg.append("g").selectAll(".node")

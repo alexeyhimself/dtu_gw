@@ -79,14 +79,14 @@
             </div>
             <div class="row">
               <div class="col-lg-4">
-                <p class="chart-name">On a sankey chart below are displayed <span style="font-weight: bold;">visual relations of the volumes</span> of user(s) interactions for each web element on selected web-page(s) for selected time range</p>
-                <div id="sankey_chart"></div>
-              </div>
-              <div class="col-lg-4">
+                <h6>Data that matches filters</h6>
+                <p class="chart-name">On a sankey chart below are displayed <span style="font-weight: bold;">visual relations of the volumes</span> of user(s) interactions for each web-element on selected web-page(s) for selected time range</p>
+                <div id="sankey_chart__in" class="sankey_chart"></div>
+
                 <p class="chart-name margin-bottom-10">In a table below are displayed <span style="font-weight: bold;">total numbers</span> of user(s) interactions for <b>each</b> web-element of selected web-page(s) for selected time range</p>
-                <a id="toggle_elements_interactions_table" class="toggle-datatable hidden" onclick="ANALYTICS_PORTAL_SDK_toggle_table_display('elements_interactions_table');" data-dtu>expand table</a> <span id="number_of_records_elements_interactions_table" class="datatable-records"></span>
+                <a id="toggle_elements_interactions_table__in" class="toggle-datatable hidden" onclick="ANALYTICS_PORTAL_SDK_toggle_table_display('elements_interactions_table__in');" data-dtu>expand table</a> <span id="number_of_records_elements_interactions_table__in" class="datatable-records"></span>
                 
-                <table id="elements_interactions_table" class="table table-sm dt-responsive nowrap2" style="width:100%">
+                <table id="elements_interactions_table__in" class="table table-sm dt-responsive nowrap2" style="width:100%">
                   <thead>
                     <tr>
                       <th>Type</th>
@@ -102,8 +102,8 @@
                 </table>
                 
                 <p class="chart-name margin-bottom-10 margin-top-10">In a table below are displayed <span style="font-weight: bold;">total numbers</span> of user(s) interactions for <b>any</b> of web-element(s) of selected web-page(s) for selected time range</p>
-                <a id="toggle_uids_interactions_table" class="toggle-datatable hidden" onclick="ANALYTICS_PORTAL_SDK_toggle_table_display('uids_interactions_table');" data-dtu>expand table</a> <span id="number_of_records_uids_interactions_table" class="datatable-records"></span>
-                <table id="uids_interactions_table" class="table table-sm" style="margin-bottom: 20px!important;">
+                <a id="toggle_uids_interactions_table__in" class="toggle-datatable hidden" onclick="ANALYTICS_PORTAL_SDK_toggle_table_display('uids_interactions_table__in');" data-dtu>expand table</a> <span id="number_of_records_uids_interactions_table__in" class="datatable-records"></span>
+                <table id="uids_interactions_table__in" class="table table-sm" style="margin-bottom: 20px!important;">
                   <thead>
                     <tr>
                       <th>UID</th>
@@ -116,8 +116,46 @@
                 </table>
               </div>
               <div class="col-lg-4">
+                <h6>Data that doesn't match filters</h6>
+                <p class="chart-name">On a sankey chart below are displayed <span style="font-weight: bold;">visual relations of the volumes</span> of user(s) interactions for each web-element that <b>did not get into</b> sankey chart with matched data</p>
+                <div id="sankey_chart__out" class="sankey_chart"></div>
+
+                <p class="chart-name margin-bottom-10">In a table below are displayed <span style="font-weight: bold;">total numbers</span> of user(s) interactions for <b>each</b> web-element of selected web-page(s) for selected time range</p>
+                <a id="toggle_elements_interactions_table__out" class="toggle-datatable hidden" onclick="ANALYTICS_PORTAL_SDK_toggle_table_display('elements_interactions_table__out');" data-dtu>expand table</a> <span id="number_of_records_elements_interactions_table__out" class="datatable-records"></span>
+                
+                <table id="elements_interactions_table__out" class="table table-sm dt-responsive nowrap2" style="width:100%">
+                  <thead>
+                    <tr>
+                      <th>Type</th>
+                      <th>Element</th>
+                      <th>Interactions</th>
+                      <th>Path (arrow)</th>
+                      <th>Path (comma)</th>
+                      <th></th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody></tbody>
+                </table>
+                
+                <p class="chart-name margin-bottom-10 margin-top-10">In a table below are displayed <span style="font-weight: bold;">total numbers</span> of user(s) interactions for <b>any</b> of web-element(s) of selected web-page(s) for selected time range</p>
+                <a id="toggle_uids_interactions_table__out" class="toggle-datatable hidden" onclick="ANALYTICS_PORTAL_SDK_toggle_table_display('uids_interactions_table__out');" data-dtu>expand table</a> <span id="number_of_records_uids_interactions_table__out" class="datatable-records"></span>
+                <table id="uids_interactions_table__out" class="table table-sm" style="margin-bottom: 20px!important;">
+                  <thead>
+                    <tr>
+                      <th>UID</th>
+                      <th>Interactions</th>
+                      <th></th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody></tbody>
+                </table>
+              </div>
+              <div class="col-lg-4">
+                <h6>Usage volume in time</h6>
                 <!--p class="chart-name">On a chart below is displayed <span style="font-weight: bold;">median number</span> (blue line) with max and min bursts due to data aggregation (yellow area) of user(s) interactions with selected element(s) of selected web-page(s) on selected time range</p-->
-                <p class="chart-name">On a bar chart below is displayed <b>maximum number of user(s) interactions</b> for selected web element(s) on selected web-page(s) for selected time range</p>
+                <p class="chart-name">On a bar chart below is displayed <b>number of user(s) interactions</b> for selected web element(s) on selected web-page(s) for selected time range</p>
                 <div id="linear_chart"></div>
                 <!--table id="linear_chart_stats" style="width: auto; display: none;" class="margin-bottom-50">
                   <tr>

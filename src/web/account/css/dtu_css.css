@@ -182,10 +182,9 @@ body {
   fill: none;
   stroke: #000;
   stroke-opacity: .2;
-  cursor: pointer!important;
 }
 
-.link:hover {
+#sankey_chart__in .link:hover {
   stroke: gold;
   stroke-opacity: 1;
   cursor: pointer!important;
@@ -234,19 +233,26 @@ body {
   background-image: linear-gradient(to right, lightskyblue 0%, lightskyblue 100%);
   background-repeat: no-repeat;
 }
-#sankey_chart {
+.sankey_chart {
   text-align: center;
-  font-size: 13px;
+  font-size: 14px;
   margin-top: 10px;
   margin-bottom: 20px;
 }
 #linear_chart {
   text-align: center;
-  font-size: 13px;
+  font-size: 14px;
   margin-top: 10px;
   //margin-bottom: 20px;
+}
+.icon {
+  font-size: 28px;
 }
 
 table.dataTable>tbody>tr.child span.dtr-title {
   min-width: 0;
+}
+
+h6 {
+  text-align: center;
 }
