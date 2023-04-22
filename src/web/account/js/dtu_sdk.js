@@ -465,7 +465,7 @@ function ANALYTICS_PORTAL_SDK_collapse_datatable(table_id, number_of_records) {
 
 function ANALYTICS_PORTAL_SDK_expand_collapse_datatable(table_id, number_of_records) {
   const datatable_is_expanded = localStorage.getItem(table_id + '_is_expanded');
-  if ([null, 'false'].includes(datatable_is_expanded))
+  if (['false'].includes(datatable_is_expanded))
     ANALYTICS_PORTAL_SDK_collapse_datatable(table_id, number_of_records);
   else
     ANALYTICS_PORTAL_SDK_expand_datatable(table_id, number_of_records);
