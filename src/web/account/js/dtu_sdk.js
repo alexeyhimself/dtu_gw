@@ -367,12 +367,9 @@ function ANALYTICS_PORTAL_SDK_init_uids_interactions_table(table_id) {
       data[2] = '🟨 ' + data[2];
       data[2] += ' compared to total number of interactions'
       let data_3 = data[3];
-      if (data_3 == '🟦 Relation to an element with the largest number of interactions is not applicable because "group" web-elements are synthetic')
-        data_3 = '0%';
-      else {
-        data[3] = '🟦 ' + data[3];
-        data[3] += ' of the UID with the largest number of interactions'
-      }
+      data[3] = '🟦 ' + data[3];
+      data[3] += ' compared to UID with the largest number of interactions'
+    
       td_interactions.setAttribute('style', 'background: linear-gradient(to right, gold 0%, gold ' + data_2 + ', #64a2ff '+ data_2 + ', #64a2ff ' + data_3 + ', transparent ' + data_3 + ', transparent 100%)');
       td_interactions.classList.add('percent');
     },
