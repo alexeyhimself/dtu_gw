@@ -131,7 +131,7 @@ function ANALYTICS_PORTAL_SDK_refresh_calls_over_time_for_chart_id_(chart_id, us
 
   const width = element_with_linear_chart.offsetWidth;
   const height = element_with_linear_chart.offsetHeight || 300;
-  const margin = {top: 10, right: 10, bottom: 30, left: 30};
+  const margin = {top: 10, right: 10, bottom: 30, left: 40};
   const chart_width_px = width - margin.left - margin.right; // ANALYTICS_PORTAL_SDK_get_chart_size(chart_id);
   config = TX_API_get_data_for_chart_(chart_width_px, user_filters, kwargs);          
 
@@ -222,14 +222,15 @@ function ANALYTICS_PORTAL_SDK_refresh_calls_over_time_for_chart_id_(chart_id, us
   svg.append('path')
     .datum(data)
     .attr("fill", "none")
-    .attr("stroke", "#64a3ff")
-    .attr("stroke-width", 2)
+    .attr("stroke", "#307cfd")
+    .attr("stroke-width", 1)
     .attr('d', line);
 
 
-  ANALYTICS_PORTAL_SDK_refresh_stats_for_chart_id_(chart_id, config.aggr, config.aggr_unit, config.min, config.max, config.median);
+  //ANALYTICS_PORTAL_SDK_refresh_stats_for_chart_id_(chart_id, config.aggr, config.aggr_unit, config.min, config.max, config.median);
 }
 
+/*
 function ANALYTICS_PORTAL_SDK_refresh_stats_for_chart_id_(chart_id, aggr, aggr_unit, min, max, median) {
   document.getElementById('linear_chart_stats').style.display = 'table'; // make visible, invisible by default for no data case
 
@@ -243,6 +244,7 @@ function ANALYTICS_PORTAL_SDK_refresh_stats_for_chart_id_(chart_id, aggr, aggr_u
       el.innerText = '-';
   }
 }
+*/
 
 function ANALYTICS_PORTAL_SDK_draw_dropdown_options(element_id, options, selected_option, types, labels) {
   //console.log(element_id)
