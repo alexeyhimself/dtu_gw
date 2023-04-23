@@ -64,11 +64,12 @@
 
 .chart-name {
   font-size: 14px;
-  color: #666666;
+  //color: #666666;
   font-weight: normal; 
-  text-align: center; 
+  //text-align: center; 
   margin-bottom: 0; 
-  padding: 0 10px;
+  //padding: 0 10px;
+  //cursor: help;
 }
 
 .margin-left-6 {
@@ -255,4 +256,9 @@ table.dataTable>tbody>tr.child span.dtr-title {
 
 h6 {
   text-align: center;
+}
+.info {
+  color: #64a3ff;
+  cursor: help;
+  font-size: 14px;
 }

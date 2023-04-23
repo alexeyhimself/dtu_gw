@@ -123,8 +123,8 @@ function ANALYTICS_PORTAL_SDK_refresh_calls_over_time_for_chart_id_(chart_id, us
   const element_with_linear_chart = document.getElementById(element_id_for_linear_chart);
   element_with_linear_chart.innerHTML = '';
   
-  const reports_match_user_filters_length = kwargs['reports_match_user_filters_length'];
-  if (reports_match_user_filters_length == 0) {
+  const reports_match_user_filters__in_length = kwargs['reports_match_user_filters__in_length'];
+  if (reports_match_user_filters__in_length == 0) {
     element_with_linear_chart.innerHTML = '<span class="no-data">' + ANALYTICS_PORTAL_SDK_generate_no_data_message() + '</span>';
     return;
   }
@@ -165,7 +165,8 @@ function ANALYTICS_PORTAL_SDK_refresh_calls_over_time_for_chart_id_(chart_id, us
       );
 
   // 4. Create the grid line functions.
-  const xGrid = (g) => g
+  const xGrid = (g) => g;
+  /*
     .attr('class', 'grid-lines')
     .selectAll('line')
     .data(xScale.ticks())
@@ -174,9 +175,12 @@ function ANALYTICS_PORTAL_SDK_refresh_calls_over_time_for_chart_id_(chart_id, us
     .attr('x2', d => xScale(d))
     .attr('y1', margin.top)
     .attr('y2', height - margin.bottom);
-
+  */
   const yGrid = (g) => g
-    .attr('class', 'grid-lines')
+    //.attr('class', 'grid-lines')
+    //.attr("class", "gridline")
+    .attr("stroke", "#9ca5aecf")
+    .attr("stroke-dasharray","4")
     .selectAll('line')
     .data(yScale.ticks())
     .join('line')
@@ -225,7 +229,6 @@ function ANALYTICS_PORTAL_SDK_refresh_calls_over_time_for_chart_id_(chart_id, us
     .attr("stroke", "#307cfd")
     .attr("stroke-width", 1)
     .attr('d', line);
-
 
   //ANALYTICS_PORTAL_SDK_refresh_stats_for_chart_id_(chart_id, config.aggr, config.aggr_unit, config.min, config.max, config.median);
 }
@@ -483,7 +486,8 @@ function ANALYTICS_PORTAL_SDK_refresh_uids_interactions_table(kwargs, data_type)
   const uids = kwargs['uids__' + data_type];
   let rows = [];
   const max_number_of_calls = Object.values(uids).sort(function(a, b){return b - a})[0];
-  const total_number_of_calls = kwargs['reports_match_user_filters_length'];
+  const total_number_of_calls = kwargs['reports_match_user_filters__' + data_type + '_length'];
+  //console.log(max_number_of_calls, total_number_of_calls)
 
   for (let uid in uids) {
     let number_of_calls = uids[uid];
@@ -670,9 +674,9 @@ function ANALYTICS_PORTAL_SDK_get_data_for_sankey_chart(kwargs, data_type) {
 function ANALYTICS_PORTAL_SDK_get_elements_in_reports(kwargs) {
   // TODO: not in reports, but overall.
   let elements = [''];
-  const reports_match_user_filters = kwargs['reports_match_user_filters'];
-  for (let i in reports_match_user_filters) {
-    let r = reports_match_user_filters[i];
+  const reports_match_user_filters__in = kwargs['reports_match_user_filters__in'];
+  for (let i in reports_match_user_filters__in) {
+    let r = reports_match_user_filters__in[i];
     if (!elements.includes(r.element))
       elements.push(r.element);
   }
@@ -691,7 +695,7 @@ function ANALYTICS_PORTAL_SDK_generate_no_data_message() {
   const idk_f = ['🤷‍♀️', '🤷🏻‍♀️', '🤷🏼‍♀️', '🤷🏽‍♀️', '🤷🏾‍♀️', '🤷🏿‍♀️'];
   const idk = [].concat(idk_f).concat(idk_m);
   const random_idk_icon = ANALYTICS_PORTAL_SDK_get_random_item_from_list(idk);
-  return '<span class="icon">' + random_idk_icon + '</span><br>' + 'No data';
+  return '<span class="icon">' + random_idk_icon + '</span><br>' + 'No such data';
 }
 
 function ANALYTICS_PORTAL_SDK_draw_sankey_chart(kwargs, data_type) { // https://d3-graph-gallery.com/graph/sankey_basic.html
@@ -714,7 +718,7 @@ function ANALYTICS_PORTAL_SDK_draw_sankey_chart(kwargs, data_type) { // https://
   let sankey_height = sankey_chart_data.nodes.length * 20;
 
 // set the dimensions and margins of the graph
-let margin = {top: 20, right: 0, bottom: 25, left: 0},
+let margin = {top: 10, right: 0, bottom: 25, left: 0},
     width = sankey_width// - margin.left - margin.right,
     height = sankey_height// - margin.top - margin.bottom;  
 
@@ -762,21 +766,7 @@ graph = sankey(sankey_chart_data);
       .enter().append("path")
       .attr("class", "link")
       .attr("d", d3.sankeyLinkHorizontal())
-      .attr("stroke-width", function(d) { return d.width; });  
-
-/*
-link.on("mouseover", function(d){
-  let target_path = d.target.__data__.target.path;
-  let table = ANALYTICS_PORTAL_SDK_get_datatable();
-
-  for (let i = 0; i < table.rows().eq(0).length; i++) {
-    let element_path = table.row(i).data()[3];
-    if ('All' + target_path.join(' → ') == element_path) {
-      console.log(table.row(i).select());
-    }
-  }
-})
-*/
+      .attr("stroke-width", function(d) { return d.width; });
 
 if (data_type == 'in') {
   link.on("click", function(d) {

@@ -283,14 +283,13 @@ function TX_API_calc_elements_tree_with_weights(kwargs, user_filters) {
 function TX_API_add_data_for_charts(kwargs, user_filters) {
   const reports_for_user_filters = DB_SELECT_all_WHERE_user_filters(user_filters);
 
-  const reports_match_user_filters = reports_for_user_filters.in;
-  kwargs['reports_match_user_filters'] = reports_match_user_filters;
-  kwargs['reports_match_user_filters_length'] = reports_match_user_filters.length;
-
-  const reports_out_of_user_filters = reports_for_user_filters.out;
-  kwargs['reports_out_of_user_filters'] = reports_out_of_user_filters;
-  kwargs['reports_out_of_user_filters_length'] = reports_out_of_user_filters.length;
-
+  const reports_match_user_filters__in = reports_for_user_filters.in;
+  kwargs['reports_match_user_filters__in'] = reports_match_user_filters__in;
+  kwargs['reports_match_user_filters__in_length'] = reports_match_user_filters__in.length;
+  const reports_match_user_filters__out = reports_for_user_filters.out;
+  //kwargs['reports_match_user_filters__out'] = reports_match_user_filters__out;
+  kwargs['reports_match_user_filters__out_length'] = reports_match_user_filters__out.length;
+  //console.log(reports_for_user_filters)
   return kwargs
 }
 
@@ -322,14 +321,14 @@ const TX_API_arrays_are_equal = (a, b) => // https://www.freecodecamp.org/news/h
 
 function TX_API_get_dates_from_to(user_filters, kwargs) {
   const timedelta_ms = user_filters['timedelta_ms'];
-  const reports_match_user_filters_length = kwargs['reports_match_user_filters_length'];
+  const reports_match_user_filters__in_length = kwargs['reports_match_user_filters__in_length'];
   
   const datetime_to = user_filters['datetime_to'];
   let datetime_from = user_filters['datetime_from'];
 
-  const reports_match_user_filters = kwargs['reports_match_user_filters'];
+  const reports_match_user_filters__in = kwargs['reports_match_user_filters__in'];
   if (datetime_to == datetime_from)
-    datetime_from = reports_match_user_filters[0].date_time; // if not set then from first date in all related reports
+    datetime_from = reports_match_user_filters__in[0].date_time; // if not set then from first date in all related reports
 
   let time_range = datetime_to - datetime_from;
   return {'datetime_from': datetime_from, 'datetime_to': datetime_to, 'time_range': time_range};
@@ -478,11 +477,11 @@ function TX_API_get_reports_with_elements_path_match(user_filters, kwargs) {
 
   const element_path_user_filters = user_filters['element_path'];
   const element_path_user_filters_length = element_path_user_filters.length;
-  const reports_match_user_filters = kwargs['reports_match_user_filters'];
-  const reports_match_user_filters_length = kwargs['reports_match_user_filters_length'];
+  const reports_match_user_filters__in = kwargs['reports_match_user_filters__in'];
+  const reports_match_user_filters__in_length = kwargs['reports_match_user_filters__in_length'];
 
-  for (let i = 0; i < reports_match_user_filters_length; i++) {
-    let report = reports_match_user_filters[i];
+  for (let i = 0; i < reports_match_user_filters__in_length; i++) {
+    let report = reports_match_user_filters__in[i];
     //console.log(new Date(report.date_time))
     let reports_match = true;
     if (!(element_path_user_filters_length == 1 && element_path_user_filters[0] == '')) { // if not [""]
