@@ -4,6 +4,8 @@ function TX_API_sum_values_of_dict(obj) { // https://stackoverflow.com/questions
 }
 */
 
+const STEP_SIZE = 7;
+
 function TX_API_get_sum_of_list_values(list_sorted_by_value_desc) {
   let sum = 0;
   for (let i in list_sorted_by_value_desc)
@@ -444,7 +446,7 @@ function TX_API_prepare_time_windows_agregations(chart_width_px, user_filters, k
   const ms_in_1_px = TX_API_get_ms_in_1_px(chart_width_px, dates.time_range);
 
   const margin_pixels_left = 0;
-  const margin_pixels_right = 3; // half of curveStepAfter step (which is 7 now)
+  const margin_pixels_right = STEP_SIZE; // curveStepAfter step (which is 7 now)
   const margin_pixels = margin_pixels_right + margin_pixels_left;
   const ms_in_1_px_with_margins = TX_API_get_ms_in_1_px(chart_width_px, dates.time_range + margin_pixels * ms_in_1_px);
 
@@ -558,7 +560,7 @@ function TX_API_get_optimal_time_step_for_agregations(chart_width_px, ms_in_1_px
   }
   console.log('chart_width_px:', chart_width_px, 'ms_in_1_px:', ms_in_1_px, 'step:', step, AGREGATION_TRESHOLDS);
   */
-  step = 7; // disabled agregations
+  step = STEP_SIZE; // disabled agregations
   return step;
 }
 
