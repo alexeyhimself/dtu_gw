@@ -262,3 +262,7 @@ h6 {
   cursor: help;
   font-size: 14px;
 }
+.percent_span {
+  font-size: 14px;
+  font-weight: normal;
+}

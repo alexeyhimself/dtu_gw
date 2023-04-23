@@ -87,7 +87,7 @@ function TX_API_add_uids_to_kwargs(kwargs, user_filters) {
   for (let uid in uids_dict__in)
     new_uids_dict__in[uid] = uids_dict__in[uid].count;
 
-  let uids_dict__out = uids_dict.all;
+  let uids_dict__out = {...uids_dict.all};
   for (let uid in uids_dict__out) {
     if (uids_dict__in[uid])
       delete uids_dict__out[uid];
@@ -99,6 +99,7 @@ function TX_API_add_uids_to_kwargs(kwargs, user_filters) {
 
   kwargs['uids__in'] = new_uids_dict__in;
   kwargs['uids__out'] = new_uids_dict__out;
+  kwargs['uids__all_length'] = Object.keys(uids_dict.all).length;
   return kwargs;
 }
 

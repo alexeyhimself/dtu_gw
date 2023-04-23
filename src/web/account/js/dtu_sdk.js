@@ -343,25 +343,32 @@ function ANALYTICS_PORTAL_SDK_draw_elements_hierarchy(kwargs) {
   ANALYTICS_PORTAL_SDK_draw_dropdown_options(id, paths, selected_option, types, options);
 }
 
-function ANALYTICS_PORTAL_SDK_get_datatable(table_id) { // https://datatables.net/manual/tech-notes/3#Object-instance-retrieval
+function ANALYTICS_PORTAL_SDK_get_datatable(table_id, data_type) { // https://datatables.net/manual/tech-notes/3#Object-instance-retrieval
   if ($.fn.dataTable.isDataTable('#' + table_id))
     return $('#' + table_id).DataTable();
   else
-    return ANALYTICS_PORTAL_SDK_init_datatable(table_id);
+    return ANALYTICS_PORTAL_SDK_init_datatable(table_id, data_type);
 }
 
-function ANALYTICS_PORTAL_SDK_init_datatable(table_id) {
+function ANALYTICS_PORTAL_SDK_init_datatable(table_id, data_type) {
   if (['elements_interactions_table__in', 'elements_interactions_table__out'].includes(table_id))
-    return ANALYTICS_PORTAL_SDK_init_elements_interactions_table(table_id);
+    return ANALYTICS_PORTAL_SDK_init_elements_interactions_table(table_id, data_type);
   else if (['uids_interactions_table__in', 'uids_interactions_table__out'].includes(table_id))
-    return ANALYTICS_PORTAL_SDK_init_uids_interactions_table(table_id);
+    return ANALYTICS_PORTAL_SDK_init_uids_interactions_table(table_id, data_type);
   else
     console.error('unknown datatable:', table_id)
 }
 
-function ANALYTICS_PORTAL_SDK_init_uids_interactions_table(table_id) {
+function ANALYTICS_PORTAL_SDK_init_uids_interactions_table(table_id, data_type) {
   return new DataTable('#' + table_id, {
     "createdRow": function(row, data, dataIndex) {
+      let color = '#64a2ff';
+      let icon = '🟦 ';
+      if (data_type == 'out') {
+        color = 'red';
+        icon = '🟥 ';
+      }
+
       let td_interactions = row.children[1];
       // background: linear-gradient(to right, gold 20%, gold 50%, skyblue 51%, skyblue 100%);
       //console.log(data)
@@ -370,10 +377,10 @@ function ANALYTICS_PORTAL_SDK_init_uids_interactions_table(table_id) {
       data[2] = '🟨 ' + data[2];
       data[2] += ' compared to total number of interactions'
       let data_3 = data[3];
-      data[3] = '🟦 ' + data[3];
+      data[3] = icon + data[3];
       data[3] += ' compared to UID with the largest number of interactions'
     
-      td_interactions.setAttribute('style', 'background: linear-gradient(to right, gold 0%, gold ' + data_2 + ', #64a2ff '+ data_2 + ', #64a2ff ' + data_3 + ', transparent ' + data_3 + ', transparent 100%)');
+      td_interactions.setAttribute('style', 'background: linear-gradient(to right, gold 0%, gold ' + data_2 + ', ' + color + ' '+ data_2 + ', ' + color + ' ' + data_3 + ', transparent ' + data_3 + ', transparent 100%)');
       td_interactions.classList.add('percent');
     },
     "columnDefs": [
@@ -397,10 +404,17 @@ function ANALYTICS_PORTAL_SDK_init_uids_interactions_table(table_id) {
   });
 }
 
-function ANALYTICS_PORTAL_SDK_init_elements_interactions_table(table_id) {
+function ANALYTICS_PORTAL_SDK_init_elements_interactions_table(table_id, data_type) {
   return new DataTable('#' + table_id, {
     "createdRow": function(row, data, dataIndex) {
       //console.error(data)
+      let color = '#64a2ff';
+      let icon = '🟦 ';
+      if (data_type == 'out') {
+        color = 'red';
+        icon = '🟥 ';
+      }
+
       let td_element = row.children[1];
       td_element.setAttribute('title', data[3]);
       let td_interactions = row.children[2];
@@ -409,14 +423,14 @@ function ANALYTICS_PORTAL_SDK_init_elements_interactions_table(table_id) {
       data[5] = '🟨 ' + data[5];
       data[5] += ' compared to total number of interactions'
       let data_6 = data[6];
-      if (data_6 == '🟦 Relation to an element with the largest number of interactions is not applicable because "group" web-elements are synthetic')
+      if (data_6 == icon + 'Relation to an element with the largest number of interactions is not applicable because "group" web-elements are synthetic')
         data_6 = '0%';
       else {
-        data[6] = '🟦 ' + data[6];
+        data[6] = icon + data[6];
         data[6] += ' compared to an element with the largest number of interactions'
       }
-      
-      td_interactions.setAttribute('style', 'background: linear-gradient(to right, gold 0%, gold ' + data_5 + ', #64a2ff '+ data_5 + ', #64a2ff ' + data_6 + ', transparent ' + data_6 + ', transparent 100%)');
+
+      td_interactions.setAttribute('style', 'background: linear-gradient(to right, gold 0%, gold ' + data_5 + ', ' + color + ' '+ data_5 + ', ' + color + ' ' + data_6 + ', transparent ' + data_6 + ', transparent 100%)');
 
       //td_interactions.setAttribute('style', 'background-size: ' + data[5] + '% 100%');
       td_interactions.classList.add('percent');
@@ -487,7 +501,6 @@ function ANALYTICS_PORTAL_SDK_refresh_uids_interactions_table(kwargs, data_type)
   let rows = [];
   const max_number_of_calls = Object.values(uids).sort(function(a, b){return b - a})[0];
   const total_number_of_calls = kwargs['reports_match_user_filters__' + data_type + '_length'];
-  //console.log(max_number_of_calls, total_number_of_calls)
 
   for (let uid in uids) {
     let number_of_calls = uids[uid];
@@ -500,7 +513,7 @@ function ANALYTICS_PORTAL_SDK_refresh_uids_interactions_table(kwargs, data_type)
   }
 
   const table_id = 'uids_interactions_table__' + data_type;
-  let table = ANALYTICS_PORTAL_SDK_get_datatable(table_id);
+  let table = ANALYTICS_PORTAL_SDK_get_datatable(table_id, data_type);
 
   //if (Object.keys(uids).length === 0)
   //  return;
@@ -510,6 +523,13 @@ function ANALYTICS_PORTAL_SDK_refresh_uids_interactions_table(kwargs, data_type)
   table.draw();
 
   ANALYTICS_PORTAL_SDK_expand_collapse_datatable(table_id, rows.length);
+
+  const uids__in_length = Object.keys(uids).length;
+  const uids__all_length = kwargs['uids__all_length'];
+  const percent_id = 'uids_interactions_percent__' + data_type;
+
+  let text = (uids__in_length * 100 / uids__all_length).toFixed(1) + '% <span class="percent_span">of all unique UIDs</span>';
+  document.getElementById(percent_id).innerHTML = text;
 }
 
 function ANALYTICS_PORTAL_SDK_refresh_elements_interactions_table(kwargs, data_type) {
@@ -551,7 +571,7 @@ function ANALYTICS_PORTAL_SDK_refresh_elements_interactions_table(kwargs, data_t
   const table_id = 'elements_interactions_table__' + data_type;
   //$('#' + table_id + ' tbody').off('click'); // remove previously set listeners
 
-  let table = ANALYTICS_PORTAL_SDK_get_datatable(table_id);
+  let table = ANALYTICS_PORTAL_SDK_get_datatable(table_id, data_type);
   //if (Object.keys(new_rows).length === 0)
   //  return;
 
@@ -714,53 +734,57 @@ function ANALYTICS_PORTAL_SDK_draw_sankey_chart(kwargs, data_type) { // https://
     node_padding = 10;
   }
 
+  let rect_color = '#0d6efdff';
+  if (data_type == 'out')
+    rect_color = 'red';
+
   let sankey_width = element_with_sankey.offsetWidth;
   let sankey_height = sankey_chart_data.nodes.length * 20;
 
-// set the dimensions and margins of the graph
-let margin = {top: 10, right: 0, bottom: 25, left: 0},
-    width = sankey_width// - margin.left - margin.right,
-    height = sankey_height// - margin.top - margin.bottom;  
+  // set the dimensions and margins of the graph
+  let margin = {top: 10, right: 0, bottom: 25, left: 0},
+      width = sankey_width// - margin.left - margin.right,
+      height = sankey_height// - margin.top - margin.bottom;  
 
-// format variables
-let formatNumber = d3.format(",.0f"), // zero decimal places
-    format = function(d) { return formatNumber(d); },
-    color = d3.scaleOrdinal(d3.schemeCategory10);
-  
-// append the svg object to the body of the page
-let svg = d3.select("#" + element_id_for_sankey).append("svg")
-    .attr("width", width + margin.left + margin.right)
-    .attr("height", height + margin.top + margin.bottom)
-  .append("g")
-    .attr("transform", 
-          "translate(" + margin.left + "," + margin.top + ")");
+  // format variables
+  let formatNumber = d3.format(",.0f"), // zero decimal places
+      format = function(d) { return formatNumber(d); },
+      color = d3.scaleOrdinal(d3.schemeCategory10);
+    
+  // append the svg object to the body of the page
+  let svg = d3.select("#" + element_id_for_sankey).append("svg")
+      .attr("width", width + margin.left + margin.right)
+      .attr("height", height + margin.top + margin.bottom)
+    .append("g")
+      .attr("transform", 
+            "translate(" + margin.left + "," + margin.top + ")");
 
-function left(node) {
-  return node.depth;
-}
+  function left(node) {
+    return node.depth;
+  }
 
-function right(node, n) {
-  return n - 1 - node.height;
-}
+  function right(node, n) {
+    return n - 1 - node.height;
+  }
 
-function justify(node, n) {
-  return node.sourceLinks.length ? node.depth : n - 1;
-}
+  function justify(node, n) {
+    return node.sourceLinks.length ? node.depth : n - 1;
+  }
 
-// Set the sankey diagram properties
-let sankey = d3.sankey()
-    .nodeWidth(3)
-    .nodePadding(node_padding)
-    .size([width, height])
-    .nodeAlign(left);
+  // Set the sankey diagram properties
+  let sankey = d3.sankey()
+      .nodeWidth(3)
+      .nodePadding(node_padding)
+      .size([width, height])
+      .nodeAlign(left);
 
-let path = sankey.links();
-if (sankey_chart_data.nodes.length < 1)
-  return;
+  let path = sankey.links();
+  if (sankey_chart_data.nodes.length < 1)
+    return;
 
-graph = sankey(sankey_chart_data);
+  graph = sankey(sankey_chart_data);
 
-// add in the links
+  // add in the links
   let link = svg.append("g").selectAll(".link")
       .data(graph.links)
       .enter().append("path")
@@ -768,38 +792,38 @@ graph = sankey(sankey_chart_data);
       .attr("d", d3.sankeyLinkHorizontal())
       .attr("stroke-width", function(d) { return d.width; });
 
-if (data_type == 'in') {
-  link.on("click", function(d) {
-    let target_path = d.target.__data__.target.path;
-    ANALYTICS_PORTAL_SDK_update_page_elements_dropdown_value(target_path);
-  })
-}
+  if (data_type == 'in') {
+    link.on("click", function(d) {
+      let target_path = d.target.__data__.target.path;
+      ANALYTICS_PORTAL_SDK_update_page_elements_dropdown_value(target_path);
+    })
+  }
 
-// add the link titles
+  // add the link titles
   link.append("title")
       .text(function(d) {
         return d.source.name + " → " + 
                d.target.name + "\n" + format(d.value) + " interactions"; });
 
-// add in the nodes
+  // add in the nodes
   var node = svg.append("g").selectAll(".node")
       .data(graph.nodes)
       .enter().append("g")
       .style("font", "13px sans-serif")
       .attr("class", "node");
 
-// add the rectangles for the nodes
+  // add the rectangles for the nodes
   node.append("rect")
       .attr("x", function(d) { return d.x0; })
       .attr("y", function(d) { return d.y0; })
       .attr("height", function(d) { return d.y1 - d.y0; })
       .attr("width", sankey.nodeWidth())
-      .style("fill", '#0d6efdff')
+      .style("fill", rect_color)
       .append("title")
       .text(function(d) { 
       return d.name + "\n" + format(d.value); });
 
-// add in the title for the nodes
+  // add in the title for the nodes
   node.append("text")
       .attr("x", function(d) { return d.x0 - 6; })
       .attr("y", function(d) { return (d.y1 + d.y0) / 2; })
