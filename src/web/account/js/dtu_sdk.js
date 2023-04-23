@@ -301,7 +301,7 @@ function ANALYTICS_PORTAL_SDK_draw_dropdown_options(element_id, options, selecte
   //if (options.length <= 1 && element_id != 'drpd:element')
   if (options.length < 1 && element_id == 'drpd:element')
     drpd_element.parentElement.style.display = 'none';
-  else if (options.length <= 1 && element_id != 'drpd:element')
+  else if (options.length <= 1 && element_id != 'drpd:element' && element_id != 'drpd:url_path')
     drpd_element.parentElement.style.display = 'none';
   else
     drpd_element.parentElement.style.display = 'unset';
