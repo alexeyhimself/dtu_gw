@@ -561,8 +561,12 @@ function ANALYTICS_PORTAL_SDK_refresh_elements_interactions_table(kwargs, data_t
     row.push('All' + element.element_path.join(' → '));
     row.push(element.element_path);
     row.push(Math.floor(element.number_of_calls * 100 / max_number_of_calls) + '%');
+
+    let icon = '🟦 ';
+    if (data_type == 'out')
+      icon = '🟥 ';
     if (type == 'group')
-      row.push('🟦 Relation to an element with the largest number of interactions is not applicable because "group" web-elements are synthetic');// row.push(Math.floor(element.number_of_calls * 100 / max_number_of_calls));
+      row.push(icon + 'Relation to an element with the largest number of interactions is not applicable because "group" web-elements are synthetic');// row.push(Math.floor(element.number_of_calls * 100 / max_number_of_calls));
     else
       row.push(Math.floor(element.number_of_calls * 100 / max_number_of_calls_no_groups) + '%');
     
