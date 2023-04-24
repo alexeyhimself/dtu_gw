@@ -365,7 +365,7 @@ function ANALYTICS_PORTAL_SDK_init_uids_interactions_table(table_id, data_type) 
       let color = '#64a2ff';
       let icon = '🟦 ';
       if (data_type == 'out') {
-        color = 'red';
+        color = 'orangered';
         icon = '🟥 ';
       }
 
@@ -411,7 +411,7 @@ function ANALYTICS_PORTAL_SDK_init_elements_interactions_table(table_id, data_ty
       let color = '#64a2ff';
       let icon = '🟦 ';
       if (data_type == 'out') {
-        color = 'red';
+        color = 'orangered';
         icon = '🟥 ';
       }
 
@@ -740,7 +740,7 @@ function ANALYTICS_PORTAL_SDK_draw_sankey_chart(kwargs, data_type) { // https://
 
   let rect_color = '#0d6efdff';
   if (data_type == 'out')
-    rect_color = 'red';
+    rect_color = 'orangered';
 
   let sankey_width = element_with_sankey.offsetWidth;
   let sankey_height = sankey_chart_data.nodes.length * 20;
