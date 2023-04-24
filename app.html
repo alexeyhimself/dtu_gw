@@ -108,113 +108,127 @@
             <div class="col margin-bottom-5" id="element_path"></div>
           </div>
 
-          <div class="row">
+          <div class="row" style="margin-top: 10px;">
             <div class="col-lg-4">
               <h6><b>What</b> and <b>how much</b> they use</h6>
-              <p class="chart-name" title="On a sankey chart below are displayed visual relations of the volumes of user(s) interactions for each web-element on selected web-page(s) for selected time range">Elements usage volumes chart <i class="bi bi-info-square-fill info"></i></p>
-              <div id="sankey_chart__in" class="sankey_chart"></div>
+              <div id="elements__in_no_data"></div>
+              <div id="elements__in">
+                <p class="chart-name" title="On a sankey chart below are displayed visual relations of the volumes of user(s) interactions for each web-element on selected web-page(s) for selected time range">Elements usage volumes chart <i class="bi bi-info-square-fill info"></i></p>
+                <div id="sankey_chart__in" class="sankey_chart"></div>
 
-              <a id="toggle_elements_interactions_table__in" class="toggle-datatable hidden" onclick="ANALYTICS_PORTAL_SDK_toggle_table_display('elements_interactions_table__in');" data-dtu>Expand table</a> <span id="number_of_records_elements_interactions_table__in" class="datatable-records"></span>
-              <i class="bi bi-info-square-fill info" title="In a table below are displayed total numbers of user(s) interactions for each web-element of selected web-page(s) for selected time range"></i>
-              <table id="elements_interactions_table__in" class="table table-sm dt-responsive nowrap2" style="width:100%">
-                <thead>
-                  <tr>
-                    <th>Type</th>
-                    <th>Element</th>
-                    <th>Interactions</th>
-                    <th>Path (arrow)</th>
-                    <th>Path (comma)</th>
-                    <th></th>
-                    <th></th>
-                  </tr>
-                </thead>
-                <tbody></tbody>
-              </table>
+                <a id="toggle_elements_interactions_table__in" class="toggle-datatable hidden" onclick="ANALYTICS_PORTAL_SDK_toggle_table_display('elements_interactions_table__in');" data-dtu>Expand table</a> <span id="number_of_records_elements_interactions_table__in" class="datatable-records"></span>
+                <i class="bi bi-info-square-fill info" title="In a table below are displayed total numbers of user(s) interactions for each web-element of selected web-page(s) for selected time range"></i>
+                <table id="elements_interactions_table__in" class="table table-sm dt-responsive nowrap2" style="width:100%">
+                  <thead>
+                    <tr>
+                      <th>Type</th>
+                      <th>Element</th>
+                      <th>Interactions</th>
+                      <th>Path (arrow)</th>
+                      <th>Path (comma)</th>
+                      <th></th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody></tbody>
+                </table>
+              </div>
             </div>
 
             <div class="col-lg-4">
               <h6><b>Who</b> of them and <b>how much</b> each of them use</h6>
-              <h2 id="uids_interactions_percent__in"></h2>
-              <a id="toggle_uids_interactions_table__in" class="toggle-datatable hidden" onclick="ANALYTICS_PORTAL_SDK_toggle_table_display('uids_interactions_table__in');" data-dtu>Expand table</a> <span id="number_of_records_uids_interactions_table__in" class="datatable-records"></span>
-              <i class="bi bi-info-square-fill info" title="In a table below are displayed total numbers of user(s) interactions for any of web-element(s) of selected web-page(s) for selected time range"></i>
-              <table id="uids_interactions_table__in" class="table table-sm" style="margin-bottom: 20px!important;">
-                <thead>
-                  <tr>
-                    <th>UID</th>
-                    <th>Interactions</th>
-                    <th></th>
-                    <th></th>
-                  </tr>
-                </thead>
-                <tbody></tbody>
-              </table>
+              <div id="uids__in_no_data"></div>
+              <div id="uids__in">
+                <h2 id="uids_interactions_percent__in"></h2>
+                <a id="toggle_uids_interactions_table__in" class="toggle-datatable hidden" onclick="ANALYTICS_PORTAL_SDK_toggle_table_display('uids_interactions_table__in');" data-dtu>Expand table</a> <span id="number_of_records_uids_interactions_table__in" class="datatable-records"></span>
+                <i class="bi bi-info-square-fill info" title="In a table below are displayed total numbers of user(s) interactions for any of web-element(s) of selected web-page(s) for selected time range"></i>
+                <table id="uids_interactions_table__in" class="table table-sm" style="margin-bottom: 20px!important;">
+                  <thead>
+                    <tr>
+                      <th>UID</th>
+                      <th>Interactions</th>
+                      <th></th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody></tbody>
+                </table>
+              </div>
             </div>
 
             <div class="col-lg-4">
               <h6><b>When</b> and <b>how much</b> they use</h6>
-              <!--p class="chart-name">On a chart below is displayed <span style="font-weight: bold;">median number</span> (blue line) with max and min bursts due to data aggregation (yellow area) of user(s) interactions with selected element(s) of selected web-page(s) on selected time range</p-->
-              <p class="chart-name" title="On a bar chart below is displayed number of user(s) interactions for selected web element(s) on selected web-page(s) for selected time range">Elements usage time chart <i class="bi bi-info-square-fill info"></i></p>
-              <div id="linear_chart"></div>
-              <!--table id="linear_chart_stats" style="width: auto; display: none;" class="margin-bottom-50">
-                <tr>
-                  < !--td>aggregation interval</td-- >
-                  < !--td>time range in 1 pixel</td-- >
-                  < !--td>last</td-- >
-                  <td>min</td>
-                  <td>median</td>
-                  <td>max</td>
-                </tr>
-                <tr>
-                  < !--td id="aggregation interval"></td-- >
-                  < !--td id="last"></td-- >
-                  <td id="min"></td>
-                  <td id="median"></td>
-                  <td id="max"></td>
-                </tr>
-              </table-->
+              <div id="time__in_no_data"></div>
+              <div id="time__in">
+                <p class="chart-name" title="On a bar chart below is displayed number of user(s) interactions for selected web element(s) on selected web-page(s) for selected time range">Elements usage time chart <i class="bi bi-info-square-fill info"></i></p>
+                <div id="linear_chart"></div>
+                <!--table id="linear_chart_stats" style="width: auto; display: none;" class="margin-bottom-50">
+                  <tr>
+                    < !--td>aggregation interval</td-- >
+                    < !--td>time range in 1 pixel</td-- >
+                    < !--td>last</td-- >
+                    <td>min</td>
+                    <td>median</td>
+                    <td>max</td>
+                  </tr>
+                  <tr>
+                    < !--td id="aggregation interval"></td-- >
+                    < !--td id="last"></td-- >
+                    <td id="min"></td>
+                    <td id="median"></td>
+                    <td id="max"></td>
+                  </tr>
+                </table-->
+              </div>
             </div>
           </div>
           <div class="row">
             <div class="col-lg-4" style="margin-top: 30px">
               <h6><b>What</b> and <b>how much</b> they <b>don't</b> use</h6>
-              <p class="chart-name" title="On a sankey chart below are displayed visual relations of the volumes of user(s) interactions for each web-element that did not get into sankey chart with matched data">Not used elements volumes chart <i class="bi bi-info-square-fill info"></i></p>
-              <div id="sankey_chart__out" class="sankey_chart"></div>
+              <div id="elements__out_no_data"></div>
+              <div id="elements__out">
+                <p class="chart-name" title="On a sankey chart below are displayed visual relations of the volumes of user(s) interactions for each web-element that did not get into sankey chart with matched data">Not used elements volumes chart <i class="bi bi-info-square-fill info"></i></p>
+                <div id="sankey_chart__out" class="sankey_chart"></div>
 
-              <a id="toggle_elements_interactions_table__out" class="toggle-datatable hidden" onclick="ANALYTICS_PORTAL_SDK_toggle_table_display('elements_interactions_table__out');" data-dtu>Expand table</a> <span id="number_of_records_elements_interactions_table__out" class="datatable-records"></span>
-              <i class="bi bi-info-square-fill info" title="In a table below are displayed total numbers of user(s) interactions for each web-element of selected web-page(s) for selected time range"></i>
-              <table id="elements_interactions_table__out" class="table table-sm dt-responsive nowrap2" style="width:100%">
-                <thead>
-                  <tr>
-                    <th>Type</th>
-                    <th>Element</th>
-                    <th>Interactions</th>
-                    <th>Path (arrow)</th>
-                    <th>Path (comma)</th>
-                    <th></th>
-                    <th></th>
-                  </tr>
-                </thead>
-                <tbody></tbody>
-              </table>
+                <a id="toggle_elements_interactions_table__out" class="toggle-datatable hidden" onclick="ANALYTICS_PORTAL_SDK_toggle_table_display('elements_interactions_table__out');" data-dtu>Expand table</a> <span id="number_of_records_elements_interactions_table__out" class="datatable-records"></span>
+                <i class="bi bi-info-square-fill info" title="In a table below are displayed total numbers of user(s) interactions for each web-element of selected web-page(s) for selected time range"></i>
+                <table id="elements_interactions_table__out" class="table table-sm dt-responsive nowrap2" style="width:100%">
+                  <thead>
+                    <tr>
+                      <th>Type</th>
+                      <th>Element</th>
+                      <th>Interactions</th>
+                      <th>Path (arrow)</th>
+                      <th>Path (comma)</th>
+                      <th></th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody></tbody>
+                </table>
+              </div>
             </div>
 
             <div class="col-lg-4" style="margin-top: 30px">
               <h6><b>Who</b> of them and <b>how much</b> each of them <b>don't</b> use</h6>
-              <h2 id="uids_interactions_percent__out"></h2>
+              <div id="uids__out_no_data"></div>
+              <div id="uids__out">
+                <h2 id="uids_interactions_percent__out"></h2>
 
-              <a id="toggle_uids_interactions_table__out" class="toggle-datatable hidden" onclick="ANALYTICS_PORTAL_SDK_toggle_table_display('uids_interactions_table__out');" data-dtu>Expand table</a> <span id="number_of_records_uids_interactions_table__out" class="datatable-records"></span>
-              <i class="bi bi-info-square-fill info" title="In a table below are displayed total numbers of user(s) interactions for any of web-element(s) of selected web-page(s) for selected time range"></i>
-              <table id="uids_interactions_table__out" class="table table-sm" style="margin-bottom: 20px!important;">
-                <thead>
-                  <tr>
-                    <th>UID</th>
-                    <th>Interactions</th>
-                    <th></th>
-                    <th></th>
-                  </tr>
-                </thead>
-                <tbody></tbody>
-              </table>
+                <a id="toggle_uids_interactions_table__out" class="toggle-datatable hidden" onclick="ANALYTICS_PORTAL_SDK_toggle_table_display('uids_interactions_table__out');" data-dtu>Expand table</a> <span id="number_of_records_uids_interactions_table__out" class="datatable-records"></span>
+                <i class="bi bi-info-square-fill info" title="In a table below are displayed total numbers of user(s) interactions for any of web-element(s) of selected web-page(s) for selected time range"></i>
+                <table id="uids_interactions_table__out" class="table table-sm" style="margin-bottom: 20px!important;">
+                  <thead>
+                    <tr>
+                      <th>UID</th>
+                      <th>Interactions</th>
+                      <th></th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody></tbody>
+                </table>
+              </div>
             </div>
           </div>
         </div>

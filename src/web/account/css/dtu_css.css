@@ -266,3 +266,8 @@ h6 {
   font-size: 14px;
   font-weight: normal;
 }
+
+.no-data {
+  text-align: center;
+  font-size: 14px;
+}

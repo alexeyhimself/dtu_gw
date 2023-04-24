@@ -117,18 +117,28 @@ function ANALYTICS_PORTAL_SDK_display_message_on_chart(chart, message) {
 }
 
 function ANALYTICS_PORTAL_SDK_refresh_calls_over_time_for_chart_id_(chart_id, user_filters, kwargs) { 
+  const element_id_to_hide = 'time__in';
+  const element_to_hide = document.getElementById(element_id_to_hide);
+  const element_id_to_show = 'time__in_no_data';
+  const element_to_show = document.getElementById(element_id_to_show);
+  const reports_match_user_filters__in_length = kwargs['reports_match_user_filters__in_length'];
+  if (reports_match_user_filters__in_length == 0) {
+    element_to_hide.style.display = 'none';
+    element_to_show.style.display = 'grid';
+    element_to_show.innerHTML = '<span class="no-data">' + ANALYTICS_PORTAL_SDK_generate_no_data_message() + '</span>';
+    return;
+  }
+  else {
+    element_to_hide.style.display = 'unset';
+    element_to_show.style.display = 'none';
+  }
+
   // https://gist.github.com/jeantimex/68e456aa4a536b245997b28330adace2
   // Step 1. Define the dimensions.
   const element_id_for_linear_chart = 'linear_chart';
   const element_with_linear_chart = document.getElementById(element_id_for_linear_chart);
   element_with_linear_chart.innerHTML = '';
   
-  const reports_match_user_filters__in_length = kwargs['reports_match_user_filters__in_length'];
-  if (reports_match_user_filters__in_length == 0) {
-    element_with_linear_chart.innerHTML = '<span class="no-data">' + ANALYTICS_PORTAL_SDK_generate_no_data_message() + '</span>';
-    return;
-  }
-
   const width = element_with_linear_chart.offsetWidth;
   const height = element_with_linear_chart.offsetHeight || 300;
   const margin = {top: 10, right: 10, bottom: 30, left: 40};
@@ -512,6 +522,20 @@ function ANALYTICS_PORTAL_SDK_refresh_uids_interactions_table(kwargs, data_type)
     ]);
   }
 
+  const element_id_to_hide = 'uids__' + data_type;
+  const element_to_hide = document.getElementById(element_id_to_hide);
+  const element_id_to_show = 'uids__' + data_type + '_no_data';
+  const element_to_show = document.getElementById(element_id_to_show);
+  if (rows.length == 0) {
+    element_to_hide.style.display = 'none';
+    element_to_show.style.display = 'grid';
+    element_to_show.innerHTML = '<span class="no-data">' + ANALYTICS_PORTAL_SDK_generate_no_data_message() + '</span>';
+  }
+  else {
+    element_to_hide.style.display = 'block';
+    element_to_show.style.display = 'none'; 
+  }
+
   const table_id = 'uids_interactions_table__' + data_type;
   let table = ANALYTICS_PORTAL_SDK_get_datatable(table_id, data_type);
 
@@ -520,7 +544,8 @@ function ANALYTICS_PORTAL_SDK_refresh_uids_interactions_table(kwargs, data_type)
 
   table.clear(); // https://stackoverflow.com/questions/27778389/how-to-manually-update-datatables-table-with-new-json-data
   table.rows.add(rows);
-  table.draw();
+  table.columns.adjust().draw(); // doesn't work adjust https://datatables.net/reference/api/columns.adjust() so recalc width:
+  $('#uids_interactions_table__' + data_type).css('width', '100%');
 
   ANALYTICS_PORTAL_SDK_expand_collapse_datatable(table_id, rows.length);
 
@@ -572,6 +597,21 @@ function ANALYTICS_PORTAL_SDK_refresh_elements_interactions_table(kwargs, data_t
     
     new_rows.push(row);
   }
+
+  const element_id_to_hide = 'uids__' + data_type;
+  const element_to_hide = document.getElementById(element_id_to_hide);
+  const element_id_to_show = 'uids__' + data_type + '_no_data';
+  const element_to_show = document.getElementById(element_id_to_show);
+  if (new_rows.length == 0) {
+    element_to_hide.style.display = 'none';
+    element_to_show.style.display = 'grid';
+    element_to_show.innerHTML = '<span class="no-data">' + ANALYTICS_PORTAL_SDK_generate_no_data_message() + '</span>';
+  }
+  else {
+    element_to_hide.style.display = 'unset';
+    element_to_show.style.display = 'none'; 
+  }
+
   const table_id = 'elements_interactions_table__' + data_type;
   //$('#' + table_id + ' tbody').off('click'); // remove previously set listeners
 
@@ -581,7 +621,8 @@ function ANALYTICS_PORTAL_SDK_refresh_elements_interactions_table(kwargs, data_t
 
   table.clear(); // https://stackoverflow.com/questions/27778389/how-to-manually-update-datatables-table-with-new-json-data
   table.rows.add(new_rows);
-  table.draw();
+  table.columns.adjust().draw(); // doesn't work adjust https://datatables.net/reference/api/columns.adjust() so recalc width:
+  $('#uids_interactions_table__' + data_type).css('width', '100%');
 
   ANALYTICS_PORTAL_SDK_expand_collapse_datatable(table_id, new_rows.length);
   /*
@@ -719,19 +760,31 @@ function ANALYTICS_PORTAL_SDK_generate_no_data_message() {
   const idk_f = ['🤷‍♀️', '🤷🏻‍♀️', '🤷🏼‍♀️', '🤷🏽‍♀️', '🤷🏾‍♀️', '🤷🏿‍♀️'];
   const idk = [].concat(idk_f).concat(idk_m);
   const random_idk_icon = ANALYTICS_PORTAL_SDK_get_random_item_from_list(idk);
-  return '<span class="icon">' + random_idk_icon + '</span><br>' + 'No such data';
+  return '<span class="icon">' + random_idk_icon + '</span><br>' + 'No data';
 }
 
 function ANALYTICS_PORTAL_SDK_draw_sankey_chart(kwargs, data_type) { // https://d3-graph-gallery.com/graph/sankey_basic.html
+  let sankey_chart_data = kwargs['sankey_chart_data__' + data_type];
+  
+  const element_id_to_hide = 'elements__' + data_type;
+  const element_to_hide = document.getElementById(element_id_to_hide)
+  const element_id_to_show = 'elements__' + data_type + '_no_data';
+  const element_to_show = document.getElementById(element_id_to_show)
+    
+  if (sankey_chart_data.nodes.length == 0) {
+    element_to_hide.style.display = 'none';
+    element_to_show.style.display = 'grid';
+    element_to_show.innerHTML = '<span class="no-data">' + ANALYTICS_PORTAL_SDK_generate_no_data_message() + '</span>';
+    return;
+  }
+  else {
+    element_to_hide.style.display = 'unset';
+    element_to_show.style.display = 'none';
+  }
+
   const element_id_for_sankey = 'sankey_chart__' + data_type;
   const element_with_sankey = document.getElementById(element_id_for_sankey);
   element_with_sankey.innerHTML = '';
-
-  let sankey_chart_data = kwargs['sankey_chart_data__' + data_type];
-  if (sankey_chart_data.nodes.length == 0) {
-    element_with_sankey.innerHTML = '<span class="no-data">' + ANALYTICS_PORTAL_SDK_generate_no_data_message() + '</span>';
-    return;
-  }
 
   let node_padding = 20;
   if (sankey_chart_data.nodes.length > 15) {
