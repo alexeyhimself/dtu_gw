@@ -108,10 +108,12 @@
             </div>
 
             <div class="col-lg-4">
-              <h6><b>Who</b> and <b>how much</b> used web-elements</h6>
+              <h6><b>Who</b> and <b>how much</b> they used web-elements</h6>
               <div id="uids__in_no_data"></div>
               <div id="uids__in">
-                <h2 id="uids_interactions_percent__in"></h2>
+                <div id="uids_donut" class="donut"></div>
+                <div id="interactions_donut" class="donut"></div>
+
                 <a id="toggle_uids_interactions_table__in" class="toggle-datatable hidden" onclick="ANALYTICS_PORTAL_SDK_toggle_table_display('uids_interactions_table__in');" data-dtu>Expand table</a> <span id="number_of_records_uids_interactions_table__in" class="datatable-records"></span>
                 <i class="bi bi-info-square-fill info" title="In a table below are displayed total numbers of user(s) interactions for any of web-element(s) of selected web-page(s) for selected time range"></i>
                 <table id="uids_interactions_table__in" class="table table-sm" style="margin-bottom: 20px!important;">

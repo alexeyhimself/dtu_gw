@@ -909,10 +909,10 @@ function ANALYTICS_PORTAL_SDK_draw_donut_chart(kwargs, donut_name) {
       .attr("transform", `translate(${width / 2},${height / 2})`);
 
   let name = 'reports_match_user_filters';
-  let data_color = 'olivedrab';
+  let data_color = '#64a2ff';
   let subtext = 'of all interactions';
   if (donut_name == 'uids') {
-    data_color = 'deepskyblue';
+    data_color = 'mediumseagreen';
     subtext = 'of all unique UIDs';
     name = donut_name;
   }
@@ -920,7 +920,10 @@ function ANALYTICS_PORTAL_SDK_draw_donut_chart(kwargs, donut_name) {
   // Create data
   const in_length = kwargs[name + '__in_length'];
   const all_length = kwargs[name + '__all_length'];
-  const data = {a: all_length - in_length + 0.01, b: in_length}
+  let start = all_length - in_length;
+  if (start == 0)
+    start = 0.001; // 0.001 to always draw vertical line at 12 o'clock but don't affect stats
+  const data = {a: start, b: in_length};
 
   // set the color scale
   const color = d3.scaleOrdinal()
@@ -938,7 +941,7 @@ function ANALYTICS_PORTAL_SDK_draw_donut_chart(kwargs, donut_name) {
     .join('path')
     .attr('d', d3.arc()
       .innerRadius(radius)         // This is the size of the donut hole
-      .outerRadius(2 * radius)
+      .outerRadius(1.8 * radius)
     )
     .attr('fill', d => color(d.data[0]))
     .attr("stroke", "snow")
