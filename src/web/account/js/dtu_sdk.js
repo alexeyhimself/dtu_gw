@@ -548,13 +548,6 @@ function ANALYTICS_PORTAL_SDK_refresh_uids_interactions_table(kwargs, data_type)
   $('#uids_interactions_table__' + data_type).css('width', '100%');
 
   ANALYTICS_PORTAL_SDK_expand_collapse_datatable(table_id, rows.length);
-
-  const uids__in_length = Object.keys(uids).length;
-  const uids__all_length = kwargs['uids__all_length'];
-  const percent_id = 'uids_interactions_percent__' + data_type;
-
-  let text = (uids__in_length * 100 / uids__all_length).toFixed(1) + '% <span class="percent_span">of all unique UIDs</span>';
-  document.getElementById(percent_id).innerHTML = text;
 }
 
 function ANALYTICS_PORTAL_SDK_refresh_elements_interactions_table(kwargs, data_type) {
@@ -684,6 +677,9 @@ function ANALYTICS_PORTAL_SDK_refresh_elements_page_data_according_to_user_filte
   ANALYTICS_PORTAL_SDK_draw_sankey_chart(kwargs, 'in');
   ANALYTICS_PORTAL_SDK_get_data_for_sankey_chart(kwargs, 'out');
   ANALYTICS_PORTAL_SDK_draw_sankey_chart(kwargs, 'out');
+
+  ANALYTICS_PORTAL_SDK_draw_donut_chart(kwargs, 'uids');
+  ANALYTICS_PORTAL_SDK_draw_donut_chart(kwargs, 'interactions');
 
   ANALYTICS_PORTAL_SDK_refresh_elements_interactions_table(kwargs, 'in');
   ANALYTICS_PORTAL_SDK_refresh_uids_interactions_table(kwargs, 'in');
@@ -890,6 +886,79 @@ function ANALYTICS_PORTAL_SDK_draw_sankey_chart(kwargs, data_type) { // https://
       .filter(function(d) { return d.x0 < width / 2; })
       .attr("x", function(d) { return d.x1 + 6; })
       .attr("text-anchor", "start")
+}
+
+function ANALYTICS_PORTAL_SDK_draw_donut_chart(kwargs, donut_name) {
+  const element_id_for_donut = donut_name + '_donut';
+  const element_with_donut = document.getElementById(element_id_for_donut);
+  element_with_donut.innerHTML = '';
+
+  // set the dimensions and margins of the graph
+  const width = element_with_donut.offsetWidth * 1,
+      height = width;
+
+  // The radius of the pieplot is half the width or half the height (smallest one). I subtract a bit of margin.
+  const radius = width / 4;
+
+  // append the svg object to the div called 'my_dataviz'
+  const svg = d3.select("#" + element_id_for_donut)
+    .append("svg")
+      .attr("width", width)
+      .attr("height", height)
+    .append("g")
+      .attr("transform", `translate(${width / 2},${height / 2})`);
+
+  let name = 'reports_match_user_filters';
+  let data_color = 'olivedrab';
+  let subtext = 'of all interactions';
+  if (donut_name == 'uids') {
+    data_color = 'deepskyblue';
+    subtext = 'of all unique UIDs';
+    name = donut_name;
+  }
+
+  // Create data
+  const in_length = kwargs[name + '__in_length'];
+  const all_length = kwargs[name + '__all_length'];
+  const data = {a: all_length - in_length + 0.01, b: in_length}
+
+  // set the color scale
+  const color = d3.scaleOrdinal()
+    .range(["#ccc8c8", data_color])
+  // Compute the position of each group on the pie:
+  const pie = d3.pie()
+    .value(d=>d[1])
+
+  const data_ready = pie(Object.entries(data))
+
+  // Build the pie chart: Basically, each part of the pie is a path that we build using the arc function.
+  svg
+    .selectAll('whatever')
+    .data(data_ready)
+    .join('path')
+    .attr('d', d3.arc()
+      .innerRadius(radius)         // This is the size of the donut hole
+      .outerRadius(2 * radius)
+    )
+    .attr('fill', d => color(d.data[0]))
+    .attr("stroke", "snow")
+    .style("stroke-width", "2px")
+    //.style("opacity", 0.7)
+
+  let text = (in_length * 100 / all_length).toFixed(1) + '%';
+  svg.append("svg:text")
+    .attr("dy", ".15em")
+    .attr("text-anchor", "middle")
+    .attr("font-size","28")
+    //.attr("fill","#5CB85C")
+    .text(text);
+
+  svg.append("svg:text")
+    .attr("dy", "2.2em")
+    .attr("text-anchor", "middle")
+    .attr("font-size","10")
+    //.attr("fill","bl")
+    .text(subtext);
 }
 
 ANALYTICS_PORTAL_SDK_start();

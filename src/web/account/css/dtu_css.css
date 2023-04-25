@@ -271,3 +271,9 @@ h6 {
   text-align: center;
   font-size: 14px;
 }
+.donut {
+  float: left; 
+  display: inline; 
+  width: calc(50% - 10px);
+  margin: 5px;
+}

@@ -173,7 +173,7 @@ function DB_SELECT_EMULATION_select_reports_WHERE_dates_IN_AND_OUT_user_filters(
     else
       found_reports_out.push(report);
   }
-  return {'in': found_reports_in, 'out': found_reports_out};
+  return {'in': found_reports_in, 'out': found_reports_out, 'all': [].concat(found_reports_in).concat(found_reports_out)};
 }
 
 function DB_SELECT_all_WHERE_user_filters(user_filters) {

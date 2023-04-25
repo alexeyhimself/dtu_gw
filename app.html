@@ -49,7 +49,7 @@
         <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
           <ul class="navbar-nav margin-left-6">
             <li class="nav-item">
-              <a style="background: red; color: snow; padding: 10px;" class="nav-link" href="https://forms.gle/8srFoa9AvJ6sY5Nm6" target="_blank" rel="nofollow" data-dtu>Notify me on app launch</a>
+              <a style="background: red; color: snow; padding: 10px 7px 7px 7px; margin-right: 5px; border-radiu2s: 0px 0px 10px 10px;" class="nav-link" href="https://forms.gle/8srFoa9AvJ6sY5Nm6" target="_blank" rel="nofollow" data-dtu>Notify me on app launch</a>
             </li>
             <li class="nav-item">
               <a class="nav-link active" href="app.html" data-dtu>Analytics app</a>
@@ -142,7 +142,9 @@
               <h6><b>Who</b> and <b>how much</b> used web-elements</h6>
               <div id="uids__in_no_data"></div>
               <div id="uids__in">
-                <h2 id="uids_interactions_percent__in"></h2>
+                <div id="uids_donut" class="donut"></div>
+                <div id="interactions_donut" class="donut"></div>
+
                 <a id="toggle_uids_interactions_table__in" class="toggle-datatable hidden" onclick="ANALYTICS_PORTAL_SDK_toggle_table_display('uids_interactions_table__in');" data-dtu>Expand table</a> <span id="number_of_records_uids_interactions_table__in" class="datatable-records"></span>
                 <i class="bi bi-info-square-fill info" title="In a table below are displayed total numbers of user(s) interactions for any of web-element(s) of selected web-page(s) for selected time range"></i>
                 <table id="uids_interactions_table__in" class="table table-sm" style="margin-bottom: 20px!important;">

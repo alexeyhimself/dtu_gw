@@ -98,6 +98,7 @@ function TX_API_add_uids_to_kwargs(kwargs, user_filters) {
     new_uids_dict__out[uid] = uids_dict__out[uid].count;
 
   kwargs['uids__in'] = new_uids_dict__in;
+  kwargs['uids__in_length'] = Object.keys(uids_dict.in).length;
   kwargs['uids__out'] = new_uids_dict__out;
   kwargs['uids__all_length'] = Object.keys(uids_dict.all).length;
   return kwargs;
@@ -111,7 +112,7 @@ function TX_API_add_topics_to_kwargs(kwargs, user_filters) {
   const topics_match_ctag_dict = DB_SELECT_DISTINCT_something_WHERE_user_filers_AND_NOT_mute(user_filters, 'topic', Object.keys(mute_list));
   const all_topics_match_ctag_dict = topics_match_ctag_dict.all;
 
-  const all_topics_match_ctag_list = Object.keys(all_topics_match_ctag_dict);
+  const all_topics_match_ctag_list = Object.keys(all_topics_match_ctag_dict).concat(['auto-generated (no data)']);
   kwargs['topics_match_ctag'] = all_topics_match_ctag_list;
 
   let topic = user_filters.topic;
@@ -292,6 +293,7 @@ function TX_API_add_data_for_charts(kwargs, user_filters) {
   const reports_match_user_filters__out = reports_for_user_filters.out;
   //kwargs['reports_match_user_filters__out'] = reports_match_user_filters__out;
   kwargs['reports_match_user_filters__out_length'] = reports_match_user_filters__out.length;
+  kwargs['reports_match_user_filters__all_length'] = reports_for_user_filters.all.length;
   //console.log(reports_for_user_filters)
   return kwargs
 }
