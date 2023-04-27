@@ -678,13 +678,13 @@ function ANALYTICS_PORTAL_SDK_refresh_elements_page_data_according_to_user_filte
   ANALYTICS_PORTAL_SDK_get_data_for_sankey_chart(kwargs, 'out');
   ANALYTICS_PORTAL_SDK_draw_sankey_chart(kwargs, 'out');
 
-  ANALYTICS_PORTAL_SDK_draw_donut_chart(kwargs, 'uids');
-  ANALYTICS_PORTAL_SDK_draw_donut_chart(kwargs, 'interactions');
-
   ANALYTICS_PORTAL_SDK_refresh_elements_interactions_table(kwargs, 'in');
   ANALYTICS_PORTAL_SDK_refresh_uids_interactions_table(kwargs, 'in');
   ANALYTICS_PORTAL_SDK_refresh_elements_interactions_table(kwargs, 'out');
   ANALYTICS_PORTAL_SDK_refresh_uids_interactions_table(kwargs, 'out');
+
+  ANALYTICS_PORTAL_SDK_draw_donut_chart(kwargs, 'uids'); // after tables because control of visibility there and if donut drawn on invisible object it is broken
+  ANALYTICS_PORTAL_SDK_draw_donut_chart(kwargs, 'interactions');
 
   ANALYTICS_PORTAL_SDK_refresh_calls_over_time_for_chart_id_('elements_calls_over_time_chart_id', user_filters, kwargs);
 }
