@@ -924,7 +924,6 @@ function ANALYTICS_PORTAL_SDK_draw_donut_chart(kwargs, donut_name) {
   if (start == 0)
     start = in_length / 1000; // to always draw vertical line at 12 o'clock but don't affect stats
   const data = {a: start, b: in_length};
-  console.error(data)
 
   // set the color scale
   const color = d3.scaleOrdinal()
