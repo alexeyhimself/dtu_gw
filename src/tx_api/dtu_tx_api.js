@@ -282,6 +282,11 @@ function TX_API_calc_elements_tree_with_weights(kwargs, user_filters) {
 }
 
 function TX_API_add_data_for_charts(kwargs, user_filters) {
+  let mute_list = {...user_filters}
+  delete mute_list['ctag']; // to mute everything but ctag
+  delete mute_list['topic']; // to mute everything but topic
+  const reports_for_user_filters_with_mute = DB_SELECT_all_WHERE_user_filters(user_filters, Object.keys(mute_list));
+
   const reports_for_user_filters = DB_SELECT_all_WHERE_user_filters(user_filters);
 
   const reports_match_user_filters__in = reports_for_user_filters.in;
@@ -290,7 +295,7 @@ function TX_API_add_data_for_charts(kwargs, user_filters) {
   const reports_match_user_filters__out = reports_for_user_filters.out;
   //kwargs['reports_match_user_filters__out'] = reports_match_user_filters__out;
   kwargs['reports_match_user_filters__out_length'] = reports_match_user_filters__out.length;
-  kwargs['reports_match_user_filters__all_length'] = reports_for_user_filters.all.length;
+  kwargs['reports_match_user_filters__all_length'] = reports_for_user_filters_with_mute.all.length;
   //console.log(reports_for_user_filters)
   return kwargs
 }

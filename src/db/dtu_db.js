@@ -176,7 +176,7 @@ function DB_SELECT_EMULATION_select_reports_WHERE_dates_IN_AND_OUT_user_filters(
   return {'in': found_reports_in, 'out': found_reports_out, 'all': [].concat(found_reports_in).concat(found_reports_out)};
 }
 
-function DB_SELECT_all_WHERE_user_filters(user_filters) {
+function DB_SELECT_all_WHERE_user_filters(user_filters, mute_list) {
   // SELECT * FROM reports_table WHERE 1=1
   // AND ctag = user_filters.ctag
   // AND topic = user_filters.topic
@@ -189,7 +189,7 @@ function DB_SELECT_all_WHERE_user_filters(user_filters) {
 
   const ctag = user_filters['ctag'];
   const topic = user_filters['topic'];
-  const table_reports = dtu_db.select(user_filters);
+  const table_reports = dtu_db.select(user_filters, mute_list);
 
   return DB_SELECT_EMULATION_select_reports_WHERE_dates_IN_AND_OUT_user_filters(table_reports, user_filters);
 }
