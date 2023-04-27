@@ -265,12 +265,13 @@ function TX_API_transform_hierarchy_to_offset_list(distinct_elements_paths_dict)
 function TX_API_calc_elements_tree_with_weights(kwargs, user_filters) {
   kwargs['element_path'] = user_filters.element_path;
 
-  const distinct_elements_paths_dict = DB_SELECT_DISTINCT_something_WHERE_user_filers_AND_NOT_mute(user_filters, 'element_path', ['element_path'])
-  kwargs['elements_hierarchy__in'] = TX_API_transform_hierarchy_to_offset_list(distinct_elements_paths_dict.in);
-  kwargs['elements_hierarchy__all'] = TX_API_transform_hierarchy_to_offset_list(distinct_elements_paths_dict.all);
+  const distinct_elements_paths_dict_no_mute = DB_SELECT_DISTINCT_something_WHERE_user_filers_AND_NOT_mute(user_filters, 'element_path');
+  const distinct_elements_paths_dict_with_mute = DB_SELECT_DISTINCT_something_WHERE_user_filers_AND_NOT_mute(user_filters, 'element_path', ['element_path']); // for menu to show all elements no matter what filters
+  kwargs['elements_hierarchy__in'] = TX_API_transform_hierarchy_to_offset_list(distinct_elements_paths_dict_no_mute.in);
+  kwargs['elements_hierarchy__all'] = TX_API_transform_hierarchy_to_offset_list(distinct_elements_paths_dict_with_mute.all);
 
-  const distinct_elements_paths_list__in = Object.keys(distinct_elements_paths_dict.in);
-  let distinct_elements_paths_dict__out = {...distinct_elements_paths_dict.all};
+  const distinct_elements_paths_list__in = Object.keys(distinct_elements_paths_dict_no_mute.in);
+  let distinct_elements_paths_dict__out = {...distinct_elements_paths_dict_with_mute.all};
   for (let element_path in distinct_elements_paths_dict__out) {
     if (distinct_elements_paths_list__in.includes(element_path) && distinct_elements_paths_dict__out[element_path].type !== 'group')
       delete distinct_elements_paths_dict__out[element_path]; 

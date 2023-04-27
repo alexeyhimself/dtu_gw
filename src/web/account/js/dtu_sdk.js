@@ -325,7 +325,7 @@ function ANALYTICS_PORTAL_SDK_refresh_topics(kwargs) {
 }
 
 function ANALYTICS_PORTAL_SDK_draw_elements_hierarchy(kwargs) {
-  const elements_hierarchy = kwargs['elements_hierarchy__in'];
+  const elements_hierarchy = kwargs['elements_hierarchy__all'];
   const element_path = kwargs['element_path'];
   let parent = document.getElementById('element_path');
   let html = '<label for="drpd:element" class="form-label no-margin-bottom custom-label">Page element:</label>';
