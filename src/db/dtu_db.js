@@ -98,7 +98,7 @@ class DB {
           if (uids.length == 1 && uids[0] == '')
             continue;
           for (let i in uids) {
-            if (!uids.includes(r['uid'])) {
+            if (!uids.includes(String(r['uid']))) {
               matched = false;
               break;
             }
@@ -110,7 +110,7 @@ class DB {
           if (uids_not.length == 1 && uids_not[0] == '')
             continue;
           for (let i in uids_not) {
-            if (uids_not.includes(r['uid'])) {
+            if (uids_not.includes(String(r['uid']))) {
               matched = false;
               break;
             }
