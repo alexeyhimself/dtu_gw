@@ -16,6 +16,7 @@
 	margin-right: 5px;
 	font-size: 14px;
   cursor: pointer;
+  line-height: 24px;
 }
 .custom-label {
 	font-weight: bold;
@@ -276,4 +277,15 @@ h6 {
   display: inline; 
   width: calc(50% - 10px);
   margin: 5px;
+}
+
+textarea.form-control {
+  cursor: text;
+  min-height: 2em;
+  padding-left: 7px;
+}
+
+table.dataTable.dtr-inline.collapsed>tbody>tr>td.dtr-control, 
+table.dataTable.dtr-inline.collapsed>tbody>tr>th.dtr-control {
+    padding-left: 15px;
 }

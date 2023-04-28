@@ -86,18 +86,42 @@ class DB {
       for (let i in asked_keys) {
         let key = asked_keys[i];
         let value = asked[key];
-        if (key != 'element_path') {
-          if (String(r[key]) != String(value)) {
-            matched = false;
-            break;
-          }
-        }
-        else {
+        if (key == 'element_path') {
           if (!String(r[key]).startsWith(String(value))) {
             matched = false;
             break;
-          } 
+          }
+          continue;
         }
+        if (key == 'uids') {
+          const uids = asked[key];
+          if (uids.length == 1 && uids[0] == '')
+            continue;
+          for (let i in uids) {
+            if (!uids.includes(r['uid'])) {
+              matched = false;
+              break;
+            }
+          }
+          continue;
+        }
+        if (key == 'uids_not') {
+          const uids_not = asked[key];
+          if (uids_not.length == 1 && uids_not[0] == '')
+            continue;
+          for (let i in uids_not) {
+            if (uids_not.includes(r['uid'])) {
+              matched = false;
+              break;
+            }
+          }
+          continue;
+        }
+        if (String(r[key]) != String(value)) {
+          matched = false;
+          break;
+        }
+        continue;  
       }
 
       if (matched)

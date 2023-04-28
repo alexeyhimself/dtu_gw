@@ -80,7 +80,8 @@ function TX_API_remove_anys(user_filters) { // if 'any' then this has no meaning
 }
 
 function TX_API_add_uids_to_kwargs(kwargs, user_filters) {
-  const uids_dict = DB_SELECT_DISTINCT_something_WHERE_user_filers_AND_NOT_mute(user_filters, 'uid', ['element', 'element_type']);
+  const uids_dict = DB_SELECT_DISTINCT_something_WHERE_user_filers_AND_NOT_mute(user_filters, 'uid');
+  //const uids_dict = DB_SELECT_DISTINCT_something_WHERE_user_filers_AND_NOT_mute(user_filters, 'uid', ['element', 'element_type']);
   const uids_dict__in = uids_dict.in;
 
   let new_uids_dict__in = {};

@@ -24,6 +24,22 @@ function ANALYTICS_PORTAL_SDK_remove_all_active_filter_class_from_time_shortcuts
   }
 }
 
+function ANALYTICS_PORTAL_SDK_split_everything_by_any_n_comma_semicolon_and_space(what) {
+  let result = [];
+  let n = what.trim().split('\n'); // trim again for same code as below
+  for (let i = 0; i < n.length; i++) {
+    let c = n[i].trim().split(',');
+    for (let i = 0; i < c.length; i++) {
+      let sc = c[i].trim().split(';');
+      for (let i = 0; i < sc.length; i++) {
+        let s = sc[i].trim().split(' ');
+        result = result.concat(s);
+      }
+    }
+  }
+  return result;
+}
+
 function ANALYTICS_PORTAL_SDK_collect_user_filters_on_the_page() {
   let topic = window.localStorage.getItem('topic');
   const topic_element = document.getElementById('drpd:topic');
@@ -64,17 +80,39 @@ function ANALYTICS_PORTAL_SDK_collect_user_filters_on_the_page() {
   if (element_path_element) {
     //console.log(element_path_element.value)
     in_page_path = JSON.parse(element_path_element.value.replace(/'/g, '"'));
+    user_filters["element_path"] = in_page_path;
   }
-  user_filters["element_path"] = in_page_path;
+
+  const uids_element = document.getElementById("txt:uids");
+  if (uids_element) {
+    let uids_list = ANALYTICS_PORTAL_SDK_split_everything_by_any_n_comma_semicolon_and_space(uids_element.value);
+    user_filters["uids"] = uids_list;
+  }
+  const uids_not_element = document.getElementById("txt:uids_not");
+  if (uids_not_element) {
+    let uids_not_list = ANALYTICS_PORTAL_SDK_split_everything_by_any_n_comma_semicolon_and_space(uids_not_element.value);
+    user_filters["uids_not"] = uids_not_list;
+  }
 
   //console.log(user_filters)
   return user_filters;
+}
+
+function ANALYTICS_PORTAL_SDK_init_uids_listeners() {
+  const ids = ['txt:uids', 'txt:uids_not'];
+  for (let i in ids) {
+    const uids_element = document.getElementById(ids[i]);
+    uids_element.addEventListener("change", function(e) {
+      ANALYTICS_PORTAL_SDK_refresh_elements_page_data_according_to_user_filters_setup_with_delay();
+    }, false);
+  }
 }
 
 function ANALYTICS_PORTAL_SDK_start() {
   ANALYTICS_PORTAL_SDK_init_time_shortcut_listeners();
   ANALYTICS_PORTAL_SDK_refresh_elements_page_data_according_to_user_filters_setup();
   ANALYTICS_PORTAL_SDK_make_dropdowns_work();
+  ANALYTICS_PORTAL_SDK_init_uids_listeners();
 }
 
 function ANALYTICS_PORTAL_SDK_make_dropdowns_work() {
@@ -379,25 +417,26 @@ function ANALYTICS_PORTAL_SDK_init_uids_interactions_table(table_id, data_type) 
         icon = '🟥 ';
       }
 
-      let td_interactions = row.children[1];
+      let td_interactions = row.children[2];
       // background: linear-gradient(to right, gold 20%, gold 50%, skyblue 51%, skyblue 100%);
       //console.log(data)
-      //td_interactions.setAttribute('style', 'background-size: ' + data[2] + '% 100%');
-      let data_2 = data[2];
-      data[2] = '🟨 ' + data[2];
-      data[2] += ' compared to total number of interactions'
+      //td_interactions.setAttribute('style', 'background-size: ' + data[3] + '% 100%');
       let data_3 = data[3];
-      data[3] = icon + data[3];
-      data[3] += ' compared to UID with the largest number of interactions'
+      data[3] = '🟨 ' + data[3];
+      data[3] += ' compared to total number of interactions'
+      let data_4 = data[4];
+      data[4] = icon + data[4];
+      data[4] += ' compared to UID with the largest number of interactions'
     
-      td_interactions.setAttribute('style', 'background: linear-gradient(to right, gold 0%, gold ' + data_2 + ', ' + color + ' '+ data_2 + ', ' + color + ' ' + data_3 + ', transparent ' + data_3 + ', transparent 100%)');
+      td_interactions.setAttribute('style', 'background: linear-gradient(to right, gold 0%, gold ' + data_3 + ', ' + color + ' '+ data_3 + ', ' + color + ' ' + data_4 + ', transparent ' + data_4 + ', transparent 100%)');
       td_interactions.classList.add('percent');
     },
     "columnDefs": [
-      {"visible": true, "targets": [0, 3]},
+      {"visible": true, "targets": [0, 4]},
     ],
-    "order": [[1, "desc"]],
+    "order": [[2, "desc"]],
     "columns": [
+        { responsivePriority: 0, "orderable": false },
         { responsivePriority: 1 },
         { responsivePriority: 2 },
         { responsivePriority: undefined, "className": "none" },
@@ -425,32 +464,33 @@ function ANALYTICS_PORTAL_SDK_init_elements_interactions_table(table_id, data_ty
         icon = '🟥 ';
       }
 
-      let td_element = row.children[1];
-      td_element.setAttribute('title', data[3]);
-      let td_interactions = row.children[2];
+      let td_element = row.children[2];
+      td_element.setAttribute('title', data[4]);
+      let td_interactions = row.children[3];
       // background: linear-gradient(to right, gold 20%, gold 50%, skyblue 51%, skyblue 100%);
-      let data_5 = data[5];
-      data[5] = '🟨 ' + data[5];
-      data[5] += ' compared to total number of interactions'
       let data_6 = data[6];
-      if (data_6 == icon + 'Relation to an element with the largest number of interactions is not applicable because "group" web-elements are synthetic')
-        data_6 = '0%';
+      data[6] = '🟨 ' + data[6];
+      data[6] += ' compared to total number of interactions'
+      let data_7 = data[7];
+      if (data_7 == icon + 'Relation to an element with the largest number of interactions is not applicable because "group" web-elements are synthetic')
+        data_7 = '0%';
       else {
-        data[6] = icon + data[6];
-        data[6] += ' compared to an element with the largest number of interactions'
+        data[7] = icon + data[7];
+        data[7] += ' compared to an element with the largest number of interactions'
       }
 
-      td_interactions.setAttribute('style', 'background: linear-gradient(to right, gold 0%, gold ' + data_5 + ', ' + color + ' '+ data_5 + ', ' + color + ' ' + data_6 + ', transparent ' + data_6 + ', transparent 100%)');
+      td_interactions.setAttribute('style', 'background: linear-gradient(to right, gold 0%, gold ' + data_6 + ', ' + color + ' '+ data_6 + ', ' + color + ' ' + data_7 + ', transparent ' + data_7 + ', transparent 100%)');
 
-      //td_interactions.setAttribute('style', 'background-size: ' + data[5] + '% 100%');
+      //td_interactions.setAttribute('style', 'background-size: ' + data[6] + '% 100%');
       td_interactions.classList.add('percent');
     },
     "columnDefs": [
-      {"visible": true, "targets": [0, 6]},
-      {"visible": false, "targets": [3, 4]},
+      {"visible": true, "targets": [0, 7]},
+      {"visible": false, "targets": [4, 5]},
     ],
-    "order": [[2, "desc"]],
+    "order": [[3, "desc"]],
     "columns": [
+        { responsivePriority: 0, "orderable": false},
         { responsivePriority: 1 },
         { responsivePriority: 2 },
         { responsivePriority: 3 },
@@ -515,6 +555,7 @@ function ANALYTICS_PORTAL_SDK_refresh_uids_interactions_table(kwargs, data_type)
   for (let uid in uids) {
     let number_of_calls = uids[uid];
     rows.push([
+      '', // icon
       uid, 
       number_of_calls, 
       Math.floor(number_of_calls * 100 / total_number_of_calls) + '%',
@@ -570,7 +611,7 @@ function ANALYTICS_PORTAL_SDK_refresh_elements_interactions_table(kwargs, data_t
     let type = element.type;
     if (type == 'anchor') type = 'link';
     if (type == 'select-one') type = 'dropdown';
-    let row = [type];
+    let row = ['', type];
     if (element.element) 
       row.push(element.element);
     else
