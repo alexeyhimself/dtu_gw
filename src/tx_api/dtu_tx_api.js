@@ -80,28 +80,29 @@ function TX_API_remove_anys(user_filters) { // if 'any' then this has no meaning
 }
 
 function TX_API_add_uids_to_kwargs(kwargs, user_filters) {
-  const uids_dict = DB_SELECT_DISTINCT_something_WHERE_user_filers_AND_NOT_mute(user_filters, 'uid');
-  //const uids_dict = DB_SELECT_DISTINCT_something_WHERE_user_filers_AND_NOT_mute(user_filters, 'uid', ['element', 'element_type']);
-  const uids_dict__in = uids_dict.in;
+  const uids_dict_with_mute = DB_SELECT_DISTINCT_something_WHERE_user_filers_AND_NOT_mute(user_filters, 'uid', ['uids', 'uids_not']);
+  const uids_dict_no_mute = DB_SELECT_DISTINCT_something_WHERE_user_filers_AND_NOT_mute(user_filters, 'uid');
+  //const uids_dict_no_mute = DB_SELECT_DISTINCT_something_WHERE_user_filers_AND_NOT_mute(user_filters, 'uid', ['element', 'element_type']);
+  const uids_dict_no_mute__in = uids_dict_no_mute.in;
 
-  let new_uids_dict__in = {};
-  for (let uid in uids_dict__in)
-    new_uids_dict__in[uid] = uids_dict__in[uid].count;
+  let new_uids_dict_no_mute__in = {};
+  for (let uid in uids_dict_no_mute__in)
+    new_uids_dict_no_mute__in[uid] = uids_dict_no_mute__in[uid].count;
 
-  let uids_dict__out = {...uids_dict.all};
-  for (let uid in uids_dict__out) {
-    if (uids_dict__in[uid])
-      delete uids_dict__out[uid];
+  let uids_dict_no_mute__out = {...uids_dict_no_mute.all};
+  for (let uid in uids_dict_no_mute__out) {
+    if (uids_dict_no_mute__in[uid])
+      delete uids_dict_no_mute__out[uid];
   }
 
-  let new_uids_dict__out = {};
-  for (let uid in uids_dict__out)
-    new_uids_dict__out[uid] = uids_dict__out[uid].count;
+  let new_uids_dict_no_mute__out = {};
+  for (let uid in uids_dict_no_mute__out)
+    new_uids_dict_no_mute__out[uid] = uids_dict_no_mute__out[uid].count;
 
-  kwargs['uids__in'] = new_uids_dict__in;
-  kwargs['uids__in_length'] = Object.keys(uids_dict.in).length;
-  kwargs['uids__out'] = new_uids_dict__out;
-  kwargs['uids__all_length'] = Object.keys(uids_dict.all).length;
+  kwargs['uids__in'] = new_uids_dict_no_mute__in;
+  kwargs['uids__in_length'] = Object.keys(uids_dict_no_mute.in).length;
+  kwargs['uids__out'] = new_uids_dict_no_mute__out;
+  kwargs['uids__all_length'] = Object.keys(uids_dict_with_mute.all).length;
   return kwargs;
 }
 
