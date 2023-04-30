@@ -104,7 +104,10 @@ function generate_fake_data() {
   list_of_elements = list_of_elements.slice(0, Math.floor(list_of_elements.length * 0.618)); // golden ratio
   const normal_list_of_elements_ids = make_normal_distribution(list_of_elements.length);
 
-  const base_uid = parseInt(dtu.get_uid());
+  const uid_ms = Date.now(new Date()); // timestamp as unique UID
+  const uid_s = Math.floor(uid_ms / 1000); // UID in seconds to make it shorter
+
+  const base_uid = uid_s;
   const uids_step = -111;
   const number_of_uids = 42;
   const list_of_uids = [];
