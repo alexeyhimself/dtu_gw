@@ -437,7 +437,7 @@ function ANALYTICS_PORTAL_SDK_init_uids_interactions_table(table_id, data_type) 
     "order": [[2, "desc"]],
     "columns": [
         { responsivePriority: 0, "orderable": false },
-        { responsivePriority: 1 },
+        { responsivePriority: 1, width: 100 },
         { responsivePriority: 2 },
         { responsivePriority: undefined, "className": "none" },
         { responsivePriority: undefined, "className": "none" },

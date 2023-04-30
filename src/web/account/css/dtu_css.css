@@ -289,3 +289,13 @@ table.dataTable.dtr-inline.collapsed>tbody>tr>td.dtr-control,
 table.dataTable.dtr-inline.collapsed>tbody>tr>th.dtr-control {
     padding-left: 15px;
 }
+
+/*
+.dataTable tr td {
+  padding-right: 15px;
+  vertical-align: middle;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+*/
