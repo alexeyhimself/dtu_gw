@@ -1,3 +1,6 @@
 [submodule "src/customer/dtu_sdk_js"]
 	path = src/customer/dtu_sdk_js
 	url = https://github.com/alexeyhimself/dtu_sdk_js.git
+[submodule "src/dtu_app"]
+	path = src/dtu_app
+	url = https://github.com/alexeyhimself/dtu_app.git
