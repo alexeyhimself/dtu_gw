@@ -68,12 +68,12 @@
 			<div class="col-10 col-lg-6 margin-top-30">
 				<p>Take a look how DoTheyUse app Product Analytics works.
 					<ul>
-						<li><a href="#didtheyuse" data-dtu>Do they use our app?</a></li>
-						<li><a href="#usedlastweek" data-dtu>Have they been used our app during last week?</a></li>
-						<li><a href="#uidsused" data-dtu>What web-elements and how much did specified users use in our app?</a></li>
+						<!--li><a href="#didtheyuse" data-dtu>No filters applied</a></li-->
+						<li><a href="#usedlastweek" data-dtu>Filter by time range</a></li>
+						<li><a href="#uidsused" data-dtu>Filter by UserID(s)</a></li>
+						<li><a href="#webpageused" data-dtu>Filter by web-page</a></li>
+						<li><a href="#webelementused" data-dtu>Filter by web-element</a></li>
 						<!--li><a href="#" data-dtu></a></li>
-						<li><a href="#" data-dtu></a></li>
-						<li><a href="#" data-dtu></a></li>
 						<li><a href="#" data-dtu></a></li>
 						<li><a href="#" data-dtu></a></li>
 						<li><a href="#" data-dtu></a></li>
@@ -86,13 +86,13 @@
 					<b>Q: Do they use our app?</b><br>
 					<b>A:</b> Yes, look there are some data charts when no filters applied:
 				</p>
-				<img alt="DoTheyUse" src="https://www.dropbox.com/s/02adble3mcch5ae/dtu-no-filters.png?raw=1" style="max-width: 100%; min-height: 250px;">
+				<img alt="DoTheyUse app: no filters applied" src="https://www.dropbox.com/s/02adble3mcch5ae/dtu-no-filters.png?raw=1" style="max-width: 100%; min-height: 250px;">
 
 				<p id="usedlastweek"><br>
 					<b>Q: Have they been used our app during last week?</b><br>
 					<b>A:</b> Yes, look there are some data charts when "Last 7 days" filter applied:
 				</p>
-				<img alt="Brawl Stars marketing website" src="https://www.dropbox.com/s/1f5qs96dvz9tj5m/dtu-filter-time.png?raw=1" style="max-width: 100%; min-height: 250px;">
+				<img alt="DoTheyUse app: filter for time range" src="https://www.dropbox.com/s/1f5qs96dvz9tj5m/dtu-filter-time.png?raw=1" style="max-width: 100%; min-height: 250px;">
 
 				<ul>
 					<li>Sankey chart on the left displays that various web-elements have been used;</li>
@@ -106,7 +106,7 @@
 					<b>Q: What web-elements and how much have Stella and Molly ever used in our app?</b><br>
 					<b>A:</b> Please take a look at the charts filtered for both of them:
 				</p>
-				<img alt="Brawl Stars marketing website" src="https://www.dropbox.com/s/zk7dobzqns00zqz/dtu-filter-uids.png?raw=1" style="max-width: 100%; min-height: 250px;">
+				<img alt="DoTheyUse app: filter for user ids" src="https://www.dropbox.com/s/zk7dobzqns00zqz/dtu-filter-uids.png?raw=1" style="max-width: 100%; min-height: 250px;">
 				<ul>
 					<li>Sankey chart on the left displays that they used various web-elements;</li>
 					<li>Table below sankey chart displays, that they both used "Navbar" 264 times;</li>
@@ -115,6 +115,33 @@
 					<li>Bar chart on the right displays how their interactions have been distributed in all available time;</li>
 				</ul>
 
+				<p id="webpageused"><br>
+					<b>Q: What web-elements on specified web-page have they ever used in our app?</b><br>
+					<b>A:</b> Please take a look at the charts filtered for /main_page.html only:
+				</p>
+				<img alt="DoTheyUse app: filter for web-page" src="https://www.dropbox.com/s/w5btcf132fc3cgf/dtu-filter-webpage.png?raw=1" style="max-width: 100%; min-height: 250px;">
+				<ul>
+					<li>Sankey chart: various web-elements have been used on the page;</li>
+					<li>Table below sankey: "Show data for" web-element has been used 3327 times;</li>
+					<li>Two donuts in the middle show, that all the users used this web-page. And actually they used only this web-page because it is 100% of all available data;</li>
+					<li>Table below donuts shows distribution of number of interactions for each UserID;
+					<li>Bar chart on the right displays how interactions have been distributed in time;</li>
+				</ul>
+
+
+				<p id="webelementused"><br>
+					<b>Q: Who and how much has been used specified web-element?</b><br>
+					<b>A:</b> Take a look at the charts filtered for "Navbar (group)" element only:
+				</p>
+				<img alt="DoTheyUse app: filter for web-element" src="https://www.dropbox.com/s/mzcet502ny02lon/dtu-filter-element.png?raw=1" style="max-width: 100%; min-height: 250px;">
+				<ul>
+					<li>Sankey chart and table below: "Navbar" has been used 2094 times;</li>
+					<li>Two donuts in the middle: all the users used "Navbar" and its usage is 33.9% of all available usage reports;</li>
+					<li>Table below donuts: Miranda used "Navbar" as much as twice less than Stella &mdash; 93 times;
+					<li>Bar chart on the right: how "Navbar" usage has been distributed in time;</li>
+				</ul>
+
+				
 			</div>
     </div>
     <!--div class="row justify-content-center">
