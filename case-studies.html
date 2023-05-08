@@ -61,23 +61,19 @@
         </div>
       </div>
     </nav>
-    <div class="row justify-content-center clip margin-bottom-7">
+    <div class="row justify-content-center clip">
     	<div class="col-10 center margin-top-10">
 				<h1>Case studies</h1>
 			</div>
 			<div class="col-10 col-lg-6 margin-top-30">
 				<p>Take a look how DoTheyUse app Product Analytics works.
 					<ul>
-						<!--li><a href="#didtheyuse" data-dtu>No filters applied</a></li-->
-						<li><a href="#usedlastweek" data-dtu>Filter by time range</a></li>
-						<li><a href="#uidsused" data-dtu>Filter by UserID(s)</a></li>
-						<li><a href="#webpageused" data-dtu>Filter by web-page</a></li>
-						<li><a href="#webelementused" data-dtu>Filter by web-element</a></li>
-						<!--li><a href="#" data-dtu></a></li>
-						<li><a href="#" data-dtu></a></li>
-						<li><a href="#" data-dtu></a></li>
-						<li><a href="#" data-dtu></a></li>
-						<li><a href="#" data-dtu></a></li-->
+						<li><a href="#filter_by_timerange" data-dtu>Filter by time range</a></li>
+						<li><a href="#filter_by_uids" data-dtu>Filter by UserID(s)</a></li>
+						<li><a href="#filter_by_webpage" data-dtu>Filter by web-page</a></li>
+						<li><a href="#filter_by_webelement" data-dtu>Filter by web-element</a></li>
+						<li><a href="#filter_by_everything" data-dtu>Filter by everything</a></li>
+						<li><a href="#explain_tables_coloring" data-dtu>Explain tables coloring</a></li>
 					</ul>
 				</p>
 			</div>
@@ -88,7 +84,7 @@
 				</p>
 				<img alt="DoTheyUse app: no filters applied" src="https://www.dropbox.com/s/02adble3mcch5ae/dtu-no-filters.png?raw=1" style="max-width: 100%; min-height: 250px;">
 
-				<p id="usedlastweek"><br>
+				<p id="filter_by_timerange"><br>
 					<b>Q: Have they been used our app during last week?</b><br>
 					<b>A:</b> Yes, look there are some data charts when "Last 7 days" filter applied:
 				</p>
@@ -102,7 +98,7 @@
 					<li>Bar chart on the right displays how interactions have been distributed in time within those 7 days;</li>
 				</ul>
 
-				<p id="uidsused"><br>
+				<p id="filter_by_uids"><br>
 					<b>Q: What web-elements and how much have Stella and Molly ever used in our app?</b><br>
 					<b>A:</b> Please take a look at the charts filtered for both of them:
 				</p>
@@ -115,7 +111,7 @@
 					<li>Bar chart on the right displays how their interactions have been distributed in all available time;</li>
 				</ul>
 
-				<p id="webpageused"><br>
+				<p id="filter_by_webpage"><br>
 					<b>Q: What web-elements on specified web-page have they ever used in our app?</b><br>
 					<b>A:</b> Please take a look at the charts filtered for /main_page.html only:
 				</p>
@@ -128,8 +124,7 @@
 					<li>Bar chart on the right displays how interactions have been distributed in time;</li>
 				</ul>
 
-
-				<p id="webelementused"><br>
+				<p id="filter_by_webelement"><br>
 					<b>Q: Who and how much has been used specified web-element?</b><br>
 					<b>A:</b> Take a look at the charts filtered for "Navbar (group)" element only:
 				</p>
@@ -141,15 +136,35 @@
 					<li>Bar chart on the right: how "Navbar" usage has been distributed in time;</li>
 				</ul>
 
+
+				<p id="explain_tables_coloring"><br>
+					<b>Q: What do these blue and yellow bars in tables mean?</b><br>
+					<b>A:</b> Blue displays relation to maximum, yellow displays relation to sum:
+				</p>
+				<img alt="DoTheyUse app: explain tables colors" src="https://www.dropbox.com/s/8hm9f8tf8u3ei4m/dtu-filter-element-tables.png?raw=1" style="max-width: 100%; min-height: 250px;">
+				<ul>
+					<li>Table on the left: 752 interactions &mdash; is 35% of a sum of all filtered interactions (752 / 2094 = 35%). It is colored yellow. And 752 interactions &mdash; is 75% compared to maximum used web-element (752 / 990 = 75%). And it is colored blue;</li>
+					<li>Table in the middle: 99 interactions &mdash; is 4% of a sum of all filtered interactions (99 / 2094 = 4%). It is colored yellow. And 99 interactions &mdash; is 60% compared to most active user number of interactions (99 / 165 = 60%). And it's colored blue;</li>
+				</ul>
 				
+				<p id="filter_by_everything"><br>
+					<b>Q: Can we see analytics for specified time range, UserID, web-page and web-element simultaneously?</b><br>
+					<b>A:</b> Yes, take a look for example how UserID = 1683527336 has been used "Notify me on app launch" link on "/main_page.html" during last month:
+				</p>
+				<img alt="DoTheyUse app: filter for everything" src="https://www.dropbox.com/s/a6owidjizh7rd0z/dtu-filter-all-together.png?raw=1" style="max-width: 100%; min-height: 250px;">
+
+				<ul>
+					<li>One used it 33 times;</li>
+					<li>And this is how it went in time;</li>
+				</ul>
 			</div>
     </div>
-    <!--div class="row justify-content-center">
-    	<div class="col-lg-6 col-md-6 center  margin-bottom-7">
-  			<a class="btn btn-lg col-10 btn-primary" href="src/dtu_app/index.html" data-dtu>Try demo account now</a>
+    <div class="row justify-content-center">
+    	<div class="col-lg-6 col-md-6 center margin-bottom-7">
+  			<a class="btn btn-lg col-10 btn-primary" href="src/dtu_app/index.html" data-dtu>Try Do They Use app now</a>
   			<p class="no-registration" style="margin-top: 10px">no registration required</p>
 			</div>
-    </div-->
+    </div>
 		
     <script src="src/dtu_app/src/db/dtu_db.js?v=10"></script>
     <script src="src/dtu_app/src/rx_api/dtu_rx_api.js?v=10"></script>
