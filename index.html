@@ -27,7 +27,22 @@
 		<link href="src/web/common/css/dtu_css.css" rel="stylesheet">
 		<link href="src/web/marketing/css/dtu_css.css" rel="stylesheet">
 		<style type="text/css">
-			
+			/* https://stackoverflow.com/questions/35814653/automatic-height-when-embedding-a-youtube-video */
+			.video-container {
+			  position: relative;
+			  padding-bottom: 41.8%;
+			  height: 0;
+			  margin-bottom: 30px;
+			  border: 1px solid gray;
+			  border-radius: 5px;
+			}
+			.video-container iframe {
+			  position: absolute;
+			  top: 0;
+			  left: 0;
+			  width: 100%;
+			  height: 100%;
+			}
 		</style>
 	</head>
 	<body>
@@ -80,7 +95,12 @@
 	  	<hr style="width: 80%">
     	<div class="col-lg-6 col-11">
     		<h2>Visualize usage of your digital apps and services to make better Product UX/CX/PX decisions</h2>
-    		<img alt="Do They Use demo app" src="https://www.dropbox.com/s/3o4453qk3f9jakd/inside-dtu-account.png?raw=1" style="min-width: 541px; max-width: 100%;">
+    		<!--img alt="Do They Use demo app" src="https://www.dropbox.com/s/3o4453qk3f9jakd/inside-dtu-account.png?raw=1" style="min-width: 541px; max-width: 100%;"-->
+    	</div>
+    	<div class="col-lg-8 col-11 video-container">
+    		<iframe width="auto" height="auto" src="https://www.youtube.com/embed/ngaa_pJEh74?rel=0&start=0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+    	</div>
+    	<div class="col-lg-6 col-11">
     		<ul>
     			<li><b>Get quantitative feedback</b> for your apps and services usage;</li>
     			<li><b>Ask better qualitative questions</b> based on insights from quantitative data feedback you've got;</li>
