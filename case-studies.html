@@ -68,7 +68,7 @@
 			<div class="col-10 col-lg-6 margin-top-30">
 				<h2>Spotify app vs. Yandex.Music app</h2>
 				<h3>Setup the Context</h3>
-				<p>Let's say you are a Product Developer of mobile app for listening to music. And your app, when it plays music, has a widget on a lock-screen of smartphone.</p>
+				<p>Imagine you are a member of a Product Team who develop build a mobile app for listening music. And when your app plays music it has a widget on a lock-screen of smartphone.</p>
 
 				<p>Below are screenshots with the widgets of two different music apps: Spotify (on the left) and Yandex.Music (on the right) displayed on the locked screens of iOS device:</p>
 				<div class="center">
@@ -77,84 +77,93 @@
 				</div>
 
 				<h3>Example of UX problem</h3>
-				<p>See a little difference in controls between these 2 widgets? Yandex.Music app (on the right) has no "back" player button. Instead it has some "menu" icon there. What will happen if we tap on this "menu" button?</p>
+				<p>See a little difference in controls between these 2 widgets? Yandex.Music app (on the right) has no "back" button. Instead it has some looking like "menu" icon there. What will happen if we tap on this "menu" button?</p>
 
 				<div class="center">
 					<img alt="Spotify on iOS" src="https://www.dropbox.com/s/x2wnzncta2mvgzw/yandex.music-menu.jpg?raw=1" style="max-width: 49%;">
 					<img alt="Spotify on iOS" src="https://www.dropbox.com/s/4rh2y6y5tr0dde6/yandex.music-liked.jpg?raw=1" style="max-width: 49%;">
 				</div>
 				
-				<p>Oh, this is "likes and dislikes" menu with the indication of already liked track! So we see that Yandex.Music Product Development Team of mobile app for iOS changed "back" icon for their "locked screen" widget to "likes menu" button...</p>
+				<p>Oh, this is "likes and dislikes" menu with an indication if track is already liked! So now we see that Yandex.Music Product Development Team of mobile app for iOS changed "back" icon for their "locked screen" widget to "likes menu" button...</p>
 
 				<p>Why did they do that?!</p>
 
-				<h3>Product Marketing Analytics didn't work here</h3>
-				<p>On this example it has to be clear, that this Product decision of "remove the "back" button" and "put "likes menu" button instead" was not driven by Product Marketing Analytics. It just couldn't, because Product Marketing Analytics only shows if customers use the whole thing, where do they come from, what OS do they have, what is their screen size, to they spend time on the screen, etc. &mdash; that kind of staff.</p>
+				<h3>Product Marketing Analytics doesn't work here</h3>
+				<p>In this example it has to be clear, that this Product decision:
+					<ul>
+						<li>remove "back" button and</li>
+						<li>put "likes menu" button instead</li> 
+					</ul>
+				<p>&mdash; was not driven by Product Marketing Analytics. It just couldn't because Product Marketing Analytics only shows if customers use the whole thing, where do they come from, what OS do they have, what is their screen size, to they spend time on the screen, do they convert (not applicable here), etc. &mdash; that kind of staff.</p>
 
 				<p>It had to be something different behind the decision there. And it was.</p>
 
 				<h3>Product UX Analytics</h3>
 
-				<p>Yandex.Music app team uses Product UX Analytics for their iOS mobile app. And it has shown them, that users of their mobile app almost never used "back" button on the "locked screen" widget of their app. Product UX Analytics data shown them "rarely used element on the screen". This was <a href="https://medium.com/do-they-use-it/quantitative-qualitative-a4a214f103d5" target="_blank" rel="external">quantitative analysis</a>.
+				<p>Yandex.Music Product Team used Product UX Analytics for their iOS mobile app. And it shown them, that users of their mobile app almost never used "back" button on the "locked screen" widget of their app (compared to usage volume of other controls on that widget). Product UX Analytics data shown them "rarely used element on the screen". This was <a href="https://medium.com/do-they-use-it/quantitative-qualitative-a4a214f103d5" target="_blank" rel="external">quantitative analysis</a>.
 				</p>
 				<p>At the same time during their regular interviews with the users they found a very strong demand for two <a href="https://jtbd.info/replacing-the-user-story-with-the-job-story-af7cdee10c27" target="_blank" rel="nofollow">Job Stories</a>:</p>
 				<blockquote class="blockquote text-center"><i>
-				  <p class="mb-0">(1) When I work and listen to music on my smartphone and I hear the song that I like, then I want to "like" it &mdash; to save it and to let the app know my music preference. And I want to do it fast and easy in order not to get distracted from context of my work.</i></p>
+				  <p class="mb-0">(1) When I work and listen to music on my smartphone and I hear a song which I like, then I want to "like" it &mdash; to save it to my "likes" list and to let the app know my music preference. And I want to do it fast and easy in order not to get distracted from the context of my work.</i></p>
 				</blockquote>
 
 				<blockquote class="blockquote text-center"><i>
-				  <p class="mb-0">(2) When I work and listen to music on my smartphone and I hear the song that I don't like, then I want to "dislike" it &mdash; to let the app know my music preference. I don't want just to skip the song, but I want to "dislike" to let the app know it. And I want to do it fast and easy in order not to get distracted from context of my work.</i></p>
+				  <p class="mb-0">(2) When I work and listen to music on my smartphone and I hear a song which I don't like, then I want to "dislike" it &mdash; to let the app know my music preference. And I don't want just to skip the song, but I want to "dislike" to let the app know it. And I want to do it fast and easy in order not to get distracted from the context of my work.</i></p>
 				</blockquote>
 
-				<p>This was <a href="https://medium.com/do-they-use-it/quantitative-qualitative-a4a214f103d5" target="_blank" rel="external">qualitative analysis</a>: understanding users/customers/players problems through the interviews.</p>
+				<p>This was <a href="https://medium.com/do-they-use-it/quantitative-qualitative-a4a214f103d5" target="_blank" rel="external">qualitative analysis</a>: understanding users/customers/players problems and jobs stories through the interviews.</p>
 
-				<p>Now Product Development Team, as a result of their quantitative and qualitative analysis, make a <del>bold</del> data-driven decision: they replace least used "back" button of the widget with their proposed solution for "like/dislike somehow fast" problem.</p>
+				<p>Now Product Development Team, as a result of their quantitative and qualitative analysis, make a <del>bold</del> data-driven decision: they replace least used "back" button of the widget with their proposed solution for "like/dislike track somehow fast and easy" problem.</p>
 
-				<p>App users still can "go back" within the current track (1) by manually dragging track bar or (2) by using "back" button on their headphones. It still works. But now they have a solution for "fast like/dislike" with no need to unlock the phone, to open the music app, to find like button and tapping it &mdash; i.e. with no need to distract from their work.</p>
+				<p>App's users still can "go back" within currently playing track (1) by manually dragging track bar back or (2) by using "back" button or gesture on their headphones. It still works. But now they have a solution for "like/dislike track fast" with no need to unlock the phone, to open the music app, to find "like/dislike" button and tapping on it &mdash; i.e. with no need to distract from their work.</p>
 
-				<p>This was an example of data-driven decision for UX.</p>
+				<p>This is a simple example of data-driven decision for mobile app UX.</p>
 
 				<h3>And where it all goes to?</h3>
-				<!--p>Both Spotify and Yandex.Music Teams have the same resources in the world: same people, same resources, same time. But yet they end up making 
-				</p-->
-				<p>Eventually, it leads us to drammatic difference in UX/CX/PX for the Products that exist at the same time on the Planet. For example, take a look at "good morning" screens for Spotify app (on the left) and Yandex.Music app (on the right):</p>
+				
+				<p>Such Product UX Analytics approach if it is practiced regularly leads us to drammatic difference in UX/CX/PX for the Products that we create.</p>
+				<p>For example, take a look at "good morning" screens for Spotify app (on the left) and for Yandex.Music app (on the right):</p>
 				<div class="center">
 					<img alt="Spotify on iOS" src="https://www.dropbox.com/s/0ajcmtijyssvklf/spotify-welcome.jpg?raw=1" style="max-width: 49%;">
 					<img alt="Spotify on iOS" src="https://www.dropbox.com/s/b3u329f19raj9z2/yandex.music-welcome.jpg?raw=1" style="max-width: 49%;">
 				</div>
 
-				<p>See how much clear UI and UX of the Yandex.Music app compared to overloaded by the elements Spotify's app screen? No distraction on Yandex.Music app's screen!</p>
+				<p>See how much clear UI and UX of the Yandex.Music app's screen compared to overloaded by the elements Spotify app's screen? No distractions on Yandex.Music app's screen!</p>
 				
-				<p>And the difference is not only on UI! It is under the hood as well! "Play My Vibe" button in the center could appear because there are no pre-generated playlists &mdash; Yandex.Musia app generates playlists on-fly based on your likes and dislikes:</p>
+				<p>And the difference is not only on UI! It is under the hood as well! "Play My Vibe" button in the center appeared because there are no pre-generated playlists &mdash; Yandex.Music app generates playlists on-fly based on your likes and dislikes:</p>
 					<ul>
-						<li>Every dislike immediately causes change of currently playing track and recalculates all future tracks;</li>
-						<li>Every like adds to all future recalculations of playlists.</li>
+						<li>every "dislike" immediately causes change of currently playing track and recalculates all the upcoming tracks in current dynamic playlist;</li>
+						<li>every "like" adds consideration to all future recalculations of playlists without recalculation of current playlist.</li>
 					</ul>
-				<p>So, now Yandex.Music app easily adjusts currently played music to your current mood and you like it.</p>
+				<p>Thanks to this approach Yandex.Music app easily adjusts currently played music to your current mood and you like it!</p>
 
-				<p>But it doesn't stop and leads us even further in UX! As Yandex.Music Team have freed their resources from making, testing and supporting unused elements, they could concentrate their efforts on solving other real problems for their customers. Try to guess what a "bear" icon in the bottom menu bar means?</p>
+				<p>But it doesn't stop here and leads us even further in UX improvements!</p>
+
+				<p>As Yandex.Music Product Team have freed their resources from making, testing and supporting unused elements, they could concentrate their efforts on solving real problems for their customers.</p>
+
+				<p>Guess what a "bear" icon in the bottom navigation bar means?:</p>
 
 				<div class="center">
 					<img alt="Spotify on iOS" src="https://www.dropbox.com/s/b3u329f19raj9z2/yandex.music-welcome.jpg?raw=1" style="max-width: 49%;">
 				</div>
 
-				<p>It is audiobooks for children:</p>
+				<p>It is Audiobooks for children, guys:</p>
 				<div class="center">
 					<img alt="Spotify on iOS" src="https://www.dropbox.com/s/i02k8t0r7nj9nvi/yandex.music-books.jpg?raw=1" style="max-width: 49%;">
 				</div>
-				<p>Yandex.Music Product Development Team for iOS put not only Music, but also gently put another "popular audio-things": Podcasts and Audiobooks into their app &mdash; making it trully outstanding mobile app in the market today.</p>
+				<p>Yandex.Music Product Development Team for iOS made a great app not only for Music, but also for another "popular audio-things": Podcasts and Audiobooks. And it made their app trully outstanding mobile app for Audio in the market today.</p>
 
-				<p>Can you imagine a <a href="https://jtbd.info/replacing-the-user-story-with-the-job-story-af7cdee10c27" target="_blank" rel="nofollow">Job Stories</a> for making an icon for Audiobooks for children in music app?</p>
+				<p>Can you imagine a <a href="https://jtbd.info/replacing-the-user-story-with-the-job-story-af7cdee10c27" target="_blank" rel="nofollow">Job Stories</a> for making a "bear" icon for Audiobooks for children in their music app?</p>
 
 				<blockquote class="blockquote text-center"><i>
-				  <p class="mb-0">(1) When I want to turn on an Audiobook for my children in the evening, I don't want to search for Audiobooks in the app. I want they to be available instantly, being saved from our yesterday, have options to choose for tomorrow...</i></p>
+				  <p class="mb-0">(1) When I want to turn on an Audiobook for my children in the evening, I don't want to search for Audiobooks in the app. I want they to be available instantly, being saved from our yesterday listening, having options to choose what to listen tomorrow...</i></p>
 				</blockquote>
 
 				<blockquote class="blockquote text-center"><i>
-				  <p class="mb-0">(2) When my child wants to listen to an Audiobook, she opens Yandex.Music app, taps a "bear" icon made for her and starts choosing what she would like to listen to &mdash; instantly...</i></p>
+				  <p class="mb-0">(2) When my child wants to listen an Audiobook, she opens Yandex.Music app, taps a "bear" icon made especially for her and starts choosing what she would like to listen to &mdash; instantly and safe...</i></p>
 				</blockquote>
 
-				<p>See the difference in outcome when we have resources to think about such customers problems and have chance to embrace them and build the best from UX/CX/PX app on the Planet? Product Analytics app &mdash; is one of such tools that help you to free your resources from doing useless to do meaningful.</p>
+				<p>See the difference in outcome when we have resources to think about such customers problems and have chance to embrace them and build the best from UX/CX/PX point of view apps on the Planet? Product UX/CX/PX Analytics apps &mdash; are in a row of tools that help us to prevent wasting our resources on doing something useless &mdash; and to concentrate on doing meaningful.</p>
 
 				<!--p>Take a look how DoTheyUse Product Analytics app could be used on example of GitHub service web-site:</p>
 				<img alt="GitHub service website" src="https://www.dropbox.com/s/acpp7m91hma4u98/github-account.png?raw=1" style="max-width: 100%;">
