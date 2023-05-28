@@ -66,7 +66,51 @@
 				<h1>Case studies</h1>
 			</div>
 			<div class="col-10 col-lg-6 margin-top-30">
-				<p>Take a look how DoTheyUse Product Analytics app could be used on example of GitHub service web-site:</p>
+				<h2>Spotify app vs. Yandex.Music app</h2>
+				<h3>Setup the Context</h3>
+				<p>Let's say you are a Product Developer of mobile app for listening to music. And your app, when it plays music, has a widget on a lock-screen of smartphone.</p>
+
+				<p>Below are screenshots with the widgets of two different music apps: Spotify (on the left) and Yandex.Music (on the right) displayed on the locked screens of iOS device:</p>
+				<img alt="Spotify on iOS" src="https://www.dropbox.com/s/2ymhkmecm8u9093/spotify-ios.jpg?raw=1" style="max-width: 49%;">
+				<img alt="Yandex.Music on iOS" src="https://www.dropbox.com/s/2wtnvf5bz1m2aew/yandex.music-no-back.jpg?raw=1" style="max-width: 49%;">
+
+				<h3>Example of UX problem</h3>
+				<p>See a little difference in controls between these 2 widgets? Yandex.Music app (on the right) has no "back" player button. Instead it has some "menu" icon there. What will happen if we tap on this "menu" button?</p>
+
+				<img alt="Spotify on iOS" src="https://www.dropbox.com/s/x2wnzncta2mvgzw/yandex.music-menu.jpg?raw=1" style="max-width: 49%;">
+				<img alt="Spotify on iOS" src="https://www.dropbox.com/s/4rh2y6y5tr0dde6/yandex.music-liked.jpg?raw=1" style="max-width: 49%;">
+				
+				<p>Oh, this is "likes and dislikes" menu with the indication of already liked track! So we see that Yandex.Music Product Development Team of mobile app for iOS changed "back" icon for their "locked screen" widget to "likes menu" button...</p>
+
+				<p>Why did they do that?!</p>
+
+				<h3>Product Marketing Analytics didn't work here</h3>
+				<p>On this example it has to be clear, that this Product decision of "remove the "back" button" and "put "likes menu" button instead" was not driven by Product Marketing Analytics. It just couldn't, because Product Marketing Analytics only shows if customers use the whole thing, where do they come from, what OS do they have, what is their screen size, to they spend time on the screen, etc. &mdash; that kind of staff.</p>
+
+				<p>It had to be something different behind the decision there. And it was.</p>
+
+				<h3>Product UX Analytics</h3>
+
+				<p>Yandex.Music app team uses Product UX Analytics for their iOS mobile app. And it has shown them, that users of their mobile app almost never used "back" button on the "locked screen" widget of their app. Product UX Analytics data shown them "rarely used element on the screen". This was <a href="https://medium.com/do-they-use-it/quantitative-qualitative-a4a214f103d5" target="_blank" rel="external">quantitative analysis</a>.
+				</p>
+				<p>At the same time during their regular interviews with the users they found a very strong demand for two <a href="https://jtbd.info/replacing-the-user-story-with-the-job-story-af7cdee10c27" target="_blank" rel="nofollow">Job Stories</a>:</p>
+				<blockquote class="blockquote text-center"><i>
+				  <p class="mb-0">(1) When I work and listen to music on my smartphone and I hear the song that I like, then I want to "like" it &mdash; to save it and to let the app know my music preference. And I want to do it fast and easy in order not to get distracted from context of my work.</i></p>
+				</blockquote>
+
+				<blockquote class="blockquote text-center"><i>
+				  <p class="mb-0">(2) When I work and listen to music on my smartphone and I hear the song that I don't like, then I want to "dislike" it &mdash; to let the app know my music preference. I don't want just to skip the song, but I want to "dislike" to let the app know it. And I want to do it fast and easy in order not to get distracted from context of my work.</i></p>
+				</blockquote>
+
+				<p>This was <a href="https://medium.com/do-they-use-it/quantitative-qualitative-a4a214f103d5" target="_blank" rel="external">qualitative analysis</a>: understanding users/customers/players problems through the interviews.</p>
+
+				<p>Now Product Development Team, as a result of their quantitative and qualitative analysis, make a <del>bold</del> data-driven decision: they replace least used "back" button of the widget with their proposed solution for "like/dislike somehow fast" problem.</p>
+
+				<p>App users still can "go back" within the current track (1) by manually dragging track bar or (2) by using "back" button on their headphones. It still works. But now they have a solution for "fast like/dislike" with no need to unlock the phone, to open the music app, to find like button and tapping it &mdash; i.e. with no need to distract from their work.</p>
+
+				<p>This is a UX data-driven decision.</p>
+
+				<!--p>Take a look how DoTheyUse Product Analytics app could be used on example of GitHub service web-site:</p>
 				<img alt="GitHub service website" src="https://www.dropbox.com/s/acpp7m91hma4u98/github-account.png?raw=1" style="max-width: 100%;">
 				<ul>
 					<li><a href="#filter_by_timerange" data-dtu>Filter usage by time range</a></li>
@@ -75,9 +119,9 @@
 					<li><a href="#filter_by_webelement" data-dtu>Filter usage by web-element</a></li>
 					<li><a href="#filter_by_everything" data-dtu>Filter usage by everything at once</a></li>
 					<li><a href="#explain_tables_coloring" data-dtu>Explain tables coloring</a></li>
-				</ul>
+				</ul-->
 			</div>
-			<div class="col-10 col-lg-8">
+			<!--div class="col-10 col-lg-8">
 				<p id="didtheyuse"><br>
 					<b>Q: Did anybody use our app at all?</b><br>
 					<b>A:</b> Yes, look there are some data charts when no filters applied:
@@ -156,7 +200,7 @@
 					<li>Table on the left: 752 interactions &mdash; is 35% of a sum of all filtered interactions (752 / 2094 = 35%). It is colored yellow. And 752 interactions &mdash; is 75% compared to maximum used web-element (752 / 990 = 75%). And it is colored blue;</li>
 					<li>Table in the middle: 99 interactions &mdash; is 4% of a sum of all filtered interactions (99 / 2094 = 4%). It is colored yellow. And 99 interactions &mdash; is 60% compared to most active user number of interactions (99 / 165 = 60%). And it's colored blue;</li>
 				</ul>
-			</div>
+			</div-->
     </div>
     <div class="row justify-content-center">
     	<div class="col-lg-6 col-md-6 center margin-bottom-7">
