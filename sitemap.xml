@@ -9,42 +9,47 @@
 
 <url>
   <loc>https://dotheyuse.com/</loc>
-  <lastmod>2023-05-18T17:28:39+00:00</lastmod>
+  <lastmod>2023-05-29T06:49:09+00:00</lastmod>
   <priority>1.00</priority>
 </url>
 <url>
   <loc>https://dotheyuse.com/problem.html</loc>
-  <lastmod>2023-05-18T17:28:39+00:00</lastmod>
+  <lastmod>2023-05-29T06:49:09+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
   <loc>https://dotheyuse.com/comparison.html</loc>
-  <lastmod>2023-05-18T17:28:39+00:00</lastmod>
+  <lastmod>2023-05-29T06:49:09+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
   <loc>https://dotheyuse.com/case-studies.html</loc>
-  <lastmod>2023-05-18T17:28:39+00:00</lastmod>
+  <lastmod>2023-05-29T06:49:09+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
   <loc>https://dotheyuse.com/mission_and_vision.html</loc>
-  <lastmod>2023-05-18T17:28:39+00:00</lastmod>
+  <lastmod>2023-05-29T06:49:09+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
   <loc>https://dotheyuse.com/contacts.html</loc>
-  <lastmod>2023-05-18T17:28:39+00:00</lastmod>
+  <lastmod>2023-05-29T06:49:09+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://dotheyuse.com/src/dtu_app/index.html</loc>
+  <lastmod>2023-05-29T06:49:10+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
   <loc>https://dotheyuse.com/src/dtu_app/how-this-works.html</loc>
-  <lastmod>2023-05-18T17:28:40+00:00</lastmod>
+  <lastmod>2023-05-29T06:49:10+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 <url>
   <loc>https://dotheyuse.com/src/dtu_app/documentation.html</loc>
-  <lastmod>2023-05-18T17:28:40+00:00</lastmod>
+  <lastmod>2023-05-29T06:49:10+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 
