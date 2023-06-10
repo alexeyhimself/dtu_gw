@@ -29,6 +29,13 @@
 		<style type="text/css">
 			blockquote {
 				padding: 20px 0 20px 0;
+				font-family: 'Crimson Pro';
+				font-size: 17pt!important;
+				font-style: italic;
+			}
+			footer {
+				padding-top: 20px;
+				text-align: right;
 			}
 		</style>
 	</head>
@@ -68,17 +75,27 @@
     		<h1 style="margin-bottom: 50px">Problem to solve</h1>
     	</div>
     	<div class="col-lg-6 col-11">
-    		<p><b>Problem</b> &mdash; is a huge waste of resources of different kind from developing software that is not used by end-users.</p>
+    		<p><b>Problem</b> &mdash; is a huge waste of resources from building and supporting uninstrumented software full of options and features.</p>
 
-    		<p>Software Development Teams spend so much resources on design, building, testing, delivery, support of UI of their apps and services and yet they don't know: (1) which elements and features, (2) when, (3) how much and (4) by whom of their users, customers and players are being used on those interfaces. Why to keep something on UI (and spend resources on it's support) if no one actually using it? Why not to remove barely used element and put there much more wanted element insted to increase satisfaction from UX/CX/PX? Why not to talk about this to your customers and not to ask them: why do you use it so much or why don't you use it at all?</p>
+    		<blockquote class="blockquote text-center">Now we've got a product that it takes forever to do anything with: it's hard to learn, it's hard to use, it's hard to maintain. Just making a small change takes forever because of so many options and configuration changes we need to test with any possible combination...
+				<footer class="blockquote-footer">Jared Spool at <cite title="Source Title">MTP Conference, 2015</cite></footer>
+    		</blockquote>
 
-    		<p>Why not? I'll tell you why. Because teams don't have that data.</p> 
-    		<p>But imagine what would change if they had that data?</p>
+    		<p>Below is a 60 seconds clip with Jared Spool at Mind The Product Conference at San Francisco, 2015, explaining eXperience rot and how to overcome it:</p>
+
+    		<iframe width="100%" height="315" style="margin-bottom: 30px" src="https://www.youtube.com/embed/oazvsSsB4bk?clip=Ugkxwb426-H3C0S4tf9LASHFuG-_4jpeNOth&amp;clipt=EJK4MRjyjDU&rel=0" title="YouTube video player" frameborder="0" allow="autoplay;" allowfullscreen></iframe>
+
+    		<p>Software Development Teams spend so much resources on designing, building, testing, delivery, support of UI of their apps and services and yet they don't know: (1) which elements and features, (2) when, (3) how much and (4) by whom of their users, customers and players are being used.</p>
+
+    		<p>Why to keep something on UI (and spend resources on it's support) if no one actually using it? Why not to <a href="comparison.html">change barely used element with much more wanted one insted</a> to increase satisfaction from UX/CX/PX? Why not to talk about this to your customers and not to ask them: why do you use it so much or why don't you use it at all?</p>
+
+    		<p>I'll tell you why. Because teams don't have that data.</p> 
+    		<p>But imagine: how things could change if they had that data?</p>
 
     		<!--p>Teams continue doing enormous amount of work taking care of everything.</p-->
 
     		<h2>Example</h2>
-    		<p>On UI screen below there are at least 16 unique interactive web-elements (links, buttons, checkboxes, input fields, etc.):</p>
+    		<p>On a simple UI screen below there are at least 16 unique interactive web-elements (links, buttons, checkboxes, input fields, etc.):</p>
 
     		<img src="https://www.dropbox.com/s/b4mh3fx5l1iym1t/example_1.png?raw=1" style="max-width: 100%;">
 
@@ -88,7 +105,7 @@
 
     		<img src="https://www.dropbox.com/s/r7njd2jy57fhxk9/example_1_dtu.png?raw=1" style="max-width: 100%;">
 
-    		<p>Now we can see:
+    		<p>Now we can see that:
     			<ul>
     				<li>"New Ticket" button is the most used UI element;</li>
     				<li>"Select item" checkbox is the least used UI element;</li>
