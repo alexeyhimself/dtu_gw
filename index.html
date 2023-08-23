@@ -12,7 +12,7 @@
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 
-		<title>Make data-driven decisions for your digital products with Do They Use product intelligence app</title>
+		<title>Make data-informed decisions for your digital products with Do They Use product intelligence app</title>
 		<meta name="description" content="Do They Use app helps empowered product teams to get quantitative product metrics and visualise product analytics faster and easier than any other Product Intelligence tool in the market now.">
 		<meta name="keywords" content="Product Intelligence, Quantitative analysis, Product Management tools, Product Metrics">
 
@@ -81,7 +81,7 @@
 				<h1 class="name">Do They Use?</h1>
 				<h2 style="margin-top: 30px; margin-bottom: 0px;">
 					<!--Make Data-Driven decisions for your Digital Products-->
-					Track features usage in your digital products
+					Audit and track features usage in your digital products
 
 					<!--span class="bg-gold">Stop feature creep:</span> find those 50-80% of features that your users don't use in your digital products and concentrate your efforts on what they really use-->
 					<!--span class="h2-span">
@@ -97,7 +97,7 @@
 	  <div class="row justify-content-center clip">
 	  	<hr style="width: 80%">
     	<div class="col-lg-6 col-11">
-    		<h2>Visualize features usage in your digital apps and services and make data-driven UX decisions</h2>
+    		<h2>Visualize features usage in your digital apps and services to make data-informed UX decisions</h2>
     		<!--img alt="Do They Use demo app" src="https://www.dropbox.com/s/3o4453qk3f9jakd/inside-dtu-account.png?raw=1" style="min-width: 541px; max-width: 100%;"-->
     	</div>
     	<div class="col-lg-8 col-11 video-container-">
@@ -125,12 +125,12 @@
     		<!--p>2. (optional) Add "data-dtu" attribute to any (of <a rel="external" href="https://github.com/alexeyhimself/dtu_sdk_js#supported-elements-types" target="_blank" data-dtu>supported by JavaScript SDK</a>) web elements you wish to track in your web app:</p>
     		<img alt="Tag element with data-dtu attribute" src="https://www.dropbox.com/s/xd72zk77csmqw3a/tag-element-with-data-dtu.png?raw=1" style="max-width: 271px;"-->
 
-    		<p>2. Interact with web-elements of your app</p>
+    		<p>2. Interact with web-elements of your app: click links, press buttons, choose options in drop-down lists, etc.</p>
     		<p>3. Go to <a href="src/dtu_app/index.html" data-dtu>Do They Use</a> account to see usage stats for each of web-elements of your app:</p>
 				<img alt="Do They Use demo app" src="https://www.dropbox.com/s/3o4453qk3f9jakd/inside-dtu-account.png?raw=1" style="min-width: 541px; max-width: 100%;">
 
 				<h2 id="sdk">JavaScript SDK</h2>
-				<p>There is an <a rel="external" href="https://github.com/alexeyhimself/dtu_sdk_js" target="_blank" data-dtu>open source JavaScript SDK</a> that already covers all most popular default interaction HTML elements (and it is ready for new pull requests if you want to contribute). That's why now it is easy as 1-2-3 to get started with the analytics for your web app as it is described in <a href="#how-it-works" data-dtu>previous section</a>.</p>
+				<p>There is an <a rel="external" href="https://github.com/alexeyhimself/dtu_sdk_js" target="_blank" data-dtu>open source JavaScript SDK</a> that already covers all most popular default interaction HTML elements (and it is ready for new pull requests if you want to contribute).</p>
 
 				<h2 id="hosting">You host or we host</h2>
 				<p>Service is available both for Cloud-based (we host) and in <a href="https://hub.docker.com/r/alexeyhimself/dtu" target="_blank" rel="external" data-dtu>Docker container</a> for Self-hosted (you host) installations. For more information about types of installation and operation read <a href="src/dtu_app/documentation.html">how to setup for your app</a>.</p>
@@ -138,17 +138,23 @@
 				<h2 id="security">Data Security</h2>
 				<p>If you want to use <b>Do They Use</b> app, but you worry about Data Security then you have different options:
 					<ul>
-						<li>Use <a href="#hosting" data-dtu>Self-hosted</a> (you host) option of usage: download and use Docker containers with our app and host these containers in your private datacenter, completely under your control;</li>
+						<li>Use <a href="#hosting" data-dtu>Self-hosted</a> (you host) option of usage: download and use Docker container with our app and host this container in your private datacenter, completely under your control;</li>
 						<li>Use <a href="#hosting" data-dtu>Cloud-based</a> (we host) option of usage, but instead of providing real UserIDs, UserGroupIDs and other IDs provide <a href="https://en.wikipedia.org/wiki/Salt_(cryptography)" target="_blank" rel="nofollow" data-dtu>salted hashes</a> for those IDs. In this case you'll be able to match hashes on our side with real IDs on your side;</li>
-						<li>Use Cloud-based (we host) option of usage, but do not provide neither real UserIDs, UserGroupIDs nor salted hashes. In this case our SDK will generate synthetic IDs &mdash; so your personal data will not go anywhere and you'll get as much analytics as you can (including users adoption) without providing real IDs.</li>
+						<li>Use Cloud-based (we host) option of usage, but do not provide neither real UserIDs, UserGroupIDs nor salted hashes. In this case our SDK will generate synthetic IDs &mdash; so your users personal data will not go anywhere and you'll get as much analytics as you can (including users adoption) without providing real IDs.</li>
 					</ul>
 				</p>
 				<h2 id="security">GDPR, CCPA and other Data Privacy regulations</h2>
-				<p>If your users disagree to share their usage data with you, you can disable JS SDK from collecting and sending any data anywhere simply by calling:
+				<p>If your users disagree to share their usage data with you, you can ask JS SDK to stop collecting and sending any data anywhere by calling:
 					<div class="code">
 						<code><pre style="overflow-x: hidden!important;">dtu.stop();</pre></code>
 					</div>
 				</p>
+				<p>as well as start collecting again:
+					<div class="code">
+						<code><pre style="overflow-x: hidden!important;">dtu.start();</pre></code>
+					</div>
+				</p>
+
 
 				<h2>Differences with other Product Analytics tools</h2>
 				<p>If you have questions about the differences with Google Analytics and similar tools, please visit <a href="comparison.html" data-dtu>Comparison</a> page.</p>
